@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARNOBOT — Robotics Redefined</title>
+  <!-- ext-resource-dependency meta tags for bundler -->
+  <meta name="ext-resource-dependency" content="uploads/saibya-nobg.png" data-resource-id="imgSaibya" />
+  <meta name="ext-resource-dependency" content="uploads/nexus-nobg.png" data-resource-id="imgNexus" />
+  <meta name="ext-resource-dependency" content="uploads/altius-nobg.png" data-resource-id="imgAltius" />
+  <meta name="ext-resource-dependency" content="uploads/WhatsApp Image 2026-04-08 at 10.08.30 PM.jpeg" data-resource-id="imgAtm" />
+  <meta name="ext-resource-dependency" content="uploads/Saibya_Brochure.pdf" data-resource-id="brochureSaibya" />
+  <meta name="ext-resource-dependency" content="uploads/Altius_Brochure.pdf" data-resource-id="brochureAltius" />
+  <meta name="ext-resource-dependency" content="intelligence-canvas.js" data-resource-id="intelligenceCanvas" />
+
+  <template id="__bundler_thumbnail" data-bg-color="#000000">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#000010"/>
+      <rect x="0" y="0" width="1200" height="800" fill="url(#grad1)"/>
+      <defs>
+        <radialGradient id="grad1" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#2D358E" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#000010" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- Chevron icon -->
+      <g transform="translate(480,260)">
+        <polygon points="60,0 120,40 60,80 0,40" fill="none" stroke="#A7BCE3" stroke-width="3" opacity="0.9"/>
+        <polygon points="60,50 120,90 60,130 0,90" fill="none" stroke="#7fa8d8" stroke-width="3" opacity="0.7"/>
+        <polygon points="60,100 120,140 60,180 0,140" fill="none" stroke="#5580b0" stroke-width="3" opacity="0.5"/>
+      </g>
+      <!-- Wordmark -->
+      <text x="620" y="360" font-family="Arial" font-weight="bold" font-size="80" fill="#ffffff" letter-spacing="4">ARNOBOT</text>
+      <text x="620" y="410" font-family="Arial" font-weight="300" font-size="20" fill="rgba(167,188,227,0.6)" letter-spacing="8">ROBOTICS REDEFINED</text>
+      <!-- Grid lines -->
+      <line x1="0" y1="450" x2="1200" y2="450" stroke="rgba(167,188,227,0.08)" stroke-width="1"/>
+      <line x1="0" y1="500" x2="1200" y2="500" stroke="rgba(167,188,227,0.05)" stroke-width="1"/>
+    </svg>
+  </template>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #000000;
+      --near-black: #0a0a0a;
+      --dark: #111111;
+      --white: #ffffff;
+      --off-white: #f5f5f5;
+      --grey-light: #e8e8e8;
+      --grey-mid: #999999;
+      --grey-dark: #444444;
+      --blue: #38559D;
+      --blue-light: #A7BCE3;
+      --blue-deep: #200B76;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #333; }
+
+    /* ── NAV ─────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      transition: background 0.4s ease;
+    }
+    nav.solid {
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo img {
+      height: 40px;
+      width: auto;
+      display: block;
+      filter: brightness(0) invert(1);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-demo {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      padding: 10px 24px;
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .nav-demo:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.6); }
+
+    /* ── HERO ────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      background: var(--black);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 1;
+    }
+    .hero-vp {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(0,0,0,0) 0px, rgba(0,0,0,0) 12px,
+        rgba(0,0,0,0.15) 12px, rgba(0,0,0,0.15) 13px
+      );
+      pointer-events: none;
+    }
+    .hero-grad {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.88) 0%,
+        rgba(0,0,0,0.15) 45%,
+        rgba(0,0,0,0.05) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 64px 80px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+    }
+    .hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 7vw, 96px);
+      font-weight: 700;
+      line-height: 1.0;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      max-width: 800px;
+      margin-bottom: 28px;
+    }
+    .hero-h1 span { color: var(--blue-light); }
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .btn-hero-primary {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 14px 32px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      display: inline-block;
+    }
+    .btn-hero-primary:hover { opacity: 0.85; }
+    .btn-hero-ghost {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .btn-hero-ghost:hover { color: var(--white); }
+    .btn-hero-ghost svg { transition: transform 0.2s; }
+    .btn-hero-ghost:hover svg { transform: translateX(4px); }
+
+    /* Scroll indicator */
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 32px; right: 64px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+      animation: lineGrow 2s ease infinite;
+    }
+    @keyframes lineGrow {
+      0%, 100% { transform: scaleY(1); opacity: 0.6; }
+      50% { transform: scaleY(0.5); opacity: 0.2; }
+    }
+    .scroll-label {
+      font-family: var(--font-display);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── VIDEO SECTION (figure.ai style full-bleed panels) ── */
+    .panel {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      background: var(--black);
+    }
+    .panel-media {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.55;
+    }
+    .panel-grad {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0.2) 60%,
+        rgba(0,0,0,0) 100%
+      );
+    }
+    .panel-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 64px 80px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 48px;
+    }
+    .panel-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      max-width: 640px;
+    }
+    .panel-link {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      align-self: flex-end;
+      margin-bottom: 8px;
+      transition: color 0.2s;
+    }
+    .panel-link:hover { color: var(--white); }
+    .panel-link svg { transition: transform 0.2s; }
+    .panel-link:hover svg { transform: translateX(4px); }
+    .panel-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.1);
+      text-transform: uppercase;
+    }
+
+    /* ── WHITE CONTENT SECTIONS ──────────────── */
+    .section-white {
+      background: var(--white);
+      color: var(--black);
+      padding: 120px 0;
+    }
+    .section-dark {
+      background: var(--near-black);
+      color: var(--white);
+      padding: 120px 0;
+    }
+    .section-mid {
+      background: var(--off-white);
+      color: var(--black);
+      padding: 120px 0;
+    }
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 64px;
+    }
+
+    /* ── TYPOGRAPHY ──────────────────────────── */
+    .eyebrow {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: 20px;
+    }
+    .eyebrow.light { color: rgba(255,255,255,0.4); }
+    .display-xl {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 5vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .display-lg {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 52px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .body-copy {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--grey-dark);
+      max-width: 520px;
+    }
+    .body-copy.light { color: rgba(255,255,255,0.5); }
+
+    /* ── PRODUCTS ────────────────────────────── */
+    .products-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: end;
+      margin-bottom: 80px;
+    }
+    .products-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .product-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 520px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-row:nth-child(even) { direction: rtl; }
+    .product-row:nth-child(even) > * { direction: ltr; }
+    .product-visual {
+      background: #0d0d0d;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.4s;
+    }
+    .product-row:hover .product-visual { background: #141414; }
+    .product-row:hover .product-visual img { opacity: 1 !important; filter: none !important; }
+    .product-visual-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .product-ph-icon {
+      font-size: 64px;
+      opacity: 0.15;
+      transition: opacity 0.3s;
+    }
+    .product-row:hover .product-ph-icon { opacity: 0.25; }
+    .product-ph-label {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.12);
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0 32px;
+    }
+    /* Faint grid on product visuals */
+    .product-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .product-info {
+      background: var(--black);
+      padding: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .product-row:hover .product-info { background: #0d0d0d; }
+    .product-num {
+      position: absolute;
+      top: 40px; left: 64px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.2);
+    }
+    .product-type {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .product-name {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .product-desc {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      max-width: 400px;
+      margin-bottom: 32px;
+    }
+    .product-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .product-cta svg { transition: transform 0.2s; }
+    .product-row:hover .product-cta { color: var(--white); }
+    .product-row:hover .product-cta svg { transform: translateX(4px); }
+
+    /* ── TECH SECTION ────────────────────────── */
+    .tech-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 600px;
+    }
+    .tech-left {
+      padding: 80px 64px;
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .tech-right {
+      background: var(--dark);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background-color: #1a1a1a;
+    }
+    .tech-cell {
+      background: var(--dark);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: background 0.25s;
+    }
+    .tech-cell:hover { background: #181818; }
+    .tech-cell-icon {
+      font-size: 20px;
+      line-height: 1;
+      opacity: 0.7;
+    }
+    .tech-cell-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .tech-cell-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.65;
+    }
+
+    /* ── INDUSTRIES ──────────────────────────── */
+    .industries-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+      margin-bottom: 80px;
+    }
+    .industries-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .industry-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--grey-light);
+      cursor: default;
+      transition: padding-left 0.25s;
+    }
+    .industry-row:first-child { border-top: 1px solid var(--grey-light); }
+    .industry-row:hover { padding-left: 12px; }
+    .industry-row-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .industry-idx {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--grey-mid);
+      min-width: 24px;
+    }
+    .industry-name-row {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--black);
+      letter-spacing: -0.01em;
+    }
+    .industry-tag {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      background: var(--grey-light);
+      padding: 4px 10px;
+    }
+
+    /* ── CREDENTIALS ─────────────────────────── */
+    .creds-row {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      padding: 48px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .creds-label {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      white-space: nowrap;
+    }
+    .creds-badges {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .cred-pill {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      padding: 8px 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* ── COMPANY ─────────────────────────────── */
+    .company-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: start;
+    }
+    .values-list {
+      display: flex;
+      flex-direction: column;
+      margin-top: 48px;
+    }
+    .value-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .value-row:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
+    .value-label {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--white);
+    }
+    .value-n {
+      font-family: var(--font-display);
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+    }
+    .mission-block {
+      margin-top: 48px;
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+    .mission-q {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 16px;
+    }
+    .mission-text {
+      font-size: 18px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+    }
+
+    /* ── COMPARE ─────────────────────────────── */
+    .compare-wrap {
+      overflow-x: auto;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+    .compare-table thead tr {
+      border-bottom: 1px solid var(--grey-light);
+    }
+    .compare-table th {
+      padding: 16px 24px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-align: left;
+    }
+    .compare-table th:nth-child(3) {
+      color: var(--blue-deep);
+    }
+    .compare-table td {
+      padding: 20px 24px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--grey-light);
+      color: var(--grey-dark);
+    }
+    .compare-table td:nth-child(3) {
+      font-weight: 500;
+      color: var(--black);
+    }
+    .check { color: #16a34a; font-weight: 700; }
+    .cross { color: #dc2626; }
+
+    /* ── CAREERS ─────────────────────────────── */
+    .careers-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 120px;
+      align-items: end;
+      margin-bottom: 64px;
+    }
+    .jobs-list {
+      display: flex;
+      flex-direction: column;
+    }
+    .job-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      cursor: pointer;
+      transition: padding-left 0.25s;
+      gap: 24px;
+    }
+    .job-row:first-child { border-top: 1px solid rgba(255,255,255,0.07); }
+    .job-row:hover { padding-left: 12px; }
+    .job-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .job-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .job-chip {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .job-chip + .job-chip::before {
+      content: '·';
+      margin-right: 16px;
+      color: rgba(255,255,255,0.15);
+    }
+    .job-arrow {
+      color: rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .job-row:hover .job-arrow { color: var(--white); transform: translateX(4px); }
+
+    /* ── CONTACT ─────────────────────────────── */
+    .contact-split {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 120px;
+      align-items: start;
+    }
+    .contact-detail {
+      font-size: 15px;
+      color: var(--grey-mid);
+      line-height: 1.7;
+      margin-top: 32px;
+    }
+    .contact-detail a {
+      color: var(--black);
+      text-decoration: none;
+      border-bottom: 1px solid var(--grey-light);
+    }
+    .contact-socials {
+      display: flex;
+      gap: 16px;
+      margin-top: 40px;
+    }
+    .social-link {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey-dark);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .social-link:hover { color: var(--black); }
+
+    /* FORM */
+    .form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+    }
+    .form-field {
+      padding: 14px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--grey-light);
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--black);
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .form-field:focus { border-bottom-color: var(--black); }
+    .form-field::placeholder { color: var(--grey-light); }
+    select.form-field { appearance: none; cursor: pointer; background: transparent; }
+    textarea.form-field { resize: none; min-height: 80px; }
+    .btn-submit {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--black);
+      border: none;
+      padding: 16px 40px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      align-self: flex-start;
+      margin-top: 8px;
+    }
+    .btn-submit:hover { opacity: 0.7; }
+    .form-ok {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #16a34a;
+      display: none;
+      margin-top: 8px;
+    }
+    .form-ok.show { display: block; }
+
+    /* ── FOOTER ──────────────────────────────── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-main {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 64px;
+      padding: 80px 64px 64px;
+      max-width: 1440px;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-brand img {
+      height: 36px;
+      width: auto;
+      display: block;
+      margin-bottom: 24px;
+      filter: brightness(0) invert(1);
+    }
+    .footer-brand-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.7;
+      max-width: 260px;
+    }
+    .footer-col-head {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 20px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col ul a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(255,255,255,0.18);
+    }
+    .footer-india {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ── MODAL ───────────────────────────────── */
+    .modal-bg {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal-card {
+      background: var(--dark);
+      max-width: 680px; width: 100%;
+      max-height: 85vh; overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+    .modal-bg.open .modal-card { transform: translateY(0); }
+    .modal-head {
+      padding: 48px 48px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      position: relative;
+    }
+    .modal-close-btn {
+      position: absolute; top: 24px; right: 24px;
+      background: rgba(255,255,255,0.08); border: none;
+      color: rgba(255,255,255,0.6); width: 32px; height: 32px;
+      cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .modal-close-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .modal-body { padding: 40px 48px; }
+    .modal-features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 32px; }
+    .mf-item {
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.04);
+      font-size: 13px; font-weight: 300;
+      color: rgba(255,255,255,0.6); line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .mf-item::before {
+      content: '';
+      display: block; width: 4px; height: 4px;
+      border-radius: 50%; background: var(--blue-light);
+      flex-shrink: 0; margin-top: 6px;
+    }
+    .app-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .app-chip {
+      font-family: var(--font-display);
+      font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      border: 1px solid rgba(255,255,255,0.12); padding: 6px 12px;
+    }
+
+    /* ── SCROLL ANIMATIONS ───────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+    /* React-mounted containers: always visible, use CSS animation instead */
+    #productsMount .reveal,
+    #techMount .reveal,
+    #industriesMount .reveal,
+    #valuesMount .reveal,
+    #jobsMount .reveal,
+    #credsMount .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: fadeUpIn 0.7s ease both;
+    }
+    @keyframes fadeUpIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 1024px) {
+      .products-intro, .tech-split, .company-split,
+      .contact-split, .careers-intro, .industries-header { grid-template-columns: 1fr; gap: 48px; }
+      .product-row { grid-template-columns: 1fr; min-height: auto; }
+      .product-row:nth-child(even) { direction: ltr; }
+      .product-visual { min-height: 320px; }
+      .footer-main { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .wrap, .hero-content, .panel-content { padding-left: 24px; padding-right: 24px; }
+      .footer-main { grid-template-columns: 1fr; padding: 48px 24px; }
+      .footer-bottom { padding: 20px 24px; }
+      .nav-inner { padding: 0 24px; }
+      .nav-links { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+      .modal-features-grid { grid-template-columns: 1fr; }
+      .panel-content { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .hero-scroll-cue { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo" style="display:flex;align-items:flex-start;gap:2px;">
+      <img src="uploads/arnobot-logo-cropped.png" alt="ARNOBOT" />
+      <span style="font-family:var(--font-display);font-size:14px;font-weight:700;color:rgba(255,255,255,0.7);margin-top:4px;line-height:1;letter-spacing:0;">™</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#technology">Technology</a></li>
+      <li><a href="#industries">Industries</a></li>
+      <li><a href="#company">Company</a></li>
+      <li><a href="#careers">Careers</a></li>
+    </ul>
+    <a href="#contact" class="nav-demo">Request a Demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero" data-screen-label="01 Hero">
+  <div class="hero-media" style="position:absolute;inset:0;overflow:hidden;">
+    <canvas id="heroCanvas" style="width:100%;height:100%;display:block;"></canvas>
+  </div>
+  <div class="hero-grad"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Made in India · Industrial Robotics</div>
+    <h1 class="hero-h1">Robotics<br/><span>Redefined.</span></h1>
+    <p class="hero-sub">Intelligent automation for defence, industrial inspection, and mission-critical environments.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-hero-primary">Explore Robots</a>
+      <a href="#contact" class="btn-hero-ghost">
+        Request a Demo
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="hero-scroll-cue">
+    <div class="scroll-line"></div>
+    <span class="scroll-label">Scroll</span>
+  </div>
+</section>
+
+<!-- PANEL 1: Intelligence -->
+<section class="panel" id="panel1" data-screen-label="02 Intelligence Panel">
+  <div style="position:absolute;inset:0;overflow:hidden;">
+    <canvas id="intelligenceCanvas" style="width:100%;height:100%;display:block;"></canvas>
+  </div>
+  <div class="panel-grad"></div>
+  <div class="panel-content">
+    <h2 class="panel-h2">The intelligence behind every mission.</h2>
+    <a href="#technology" class="panel-link">
+      Explore Technology
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- PANEL 2: Ruggedness -->
+<section class="panel" id="panel2" data-screen-label="03 Ruggedness Panel">
+  <div style="position:absolute;inset:0;overflow:hidden;">
+    <img src="uploads/WhatsApp Image 2026-04-08 at 10.08.09 PM.jpeg" alt="ALTIUS climbing ship hull" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;" />
+  </div>
+  <div class="panel-grad"></div>
+  <div class="panel-content">
+    <h2 class="panel-h2">Built for environments humans can't enter.</h2>
+    <a href="#products" class="panel-link">
+      View All Robots
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" data-screen-label="04 Products" style="background:var(--black);padding:120px 0 0;">
+  <div class="wrap">
+    <div class="products-intro reveal">
+      <div>
+        <div class="eyebrow light">Our Robots</div>
+        <h2 class="display-xl" style="color:var(--white);">Advanced ground systems for any mission.</h2>
+      </div>
+      <p class="body-copy light" style="margin-bottom:0;">ARNOBOT develops rugged, intelligent robots engineered for extreme reliability in defence, industrial inspection, and hazardous environments.</p>
+    </div>
+  </div>
+  <div id="productsMount"></div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section id="technology" data-screen-label="05 Technology">
+  <div class="tech-split">
+    <div class="tech-left reveal">
+      <div class="eyebrow light">Intelligence Layer</div>
+      <h2 class="display-lg" style="color:var(--white);margin-bottom:24px;">The AI that powers every mission.</h2>
+      <p class="body-copy light">Computer vision, sensor fusion, and semi-autonomous navigation — operating where humans cannot, continuously collecting and acting on data.</p>
+    </div>
+    <div class="tech-right" id="techMount"></div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries" class="section-white" data-screen-label="06 Industries">
+  <div class="wrap">
+    <div class="industries-header">
+      <div class="reveal">
+        <div class="eyebrow">Industries Served</div>
+        <h2 class="display-xl">Built for the world's most demanding environments.</h2>
+      </div>
+      <p class="body-copy reveal reveal-d1">From defence and oil & gas to shipyards and disaster response — ARNOBOT systems are engineered to operate where failure is not an option.</p>
+    </div>
+    <div class="industries-list reveal" id="industriesMount"></div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="compare" class="section-white" data-screen-label="08 Comparison">
+  <div class="wrap">
+    <div class="reveal" style="margin-bottom:64px;">
+      <div class="eyebrow">Why ARNOBOT</div>
+      <h2 class="display-xl">Traditional inspection vs.<br/>autonomous robotics.</h2>
+    </div>
+    <div class="compare-wrap reveal reveal-d1">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="color:#999;">Metric</th>
+            <th style="color:#999;">Traditional Inspection</th>
+            <th>ARNOBOT System</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Human safety risk</td><td><span class="cross">✕</span> High exposure</td><td><span class="check">✓</span> Zero human risk</td></tr>
+          <tr><td>Inspection frequency</td><td><span class="cross">✕</span> Periodic only</td><td><span class="check">✓</span> Continuous monitoring</td></tr>
+          <tr><td>Data intelligence</td><td><span class="cross">✕</span> Manual records</td><td><span class="check">✓</span> AI-driven analytics</td></tr>
+          <tr><td>Downtime impact</td><td><span class="cross">✕</span> High downtime</td><td><span class="check">✓</span> Optimised efficiency</td></tr>
+          <tr><td>Operational cost</td><td><span class="cross">✕</span> Recurring labour</td><td><span class="check">✓</span> Long-term ROI</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANY -->
+<section id="company" class="section-dark" data-screen-label="09 Company">
+  <div class="wrap">
+    <div class="company-split">
+      <div class="reveal">
+        <div class="eyebrow light">About ARNOBOT</div>
+        <h2 class="display-xl" style="color:var(--white);margin-bottom:32px;">Transforming how critical assets are inspected.</h2>
+        <p class="body-copy light">With a strong foundation in unmanned ground vehicles, defence engineering, and automation, ARNOBOT builds robust robotic systems designed for extreme environments — backed by a vision to become India's leading robotics partner.</p>
+        <div class="mission-block" style="margin-top:40px;">
+          <div class="mission-q">Mission</div>
+          <div class="mission-text">To make industrial maintenance safer, smarter, and more efficient through intelligent robotics.</div>
+        </div>
+      </div>
+      <div class="reveal reveal-d1">
+        <div class="eyebrow light">Core Values</div>
+        <div class="values-list" id="valuesMount"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREERS -->
+<section id="careers" class="section-dark" data-screen-label="10 Careers" style="padding-top:0;">
+  <div class="wrap" style="border-top:1px solid rgba(255,255,255,0.06);padding-top:80px;">
+    <div class="careers-intro">
+      <div class="reveal">
+        <div class="eyebrow light">Join the Team</div>
+        <h2 class="display-xl" style="color:var(--white);">Build robots that matter.</h2>
+      </div>
+      <p class="body-copy light reveal reveal-d1">We're looking for engineers, designers, and builders who want to work on machines that operate where humans can't.</p>
+    </div>
+    <div class="jobs-list reveal" id="jobsMount"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section-white" data-screen-label="11 Contact">
+  <div class="wrap">
+    <div class="contact-split">
+      <div class="reveal">
+        <div class="eyebrow">Get in Touch</div>
+        <h2 class="display-lg" style="margin-bottom:0;">Ready to deploy smarter robotics?</h2>
+        <div class="contact-detail">
+          G-2, Parul Apartments, Satellite Road,<br/>
+          Ahmedabad – 380015, India<br/><br/>
+          <a href="mailto:info.arnobot@gmail.com">info.arnobot@gmail.com</a><br/>
+          <a href="tel:+919925512860">+91 99255 12860</a>
+        </div>
+        <div class="contact-socials">
+          <a href="https://www.linkedin.com/company/arnobot/" target="_blank" class="social-link">
+            LinkedIn
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </a>
+          <a href="https://www.instagram.com/robots_arnobot/" target="_blank" class="social-link">
+            Instagram
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="reveal reveal-d1">
+        <form class="form" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input class="form-field" type="text" placeholder="Rajesh" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input class="form-field" type="text" placeholder="Sharma" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-field" type="email" placeholder="you@company.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Organisation</label>
+            <input class="form-field" type="text" placeholder="BHEL / Indian Navy / etc." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Inquiry</label>
+            <select class="form-field">
+              <option>Schedule a Consultation</option>
+              <option>Request a Demo</option>
+              <option>Book Site Assessment</option>
+              <option>Partnership / Distribution</option>
+              <option>Defence Procurement</option>
+              <option>General Inquiry</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-field" placeholder="Tell us about your operational requirements…" required></textarea>
+          </div>
+          <div class="form-ok" id="formOk">Message sent — we'll be in touch shortly.</div>
+          <button type="submit" class="btn-submit">Send Message →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer data-screen-label="12 Footer">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:flex-start;gap:3px;margin-bottom:24px;">
+        <img src="uploads/arnobot-logo-cropped.png" alt="ARNOBOT" style="height:36px;width:auto;filter:brightness(0) invert(1);" />
+        <span style="font-family:var(--font-display);font-size:13px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:3px;line-height:1;">™</span>
+      </div>
+      <p class="footer-brand-desc" style="color: rgb(255, 255, 255); font-size: 14px">Intelligent automation for defence, industrial inspection, and mission-critical environments. Made in India.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-head" style="font-size: 14px; color: rgb(217, 217, 217); height: 30px">Products</div>
+      <ul>
+        <li><a href="#products">SAIBYA – UGV</a></li>
+        <li><a href="#products">NEXUS – Tactical</a></li>
+        <li><a href="#products">ALTIUS – Climbing</a></li>
+        <li><a href="#products">ATM – Any Terrain Machine</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-head" style="font-size: 14px; color: rgb(211, 211, 211)">Company</div>
+      <ul>
+        <li><a href="#company">About</a></li>
+        <li><a href="#technology">Technology</a></li>
+        <li><a href="#industries">Industries</a></li>
+        <li><a href="#careers">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-head" style="font-size: 14px; color: rgb(211, 211, 211)">Connect</div>
+      <ul>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="https://www.linkedin.com/company/arnobot/" target="_blank">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/robots_arnobot/" target="_blank">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 ARNOBOT. All rights reserved.</span>
+    <span class="footer-india">Made in India 🇮🇳</span>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="productModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <button class="modal-close-btn" id="modalClose">✕</button>
+      <div id="modalEyebrow" style="font-family:var(--font-display);font-size:11px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue-light);margin-bottom:12px;"></div>
+      <div id="modalName" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--white);letter-spacing:-0.01em;margin-bottom:12px;"></div>
+      <div id="modalDesc" style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.7;"></div>
+    </div>
+    <div class="modal-body">
+      <div style="font-family:var(--font-display);font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:14px;">Key Features</div>
+      <div class="modal-features-grid" id="modalFeatures"></div>
+      <div style="font-family:var(--font-display);font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:24px 0 14px;">Applications</div>
+      <div class="app-chips" id="modalApps"></div>
+      <div style="margin-top:32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <a href="#contact" class="btn-hero-primary" style="font-size:11px;" onclick="document.getElementById('productModal').classList.remove('open')">Request a Demo →</a>
+        <div id="modalBrochure" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REACT -->
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const PRODUCTS = [
+  { id:'saibya', num:'01', name:'SAIBYA', type:'Heavy-Duty UGV', desc:'Robots for the future. A rugged, EV-based unmanned ground vehicle with stair-climbing capability — built for defence logistics, hazardous transport, and mission-critical ground operations.', img:window.__resources.imgSaibya, brochure:window.__resources.brochureSaibya, features:['EV-based mobility','Stair climbing capability','Wireless drive','Rugged design','Supports access to advancements','Modular attachment system'], apps:['Defence Logistics','Ammunition Carriage','Industrial Handling','Disaster Response','Hazardous Zone Ops'] },
+  { id:'nexus', num:'02', name:'NEXUS', type:'Compact Tactical Robot', desc:'Ultra-lightweight tracked tactical robot for surveillance, reconnaissance, and rapid deployment in high-risk environments.', img:window.__resources.imgNexus, brochure:null, features:['Ultra-lightweight compact build','HD camera system','Remote tactical control','Rapid deployment','Low acoustic signature'], apps:['Defence Surveillance','Tactical Recon','Indoor Security','Border Monitoring','High-risk Scouting'] },
+  { id:'altius', num:'03', name:'ALTIUS', type:'Vertical Climbing Robot', desc:'Robots that climb. An EV-based, waterproof magnetic climbing robot with cloud-based monitoring — built for inspection and cleaning of ferromagnetic surfaces in maritime, oil & gas, and manufacturing.', img:window.__resources.imgAltius, brochure:window.__resources.brochureAltius, features:['Magnetic wall climbing (IP-65)','EV-based & wireless drive','Multiple payload support','Cloud-based monitoring platform','Continuous power from station','Modular tool capability'], apps:['Ship Hull Inspection','Oil & Gas','Manufacturing Inspection','Maritime Cleaning','Infrastructure Monitoring'] },
+  { id:'atm', num:'04', name:'ATM', type:'Any Terrain Machine', desc:"ARNOBOT's versatile unmanned ground vehicle engineered for reliable payload transport across slopes, stairs, and desert sands. Available in Remote, Semi-autonomous, and fully Autonomous variants.", img:window.__resources.imgAtm, brochure:null, features:['140×90×90 cm frame · 150 kg weight','Up to 500 kg payload capacity','90 mm ground clearance','Front & rear suspension','Rear wheel drive','60V 45Ah LFP battery · Autonomous available'], apps:['Surveillance','Defence Logistics','Towing','Grass Cutting','Search & Rescue','Industrial Transport'] }
+];
+
+const INDUSTRIES = [
+  { name:'Defence & Military', tag:'Primary Sector' },
+  { name:'Oil & Gas', tag:'Industrial' },
+  { name:'Maritime & Naval', tag:'Industrial' },
+  { name:'Power Generation', tag:'Infrastructure' },
+  { name:'Heavy Manufacturing', tag:'Industrial' },
+  { name:'Disaster Response', tag:'Emergency' },
+  { name:'Smart Infrastructure', tag:'Infrastructure' },
+  { name:'Homeland Security', tag:'Defence' }
+];
+
+const TECH_CELLS = [
+  { icon:'👁', title:'Computer Vision', desc:'Real-time defect detection and visual analytics on industrial and ferromagnetic surfaces.' },
+  { icon:'📡', title:'Sensor Fusion', desc:'Multi-sensor integration — LiDAR, IMU, ultrasonic, and thermal data combined.' },
+  { icon:'🧭', title:'Autonomous Nav', desc:'Semi and fully autonomous path planning for complex unstructured terrain.' },
+  { icon:'☁', title:'Cloud Dashboard', desc:'Centralised remote monitoring, live telemetry, and data analytics.' }
+];
+
+const VALUES = ['Engineering Excellence','Safety First','Client-Centric Innovation','Data-Driven Decisions','Made in India'];
+
+const JOBS = [
+  { title:'Robotics Software Engineer', dept:'Engineering', type:'Full-time', loc:'Ahmedabad' },
+  { title:'Mechanical Design Engineer (UGV)', dept:'Hardware', type:'Full-time', loc:'Ahmedabad' },
+  { title:'Computer Vision Engineer', dept:'AI / ML', type:'Full-time', loc:'Ahmedabad' },
+  { title:'Business Development Manager', dept:'Sales', type:'Full-time', loc:'Pan India' },
+  { title:'Embedded Systems Engineer', dept:'Engineering', type:'Full-time', loc:'Ahmedabad' }
+];
+
+const CREDS = ['DPIIT','MSME','DGFT','SSIP','iHUB','KPGU'];
+
+/* ── PRODUCT ROWS ─────── */
+function ProductRows({ onOpen }) {
+  return (
+    <div className="products-scroll">
+      {PRODUCTS.map((p) => (
+        <div key={p.id} className="product-row reveal" onClick={() => onOpen(p)}>
+          <div className="product-visual">
+            {p.img ? (
+              <>
+                <div style={{
+                  position:'absolute', inset:0,
+                  background:'#0d0d0d',
+                  zIndex:0
+                }}></div>
+                <img
+                  src={p.img}
+                  alt={p.name}
+                  style={{
+                    position:'relative', zIndex:1,
+                    width: p.id === 'atm' ? '100%' : '80%',
+                    height: p.id === 'atm' ? '100%' : '80%',
+                    objectFit: p.id === 'atm' ? 'cover' : 'contain', objectPosition:'center',
+                    opacity:0.92,
+                    transition:'opacity 0.4s, transform 0.4s',
+                    filter: p.id === 'atm' ? 'brightness(0.85) saturate(0.9)' : 'none'
+                  }}
+                />
+              </>
+            ) : (
+              <div className="product-visual-inner">
+                <div className="product-ph-icon">🦾</div>
+                <div className="product-ph-label">{p.name} robot render</div>
+              </div>
+            )}
+          </div>
+          <div className="product-info">
+            <div className="product-num">{p.num}</div>
+            <div className="product-type">{p.type}</div>
+            <div className="product-desc">{p.desc}</div>
+            <button className="product-cta">
+              Learn More
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── TECH CELLS ─────── */
+function TechCells() {
+  return (
+    <>
+      {TECH_CELLS.map((c) => (
+        <div key={c.title} className="tech-cell">
+          <div className="tech-cell-icon">{c.icon}</div>
+          <div className="tech-cell-title">{c.title}</div>
+          <div className="tech-cell-desc">{c.desc}</div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+/* ── INDUSTRIES LIST ─────── */
+function IndustriesList() {
+  return (
+    <>
+      {INDUSTRIES.map((ind, i) => (
+        <div key={ind.name} className="industry-row">
+          <div className="industry-row-left">
+            <span className="industry-idx">{String(i+1).padStart(2,'0')}</span>
+            <span className="industry-name-row">{ind.name}</span>
+          </div>
+          <span className="industry-tag">{ind.tag}</span>
+        </div>
+      ))}
+    </>
+  );
+}
+
+/* ── VALUES ─────── */
+function ValuesList() {
+  return (
+    <>
+      {VALUES.map((v, i) => (
+        <div key={v} className="value-row">
+          <span className="value-label">{v}</span>
+          <span className="value-n">{String(i+1).padStart(2,'0')}</span>
+        </div>
+      ))}
+    </>
+  );
+}
+
+/* ── JOBS ─────── */
+function JobsList() {
+  return (
+    <>
+      {JOBS.map((j) => (
+        <div key={j.title} className="job-row" onClick={() => document.getElementById('contact').scrollIntoView({behavior:'smooth'})}>
+          <div>
+            <div className="job-title">{j.title}</div>
+            <div className="job-meta">
+              <span className="job-chip">{j.dept}</span>
+              <span className="job-chip">{j.type}</span>
+              <span className="job-chip">{j.loc}</span>
+            </div>
+          </div>
+          <svg className="job-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      ))}
+    </>
+  );
+}
+
+/* ── TWEAKS ─────── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#3a5ea0",
+  "heroLine2": "Redefined."
+}/*EDITMODE-END*/;
+
+/* ── APP ─────── */
+function App() {
+  const [modal, setModal] = useState(null);
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  // Modal DOM
+  useEffect(() => {
+    const overlay = document.getElementById('productModal');
+    if (modal) {
+      document.getElementById('modalEyebrow').textContent = modal.type;
+      document.getElementById('modalName').textContent = modal.type;
+      document.getElementById('modalDesc').textContent = modal.desc;
+      document.getElementById('modalFeatures').innerHTML = modal.features.map(f=>`<div class="mf-item">${f}</div>`).join('');
+      document.getElementById('modalApps').innerHTML = modal.apps.map(a=>`<div class="app-chip">${a}</div>`).join('');
+      // Brochure button
+      const brochureEl = document.getElementById('modalBrochure');
+      if (modal.brochure) {
+        brochureEl.innerHTML = `<a href="${modal.brochure}" download target="_blank" style="display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.5);text-decoration:none;border:1px solid rgba(255,255,255,0.15);padding:10px 20px;transition:all 0.2s;" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,0.4)'" onmouseout="this.style.color='rgba(255,255,255,0.5)';this.style.borderColor='rgba(255,255,255,0.15)'">↓ Download Brochure</a>`;
+        brochureEl.style.display = 'block';
+      } else {
+        brochureEl.style.display = 'none';
+      }
+      overlay.classList.add('open');
+    } else {
+      overlay.classList.remove('open');
+    }
+  }, [modal]);
+
+  useEffect(() => {
+    const o = document.getElementById('productModal');
+    const cl = document.getElementById('modalClose');
+    const onBg = (e) => { if (e.target === o) setModal(null); };
+    const onCl = () => setModal(null);
+    o.addEventListener('click', onBg);
+    cl.addEventListener('click', onCl);
+    return () => { o.removeEventListener('click', onBg); cl.removeEventListener('click', onCl); };
+  }, []);
+
+  // Tweaks
+  useEffect(() => {
+    document.documentElement.style.setProperty('--blue-light', t.accentColor);
+  }, [t.accentColor]);
+
+  useEffect(() => {
+    const span = document.querySelector('.hero-h1 span');
+    if (span) span.textContent = t.heroLine2;
+  }, [t.heroLine2]);
+
+  // Render sub-trees
+  useEffect(() => {
+    const pm = document.getElementById('productsMount');
+    if (pm) ReactDOM.createRoot(pm).render(<ProductRows onOpen={setModal} />);
+    const tm = document.getElementById('techMount');
+    if (tm) ReactDOM.createRoot(tm).render(<TechCells />);
+    const im = document.getElementById('industriesMount');
+    if (im) ReactDOM.createRoot(im).render(<IndustriesList />);
+    const vm = document.getElementById('valuesMount');
+    if (vm) ReactDOM.createRoot(vm).render(<ValuesList />);
+    const jm = document.getElementById('jobsMount');
+    if (jm) ReactDOM.createRoot(jm).render(<JobsList />);
+    const cm = document.getElementById('credsMount');
+    if (cm) ReactDOM.createRoot(cm).render(
+      <>{CREDS.map(c => <div key={c} className="cred-pill">{c}</div>)}</>
+    );
+    // Re-observe all reveal elements after React renders
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.in)').forEach(el => window.revealObs && window.revealObs.observe(el));
+    }, 200);
+  }, []);
+
+  return (
+    <TweaksPanel>
+      <TweakColor label="Accent Color" value={t.accentColor} onChange={v => setTweak('accentColor', v)} />
+      <TweakText label="Hero Line 2" value={t.heroLine2} onChange={v => setTweak('heroLine2', v)} />
+    </TweaksPanel>
+  );
+}
+
+const appDiv = document.createElement('div');
+document.body.appendChild(appDiv);
+ReactDOM.createRoot(appDiv).render(<App />);
+</script>
+
+<!-- HERO CANVAS ANIMATION -->
+<script>
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const W = () => canvas.width;
+  const H = () => canvas.height;
+  let t = 0;
+
+  // ── RADAR ──────────────────────────────────────
+  const RADAR_R = () => Math.min(W(), H()) * 0.32;
+
+  // Target blips on radar
+  const blips = [
+    { angle: 0.8,  dist: 0.45, label: 'TGT-01', type: 'FRIENDLY' },
+    { angle: 2.1,  dist: 0.7,  label: 'TGT-02', type: 'HOSTILE'  },
+    { angle: 3.8,  dist: 0.55, label: 'TGT-03', type: 'FRIENDLY' },
+    { angle: 5.0,  dist: 0.3,  label: 'TGT-04', type: 'UNKNOWN'  },
+    { angle: 1.3,  dist: 0.82, label: 'TGT-05', type: 'FRIENDLY' },
+    { angle: 4.4,  dist: 0.65, label: 'TGT-06', type: 'HOSTILE'  },
+  ];
+
+  // Grid dots (topographic-style)
+  const gridDots = Array.from({length: 120}, () => ({
+    x: Math.random(), y: Math.random(),
+    alpha: Math.random() * 0.3 + 0.05,
+    size: Math.random() * 1.2 + 0.3
+  }));
+
+  // Horizontal data lines
+  const hLines = Array.from({length: 18}, (_, i) => ({
+    y: i / 18 + Math.random() * 0.02,
+    x: Math.random(),
+    speed: (Math.random() > 0.5 ? 1 : -1) * (0.0004 + Math.random() * 0.0006),
+    w: 60 + Math.random() * 180,
+    alpha: 0.08 + Math.random() * 0.14
+  }));
+
+  // Corner reticles (4 corners)
+  const corners = [
+    { x: 0.12, y: 0.18, label: 'SECTOR ALPHA', val: 'CLEAR' },
+    { x: 0.88, y: 0.18, label: 'SECTOR BRAVO', val: 'ACTIVE' },
+    { x: 0.12, y: 0.82, label: 'SECTOR GAMMA', val: 'SCANNING' },
+    { x: 0.88, y: 0.82, label: 'SECTOR DELTA', val: 'CLEAR' },
+  ];
+
+  // ── DRAW FUNCTIONS ──────────────────────────────
+
+  function drawTopographicGrid() {
+    // Faint dot grid
+    gridDots.forEach(d => {
+      ctx.beginPath();
+      ctx.arc(d.x * W(), d.y * H(), d.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(167,188,227,${d.alpha})`;
+      ctx.fill();
+    });
+    // Major grid lines
+    const cols = 16, rows = 9;
+    ctx.strokeStyle = 'rgba(167,188,227,0.06)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= cols; i++) {
+      const x = (i / cols) * W();
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H()); ctx.stroke();
+    }
+    for (let i = 0; i <= rows; i++) {
+      const y = (i / rows) * H();
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W(), y); ctx.stroke();
+    }
+  }
+
+  function drawHorizontalStreaks() {
+    hLines.forEach(l => {
+      l.x += l.speed;
+      if (l.x > 1.3) l.x = -0.3;
+      if (l.x < -0.3) l.x = 1.3;
+      const x = l.x * W(), y = l.y * H();
+      const g = ctx.createLinearGradient(x, 0, x + l.w, 0);
+      g.addColorStop(0, 'rgba(167,188,227,0)');
+      g.addColorStop(0.4, `rgba(167,188,227,${l.alpha})`);
+      g.addColorStop(1, 'rgba(167,188,227,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(x, y, l.w, 1);
+    });
+  }
+
+  function drawRadar() {
+    const cx = W() * 0.72, cy = H() * 0.45;
+    const R = RADAR_R();
+    const sweep = (t * 0.018) % (Math.PI * 2);
+
+    // Outer ring glow
+    const glow = ctx.createRadialGradient(cx, cy, R * 0.85, cx, cy, R * 1.05);
+    glow.addColorStop(0, 'rgba(167,188,227,0.12)');
+    glow.addColorStop(1, 'rgba(167,188,227,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath(); ctx.arc(cx, cy, R * 1.05, 0, Math.PI * 2); ctx.fill();
+
+    // Concentric rings
+    [1, 0.75, 0.5, 0.25].forEach((scale, i) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, R * scale, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(167,188,227,${0.18 - i * 0.03})`;
+      ctx.lineWidth = i === 0 ? 1.5 : 0.75;
+      ctx.stroke();
+    });
+
+    // Cross hairs
+    ctx.strokeStyle = 'rgba(167,188,227,0.12)';
+    ctx.lineWidth = 0.75;
+    ctx.setLineDash([4, 8]);
+    ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Sweep gradient
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(sweep);
+    const sweepGrad = ctx.createConicalGradient ? null : null;
+    // Manual sweep wedge
+    const wedgeAngle = Math.PI * 0.45;
+    const grad = ctx.createLinearGradient(0, 0, R, 0);
+    grad.addColorStop(0, 'rgba(167,188,227,0.35)');
+    grad.addColorStop(1, 'rgba(167,188,227,0)');
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, R, -wedgeAngle, 0);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Sweep line
+    ctx.strokeStyle = 'rgba(167,188,227,0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(R, 0); ctx.stroke();
+    ctx.restore();
+
+    // Clip to circle for blips
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+
+    // Blips
+    blips.forEach((b, i) => {
+      const bx = cx + Math.cos(b.angle) * b.dist * R;
+      const by = cy + Math.sin(b.angle) * b.dist * R;
+      const angleDiff = ((sweep - b.angle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+      const fadeAlpha = angleDiff < 0.3 ? 1 : Math.max(0, 1 - (angleDiff / (Math.PI * 1.5)));
+
+      if (fadeAlpha > 0.05) {
+        const color = b.type === 'HOSTILE' ? `rgba(255,100,100,${fadeAlpha})`
+                    : b.type === 'UNKNOWN' ? `rgba(255,220,100,${fadeAlpha})`
+                    : `rgba(167,188,227,${fadeAlpha})`;
+
+        // Ping ripple
+        if (angleDiff < 0.4) {
+          ctx.beginPath();
+          ctx.arc(bx, by, 8 + angleDiff * 20, 0, Math.PI * 2);
+          ctx.strokeStyle = color.replace(`${fadeAlpha}`, `${fadeAlpha * 0.3}`);
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.arc(bx, by, 3, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = color;
+        ctx.font = '500 8px Syne';
+        ctx.fillText(b.label, bx + 6, by - 4);
+        ctx.font = '300 7px DM Sans';
+        ctx.fillStyle = color.replace(`${fadeAlpha}`, `${fadeAlpha * 0.6}`);
+        ctx.fillText(b.type, bx + 6, by + 5);
+      }
+    });
+    ctx.restore();
+
+    // Radar label
+    ctx.fillStyle = 'rgba(167,188,227,0.35)';
+    ctx.font = '600 9px Syne';
+    ctx.textAlign = 'center';
+    ctx.fillText('GROUND SURVEILLANCE · ACTIVE', cx, cy + R + 18);
+    ctx.font = '300 8px DM Sans';
+    ctx.fillStyle = 'rgba(167,188,227,0.2)';
+    ctx.fillText(`RANGE: 5KM  ·  AZ: ${Math.floor(sweep * 180 / Math.PI).toString().padStart(3,'0')}°`, cx, cy + R + 30);
+    ctx.textAlign = 'left';
+  }
+
+  function drawLeftPanel() {
+    const px = W() * 0.06, py = H() * 0.25;
+
+    // Title
+    ctx.fillStyle = 'rgba(167,188,227,0.6)';
+    ctx.font = '700 11px Syne';
+    ctx.fillText('MISSION STATUS', px, py);
+
+    const items = [
+      { label: 'UNITS DEPLOYED', val: '04' },
+      { label: 'AREA COVERED',   val: '12.4 KM²' },
+      { label: 'THREATS DETECTED', val: '02' },
+      { label: 'UPTIME',          val: '99.7%' },
+      { label: 'SIGNAL',          val: 'SECURE' },
+    ];
+
+    items.forEach((item, i) => {
+      const y = py + 24 + i * 28;
+      // Row bg
+      ctx.fillStyle = `rgba(167,188,227,0.03)`;
+      ctx.fillRect(px - 4, y - 12, 180, 20);
+
+      ctx.fillStyle = 'rgba(167,188,227,0.3)';
+      ctx.font = '300 8px DM Sans';
+      ctx.fillText(item.label, px, y);
+      ctx.fillStyle = 'rgba(167,188,227,0.8)';
+      ctx.font = '600 10px Syne';
+      ctx.fillText(item.val, px + 185, y);
+
+      // Progress bar for some
+      if (i < 4) {
+        ctx.fillStyle = 'rgba(167,188,227,0.08)';
+        ctx.fillRect(px, y + 4, 160, 2);
+        const pct = [1, 0.62, 0.2, 0.997][i];
+        ctx.fillStyle = i === 2 ? 'rgba(255,100,100,0.5)' : 'rgba(167,188,227,0.4)';
+        ctx.fillRect(px, y + 4, 160 * pct, 2);
+      }
+    });
+
+    // Divider
+    ctx.strokeStyle = 'rgba(167,188,227,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px - 8, py + 175);
+    ctx.lineTo(px + 200, py + 175);
+    ctx.stroke();
+
+    // Coordinates
+    ctx.fillStyle = 'rgba(167,188,227,0.4)';
+    ctx.font = '600 9px Syne';
+    ctx.fillText('POSITION', px, py + 192);
+    ctx.fillStyle = 'rgba(167,188,227,0.6)';
+    ctx.font = '300 9px DM Sans';
+    ctx.fillText('23.0225° N  72.5714° E', px, py + 206);
+    ctx.fillText(`ALT 52m  HDG ${String(Math.floor(t*0.05 % 360)).padStart(3,'0')}°`, px, py + 220);
+  }
+
+  function drawCornerBrackets() {
+    corners.forEach((c, i) => {
+      const x = c.x * W(), y = c.y * H();
+      const s = 28;
+      const phase = Math.sin(t * 0.015 + i * 1.2);
+      const alpha = 0.25 + 0.15 * phase;
+
+      ctx.strokeStyle = `rgba(167,188,227,${alpha})`;
+      ctx.lineWidth = 1.5;
+      [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(([sx,sy]) => {
+        ctx.beginPath();
+        ctx.moveTo(x + sx*s, y + sy*s - sy*10);
+        ctx.lineTo(x + sx*s, y + sy*s);
+        ctx.lineTo(x + sx*s - sx*10, y + sy*s);
+        ctx.stroke();
+      });
+
+      ctx.fillStyle = `rgba(167,188,227,${alpha + 0.1})`;
+      ctx.font = '500 8px Syne';
+      ctx.textAlign = i % 2 === 0 ? 'left' : 'right';
+      const lx = i % 2 === 0 ? x - s - 2 : x + s + 2;
+      ctx.fillText(c.label, lx, y - s - 6);
+      ctx.fillStyle = `rgba(167,188,227,${alpha * 0.7})`;
+      ctx.font = '300 7px DM Sans';
+      ctx.fillText(c.val, lx, y - s + 4);
+      ctx.textAlign = 'left';
+    });
+  }
+
+  function drawScanLine() {
+    const y = (t * 0.25) % H();
+    const g = ctx.createLinearGradient(0, y-30, 0, y+30);
+    g.addColorStop(0, 'rgba(167,188,227,0)');
+    g.addColorStop(0.5, 'rgba(167,188,227,0.08)');
+    g.addColorStop(1, 'rgba(167,188,227,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, y-30, W(), 60);
+    ctx.strokeStyle = 'rgba(167,188,227,0.18)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W(),y); ctx.stroke();
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W(), H());
+    drawTopographicGrid();
+    drawHorizontalStreaks();
+    drawScanLine();
+    drawRadar();
+    drawLeftPanel();
+    drawCornerBrackets();
+    t++;
+    requestAnimationFrame(frame);
+  }
+
+  frame();
+})();
+</script>
+
+<!-- INTELLIGENCE CANVAS -->
+<script src="intelligence-canvas.js" data-resource-id="intelligenceCanvas"></script>
+
+<!-- PLAIN JS -->
+<script>
+  // Nav solid on scroll
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('solid', window.scrollY > 40);
+  }, { passive: true });
+
+  // Reveal on scroll
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target); }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+  window.revealObs = revealObs;
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+  // Fallback: re-observe after short delay for React-rendered elements
+  [400, 800, 1400].forEach(delay => {
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.in)').forEach(el => revealObs.observe(el));
+    }, delay);
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); window.scrollTo({ top: t.offsetTop - 80, behavior: 'smooth' }); }
+    });
+  });
+
+  // Contact form
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('formOk').classList.add('show');
+    this.querySelectorAll('input,textarea,select').forEach(f => f.value = '');
+    setTimeout(() => document.getElementById('formOk').classList.remove('show'), 5000);
+  });
+</script>
+
+</body>
+</html>
