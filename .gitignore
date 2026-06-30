@@ -9,3 +9,8 @@ yarn-error.log*
 .pnp.js
 
 .vscode/*
+
+# OS / test artifacts
+.DS_Store
+hero.jpeg
+.playwright-mcp/
