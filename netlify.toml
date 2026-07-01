@@ -1,0 +1,15 @@
+# Netlify build config. The Next.js app lives in the web/ subdirectory, so
+# builds run from there (the repo root has no package.json).
+[build]
+  base = "web"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16 requires a modern Node runtime.
+  NODE_VERSION = "22"
+
+# Runs the Next.js App Router on Netlify: SSR pages + /api/* route handlers
+# become serverless functions. Netlify installs this automatically.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
