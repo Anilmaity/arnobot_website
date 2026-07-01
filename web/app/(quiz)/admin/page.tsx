@@ -228,6 +228,18 @@ function ApplicantsTab({
   onRefresh: () => void;
 }) {
   const [open, setOpen] = useState<string | null>(null);
+
+  async function del(a: Applicant) {
+    if (
+      !confirm(
+        `Delete ${a.name || a.email}'s application?\n\nThis permanently removes their result and resume.`
+      )
+    )
+      return;
+    await fetch(`/api/admin/applicants?id=${encodeURIComponent(a.id)}`, { method: "DELETE" });
+    onRefresh();
+  }
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
@@ -255,12 +267,13 @@ function ApplicantsTab({
                 <th className="px-4 py-3">Result</th>
                 <th className="px-4 py-3">Resume</th>
                 <th className="px-4 py-3">Completed</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
               {applicants.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-muted">
+                  <td colSpan={7} className="px-4 py-10 text-center text-muted">
                     No applicants yet.
                   </td>
                 </tr>
@@ -328,10 +341,19 @@ function ApplicantsTab({
                     <td className="px-4 py-3 text-xs text-muted">
                       {a.completedAt ? new Date(a.completedAt).toLocaleString() : "—"}
                     </td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => del(a)}
+                        className="text-xs font-medium text-bad hover:underline"
+                        title="Delete this application"
+                      >
+                        delete
+                      </button>
+                    </td>
                   </tr>
                   {open === a.id && (
                     <tr className="border-b border-line bg-surfaceAlt/50">
-                      <td colSpan={6} className="px-5 py-4">
+                      <td colSpan={7} className="px-5 py-4">
                         <div className="grid sm:grid-cols-3 gap-x-8 gap-y-2.5 text-sm">
                           <Detail label="Applying for" value={a.role} />
                           <Detail label="Birth year" value={a.birthYear} />

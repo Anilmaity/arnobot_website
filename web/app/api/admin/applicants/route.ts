@@ -135,6 +135,17 @@ export async function GET(req: NextRequest) {
   });
 }
 
+export async function DELETE(req: NextRequest) {
+  if (!isAdmin(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  await ensureDb();
+  const id = String(new URL(req.url).searchParams.get("id") || "");
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+  await sql`DELETE FROM applicants WHERE id = ${id}`;
+  return NextResponse.json({ ok: true });
+}
+
 function csvCell(v: unknown): string {
   const s = String(v ?? "");
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
