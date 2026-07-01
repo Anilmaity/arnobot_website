@@ -17,6 +17,7 @@ type Row = {
   degree: string | null;
   cgpa: string | null;
   projects: string | null;
+  role: string | null;
   resume_name: string | null;
   status: string;
   score: number | null;
@@ -36,7 +37,7 @@ export async function GET(req: NextRequest) {
 
   const rows = await sql<Row[]>`
     SELECT id, email, name, phone, address, place, birth_year, grad_year,
-           college, degree, cgpa, projects, resume_name, status, score, total,
+           college, degree, cgpa, projects, role, resume_name, status, score, total,
            passed, breakdown, started_at, completed_at, created_at
     FROM applicants
     ORDER BY created_at DESC
@@ -55,6 +56,7 @@ export async function GET(req: NextRequest) {
       "College",
       "Degree",
       "CGPA/Marks",
+      "Role",
       "Status",
       "Score",
       "Total",
@@ -76,6 +78,7 @@ export async function GET(req: NextRequest) {
         r.college ?? "",
         r.degree ?? "",
         r.cgpa ?? "",
+        r.role ?? "",
         r.status,
         r.score ?? "",
         r.total ?? "",
@@ -117,6 +120,7 @@ export async function GET(req: NextRequest) {
       degree: r.degree,
       cgpa: r.cgpa,
       projects: r.projects,
+      role: r.role,
       resumeName: r.resume_name,
       status: r.status,
       score: r.score,

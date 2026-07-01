@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArnobotLogo, Diamonds } from "./Brand";
 
-type Step = "login" | "resume" | "profile" | "exam" | "result" | "blocked";
+type Step = "login" | "role" | "resume" | "profile" | "exam" | "result";
+
+type RoleOption = { id: string; name: string; skills: string[] };
 
 type Question = {
   id: number;
@@ -64,15 +66,18 @@ export default function ScreeningApp() {
   const [email, setEmail] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
+  const [roles, setRoles] = useState<RoleOption[]>([]);
+  const [roleId, setRoleId] = useState<string>("");
   const [missing, setMissing] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [blockedMsg, setBlockedMsg] = useState("");
+  const [leftExam, setLeftExam] = useState(false); // exam ended by leaving the tab
 
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const answersRef = useRef<Record<string, number>>({});
+  const endingRef = useRef(false); // guards single-fire when the exam tab is left
   const [result, setResult] = useState<Result | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
@@ -104,17 +109,21 @@ export default function ScreeningApp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: v }),
       });
-      const data = await res.json();
-      if (data.alreadyCompleted) {
-        setBlockedMsg(
-          "This email has already completed the assessment. Each candidate may attempt it only once."
-        );
-        setStep("blocked");
-        return;
-      }
+      await res.json().catch(() => null);
+      // Retakes are allowed — proceed regardless of any prior completion.
       setEmail(v);
       setProfile((p) => ({ ...p, email: v }));
-      setStep("resume");
+      // Load selectable roles; skip the role step if none are configured.
+      try {
+        const rr = await fetch("/api/roles");
+        const rd = await rr.json();
+        const list: RoleOption[] = Array.isArray(rd?.roles) ? rd.roles : [];
+        setRoles(list);
+        setStep(list.length ? "role" : "resume");
+      } catch {
+        setRoles([]);
+        setStep("resume");
+      }
     } catch {
       setError("Couldn't reach the server. Please try again.");
     } finally {
@@ -137,11 +146,6 @@ export default function ScreeningApp() {
       const res = await fetch("/api/resume/parse", { method: "POST", body: fd });
       const data = await res.json();
       if (!res.ok) {
-        if (data.alreadyCompleted) {
-          setBlockedMsg(data.error);
-          setStep("blocked");
-          return;
-        }
         setError(data.error || "Could not process the resume.");
         return;
       }
@@ -165,8 +169,53 @@ export default function ScreeningApp() {
     }
   }
 
+  // ── Start / restart the exam ─────────────────────────────────────
+  const startExam = useCallback(async () => {
+    setError("");
+    setBusy(true);
+    try {
+      const res = await fetch("/api/quiz/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, profile, roleId }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (data.missing) setMissing(new Set(data.missing));
+        if (data.roleGone) {
+          // Role was removed mid-flow — reload roles and re-pick.
+          try {
+            const rr = await fetch("/api/roles");
+            const rd = await rr.json();
+            setRoles(Array.isArray(rd?.roles) ? rd.roles : []);
+          } catch {
+            /* ignore */
+          }
+          setRoleId("");
+          setStep("role");
+        }
+        setError(data.error || "Could not start the assessment.");
+        return;
+      }
+      const q: QuizData = data;
+      setQuiz(q);
+      answersRef.current = {};
+      endingRef.current = false;
+      setLeftExam(false);
+      setResult(null);
+      setQIndex(0);
+      setSelected(null);
+      setTimeLeft(q.timeLimitMin > 0 ? q.timeLimitMin * 60 : null);
+      setStep("exam");
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  }, [email, profile, roleId]);
+
   // ── Profile → start exam ─────────────────────────────────────────
-  async function handleStartExam(e: React.FormEvent) {
+  function handleStartExam(e: React.FormEvent) {
     e.preventDefault();
     const miss = REQUIRED.filter((k) => !String(profile[k]).trim());
     const badYear =
@@ -176,38 +225,13 @@ export default function ScreeningApp() {
       setError("Please complete all required fields (marked *). Years must be 4 digits.");
       return;
     }
-    setError("");
-    setBusy(true);
-    try {
-      const res = await fetch("/api/quiz/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, profile }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        if (data.alreadyCompleted) {
-          setBlockedMsg(data.error);
-          setStep("blocked");
-          return;
-        }
-        if (data.missing) setMissing(new Set(data.missing));
-        setError(data.error || "Could not start the assessment.");
-        return;
-      }
-      const q: QuizData = data;
-      setQuiz(q);
-      answersRef.current = {};
-      setQIndex(0);
-      setSelected(null);
-      if (q.timeLimitMin > 0) setTimeLeft(q.timeLimitMin * 60);
-      setStep("exam");
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setBusy(false);
-    }
+    void startExam();
   }
+
+  // Retake keeps the confirmed profile, so it re-starts a fresh randomized exam.
+  const retake = useCallback(() => {
+    void startExam();
+  }, [startExam]);
 
   // ── Exam navigation (forward-only) ───────────────────────────────
   function next() {
@@ -255,8 +279,41 @@ export default function ScreeningApp() {
     [quiz, qIndex, selected]
   );
 
+  // ── End the exam if the candidate leaves the tab ─────────────────
+  // Switching tabs / minimising during the exam ends the attempt (auto-submits
+  // whatever was answered). Only armed while the exam is on screen.
+  useEffect(() => {
+    if (step !== "exam") return;
+    const onHidden = () => {
+      if (document.visibilityState === "hidden" && !endingRef.current) {
+        endingRef.current = true;
+        setLeftExam(true);
+        void submitExam(true);
+      }
+    };
+    document.addEventListener("visibilitychange", onHidden);
+    return () => document.removeEventListener("visibilitychange", onHidden);
+  }, [step, submitExam]);
+
+  // ── Block copy / cut / right-click while the exam is on screen ────
+  // Stops candidates lifting the question + options to paste into an AI.
+  useEffect(() => {
+    if (step !== "exam") return;
+    const block = (e: Event) => e.preventDefault();
+    document.addEventListener("copy", block);
+    document.addEventListener("cut", block);
+    document.addEventListener("contextmenu", block);
+    return () => {
+      document.removeEventListener("copy", block);
+      document.removeEventListener("cut", block);
+      document.removeEventListener("contextmenu", block);
+    };
+  }, [step]);
+
   const setField = (k: keyof Profile, v: string) =>
     setProfile((p) => ({ ...p, [k]: v }));
+
+  const roleName = roles.find((r) => r.id === roleId)?.name || "";
 
   // ── Shell ────────────────────────────────────────────────────────
   return (
@@ -325,10 +382,84 @@ export default function ScreeningApp() {
           </Centered>
         )}
 
+        {step === "role" && (
+          <Centered>
+            <div className="card p-7 sm:p-9 w-full max-w-2xl mx-auto animate-pop">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-steel">
+                Choose your role
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
+                Which role are you applying for?
+              </h1>
+              <p className="text-base text-body mt-2">
+                You&apos;ll be assessed on the skills required for the role you pick.
+              </p>
+              <div className="mt-6 grid gap-3">
+                {roles.map((r) => {
+                  const active = roleId === r.id;
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => {
+                        setError("");
+                        setRoleId(r.id);
+                      }}
+                      className={`text-left rounded-xl border-2 px-5 py-4 transition ${
+                        active
+                          ? "border-navy bg-navy/[0.04] ring-1 ring-navy/10"
+                          : "border-line bg-white hover:border-steel/60 hover:bg-surfaceAlt"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-lg font-semibold text-ink">{r.name}</span>
+                        <span
+                          className={`shrink-0 w-5 h-5 rounded-full border-2 grid place-items-center ${
+                            active ? "border-navy" : "border-line2"
+                          }`}
+                        >
+                          {active && <span className="w-2.5 h-2.5 rounded-full bg-navy" />}
+                        </span>
+                      </div>
+                      {r.skills.length > 0 && (
+                        <div className="mt-2.5 flex flex-wrap gap-1.5">
+                          {r.skills.map((s) => (
+                            <span
+                              key={s}
+                              className="text-xs font-medium rounded-full px-2.5 py-1 bg-surfaceAlt border border-line text-body"
+                            >
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+              {error && <div className="mt-3"><Err>{error}</Err></div>}
+              <div className="mt-6">
+                <PrimaryButton
+                  disabled={!roleId}
+                  onClick={() => {
+                    setError("");
+                    setStep("resume");
+                  }}
+                >
+                  Continue
+                </PrimaryButton>
+              </div>
+            </div>
+          </Centered>
+        )}
+
         {step === "resume" && (
           <Centered>
             <Card>
               <StepHead n={1} total={3} title="Upload your resume" />
+              {roleName && (
+                <div className="mt-2 text-sm font-medium text-steel">Applying for: {roleName}</div>
+              )}
               <p className="text-base text-body mt-2">
                 We'll read your resume to pre-fill your details. PDF, DOC or DOCX, up to 4 MB.
               </p>
@@ -405,7 +536,12 @@ export default function ScreeningApp() {
         )}
 
         {step === "exam" && quiz && (
-          <div className="max-w-3xl mx-auto">
+          <div
+            className="max-w-3xl mx-auto select-none"
+            onCopy={(e) => e.preventDefault()}
+            onCut={(e) => e.preventDefault()}
+            onContextMenu={(e) => e.preventDefault()}
+          >
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-medium text-muted">
                 Progress · {Math.round((qIndex / quiz.total) * 100)}%
@@ -429,7 +565,7 @@ export default function ScreeningApp() {
             {error && <div className="mt-3"><Err>{error}</Err></div>}
             <div className="mt-6 flex items-center justify-between">
               <span className="text-sm text-muted">
-                Forward-only · you can't return to previous questions
+                Forward-only · copying is disabled · leaving the tab ends the exam
               </span>
               <PrimaryButton inline disabled={selected === null || busy} onClick={next}>
                 {qIndex + 1 === quiz.total ? (busy ? "Submitting…" : "Submit assessment") : "Next"}
@@ -440,23 +576,11 @@ export default function ScreeningApp() {
 
         {step === "result" && result && (
           <Centered>
-            <ResultView result={result} name={profile.name} />
-          </Centered>
-        )}
-
-        {step === "blocked" && (
-          <Centered>
-            <Card>
-              <Brand
-                tone="bad"
-                title="Assessment already completed"
-                subtitle="ARNOBOT Screening Assistant"
-              />
-              <p className="text-base text-body mt-5">{blockedMsg}</p>
-              <p className="text-sm text-muted mt-3">
-                If you believe this is a mistake, please contact the ARNOBOT hiring team.
-              </p>
-            </Card>
+            {leftExam ? (
+              <EndedView onRetake={retake} busy={busy} />
+            ) : (
+              <ResultView result={result} name={profile.name} onRetake={retake} busy={busy} />
+            )}
           </Centered>
         )}
       </main>
@@ -657,7 +781,43 @@ function ExamQuestion({
   );
 }
 
-function ResultView({ result, name }: { result: Result; name: string }) {
+function EndedView({ onRetake, busy }: { onRetake: () => void; busy?: boolean }) {
+  return (
+    <div className="w-full max-w-md">
+      <Card>
+        <Brand
+          tone="bad"
+          title="Assessment ended"
+          subtitle="ARNOBOT Private Limited · Screening"
+        />
+        <p className="text-base text-body mt-5">
+          Your assessment ended because you switched away from the exam tab. To keep the
+          assessment fair, leaving the exam window ends the current attempt.
+        </p>
+        <p className="text-sm text-muted mt-3">
+          You can retake it below — please stay on this tab until you finish.
+        </p>
+        <div className="mt-6">
+          <PrimaryButton onClick={onRetake} disabled={busy}>
+            {busy ? "Starting…" : "Retake assessment"}
+          </PrimaryButton>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function ResultView({
+  result,
+  name,
+  onRetake,
+  busy,
+}: {
+  result: Result;
+  name: string;
+  onRetake: () => void;
+  busy?: boolean;
+}) {
   const first = name?.split(" ")[0] || "";
   return (
     <div className="w-full max-w-md">
@@ -709,7 +869,14 @@ function ResultView({ result, name }: { result: Result; name: string }) {
             ? `Thank you${first ? `, ${first}` : ""}! Our hiring team will review your profile and results and be in touch about next steps.`
             : "Thank you for completing the assessment. Your result and resume have been recorded for the ARNOBOT team."}
         </p>
-        <p className="text-xs text-muted mt-4 text-center">You may now close this window.</p>
+        <div className="mt-6">
+          <PrimaryButton onClick={onRetake} disabled={busy}>
+            {busy ? "Starting…" : "Retake assessment"}
+          </PrimaryButton>
+        </div>
+        <p className="text-xs text-muted mt-4 text-center">
+          You may retake the assessment or close this window.
+        </p>
       </Card>
     </div>
   );

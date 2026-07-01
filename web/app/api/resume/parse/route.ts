@@ -29,20 +29,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Resume is too large (max 4 MB)." }, { status: 400 });
     }
 
-    // One attempt per email.
+    // Retakes are allowed: a returning candidate (even one who previously
+    // completed) may re-upload and take the assessment again.
     const existing = await sql<{ id: string; status: string }[]>`
       SELECT id, status FROM applicants WHERE email = ${email}
     `;
-    if (existing.length && existing[0].status === "completed") {
-      return NextResponse.json(
-        {
-          error:
-            "This email has already completed the assessment. Each candidate may attempt it only once.",
-          alreadyCompleted: true,
-        },
-        { status: 409 }
-      );
-    }
 
     const buf = Buffer.from(await resume.arrayBuffer());
     const text = await extractText(buf, resume.name, resume.type || "");

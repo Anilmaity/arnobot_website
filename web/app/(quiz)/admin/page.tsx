@@ -16,6 +16,7 @@ type Applicant = {
   degree: string | null;
   cgpa: string | null;
   projects: string | null;
+  role: string | null;
   resumeName: string | null;
   status: string;
   score: number | null;
@@ -37,8 +38,9 @@ type Question = {
   active: boolean;
 };
 type Settings = { questionsPerTest: number; passPercent: number; timeLimitMin: number };
+type Role = { id: string; name: string; skills: string[]; active: boolean };
 
-type Tab = "applicants" | "questions" | "settings";
+type Tab = "applicants" | "roles" | "questions" | "settings";
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -51,6 +53,8 @@ export default function AdminPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [byCategory, setByCategory] = useState<{ category: string; n: string }[]>([]);
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   const loadApplicants = useCallback(async () => {
     const res = await fetch("/api/admin/applicants");
@@ -78,6 +82,15 @@ export default function AdminPage() {
     if (res.ok) setSettings(await res.json());
   }, []);
 
+  const loadRoles = useCallback(async () => {
+    const res = await fetch("/api/admin/roles");
+    if (res.ok) {
+      const data = await res.json();
+      setRoles(data.roles);
+      setCategories(data.categories);
+    }
+  }, []);
+
   useEffect(() => {
     loadApplicants();
   }, [loadApplicants]);
@@ -85,7 +98,8 @@ export default function AdminPage() {
   useEffect(() => {
     if (authed && tab === "questions") loadQuestions();
     if (authed && tab === "settings") loadSettings();
-  }, [authed, tab, loadQuestions, loadSettings]);
+    if (authed && tab === "roles") loadRoles();
+  }, [authed, tab, loadQuestions, loadSettings, loadRoles]);
 
   async function login(e: React.FormEvent) {
     e.preventDefault();
@@ -174,7 +188,7 @@ export default function AdminPage() {
         )}
 
         <div className="flex gap-1 mb-5 border-b border-line">
-          {(["applicants", "questions", "settings"] as Tab[]).map((t) => (
+          {(["applicants", "roles", "questions", "settings"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -191,6 +205,9 @@ export default function AdminPage() {
 
         {tab === "applicants" && (
           <ApplicantsTab applicants={applicants} onRefresh={loadApplicants} />
+        )}
+        {tab === "roles" && (
+          <RolesTab roles={roles} categories={categories} onChanged={loadRoles} />
         )}
         {tab === "questions" && (
           <QuestionsTab questions={questions} byCategory={byCategory} onChanged={loadQuestions} />
@@ -316,6 +333,7 @@ function ApplicantsTab({
                     <tr className="border-b border-line bg-surfaceAlt/50">
                       <td colSpan={6} className="px-5 py-4">
                         <div className="grid sm:grid-cols-3 gap-x-8 gap-y-2.5 text-sm">
+                          <Detail label="Applying for" value={a.role} />
                           <Detail label="Birth year" value={a.birthYear} />
                           <Detail label="Graduation year" value={a.gradYear} />
                           <Detail label="City / Place" value={a.place} />
@@ -481,6 +499,242 @@ function QuestionsTab({
                     </button>
                   </td>
                 </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RolesTab({
+  roles,
+  categories,
+  onChanged,
+}: {
+  roles: Role[];
+  categories: string[];
+  onChanged: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [msg, setMsg] = useState("");
+  const [editing, setEditing] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editSkills, setEditSkills] = useState<string[]>([]);
+
+  const toggle = (list: string[], s: string) =>
+    list.includes(s) ? list.filter((x) => x !== s) : [...list, s];
+
+  async function create() {
+    setMsg("");
+    const res = await fetch("/api/admin/roles", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, skills }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setName("");
+      setSkills([]);
+      setMsg("Role added ✓");
+      onChanged();
+    } else {
+      setMsg(data.error || "Could not add role.");
+    }
+  }
+  async function toggleActive(r: Role) {
+    await fetch("/api/admin/roles", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: r.id, active: !r.active }),
+    });
+    onChanged();
+  }
+  async function saveEdit(r: Role) {
+    const res = await fetch("/api/admin/roles", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: r.id, name: editName, skills: editSkills }),
+    });
+    if (res.ok) {
+      setEditing(null);
+      onChanged();
+    }
+  }
+  async function del(r: Role) {
+    if (!confirm(`Delete role "${r.name}"?`)) return;
+    await fetch(`/api/admin/roles?id=${encodeURIComponent(r.id)}`, { method: "DELETE" });
+    onChanged();
+  }
+
+  function SkillPicker({
+    selected,
+    onToggle,
+  }: {
+    selected: string[];
+    onToggle: (s: string) => void;
+  }) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {categories.map((c) => {
+          const on = selected.includes(c);
+          return (
+            <button
+              key={c}
+              type="button"
+              onClick={() => onToggle(c)}
+              className={`text-sm rounded-full px-3.5 py-1.5 border-2 transition ${
+                on
+                  ? "border-navy bg-navy/[0.05] text-navy font-semibold"
+                  : "border-line text-body hover:border-steel/60"
+              }`}
+            >
+              {on ? "✓ " : ""}
+              {c}
+            </button>
+          );
+        })}
+        {categories.length === 0 && (
+          <span className="text-sm text-muted">No question categories found yet.</span>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="card p-6">
+        <h3 className="text-base font-semibold text-ink">Add a role</h3>
+        <p className="text-sm text-muted mt-1">
+          Name the role and pick the skills (question categories) candidates will be tested on.
+        </p>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="e.g. Robotics Software Engineer"
+          className="mt-4 w-full rounded-xl border border-line bg-white px-4 py-2.5 text-base text-ink outline-none focus:border-steel focus:ring-4 focus:ring-steel/15 transition"
+        />
+        <div className="mt-4">
+          <div className="text-sm font-medium text-body mb-2">Required skills</div>
+          <SkillPicker selected={skills} onToggle={(s) => setSkills((v) => toggle(v, s))} />
+        </div>
+        <div className="flex items-center gap-3 mt-5">
+          <button
+            onClick={create}
+            disabled={name.trim().length < 2 || skills.length === 0}
+            className="rounded-xl px-5 py-2.5 text-sm font-semibold bg-navy text-white shadow-btn hover:bg-navy2 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            Add role
+          </button>
+          {msg && <span className="text-sm text-ok font-medium">{msg}</span>}
+        </div>
+      </div>
+
+      <div className="card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-xs font-semibold uppercase tracking-wider text-muted bg-surfaceAlt border-b border-line">
+                <th className="px-4 py-3">Role</th>
+                <th className="px-4 py-3">Skills</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {roles.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-4 py-10 text-center text-muted">
+                    No roles yet — add one above.
+                  </td>
+                </tr>
+              )}
+              {roles.map((r) => (
+                <Fragment key={r.id}>
+                  <tr className="border-b border-line align-top hover:bg-surfaceAlt/50">
+                    <td className="px-4 py-3 font-semibold text-ink whitespace-nowrap">{r.name}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1.5 max-w-md">
+                        {r.skills.map((s) => (
+                          <span
+                            key={s}
+                            className="text-xs font-medium rounded-full px-2.5 py-1 bg-surface border border-line text-body"
+                          >
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => toggleActive(r)}
+                        className={`text-xs font-medium rounded-full px-2.5 py-1 border ${
+                          r.active
+                            ? "border-ok/30 text-ok bg-okbg"
+                            : "border-line text-muted bg-surfaceAlt"
+                        }`}
+                      >
+                        {r.active ? "active" : "off"}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <button
+                        onClick={() => {
+                          if (editing === r.id) {
+                            setEditing(null);
+                            return;
+                          }
+                          setEditing(r.id);
+                          setEditName(r.name);
+                          setEditSkills(r.skills);
+                        }}
+                        className="text-xs text-steel hover:underline font-medium mr-3"
+                      >
+                        {editing === r.id ? "close" : "edit"}
+                      </button>
+                      <button
+                        onClick={() => del(r)}
+                        className="text-xs text-bad hover:underline font-medium"
+                      >
+                        delete
+                      </button>
+                    </td>
+                  </tr>
+                  {editing === r.id && (
+                    <tr className="border-b border-line bg-surfaceAlt/50">
+                      <td colSpan={4} className="px-4 py-4">
+                        <input
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          className="w-full max-w-md rounded-xl border border-line bg-white px-4 py-2.5 text-base text-ink outline-none focus:border-steel focus:ring-4 focus:ring-steel/15 transition"
+                        />
+                        <div className="mt-3">
+                          <SkillPicker
+                            selected={editSkills}
+                            onToggle={(s) => setEditSkills((v) => toggle(v, s))}
+                          />
+                        </div>
+                        <div className="mt-4 flex items-center gap-3">
+                          <button
+                            onClick={() => saveEdit(r)}
+                            disabled={editName.trim().length < 2 || editSkills.length === 0}
+                            className="rounded-lg px-4 py-2 text-sm font-semibold bg-navy text-white hover:bg-navy2 disabled:opacity-50 transition"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditing(null)}
+                            className="text-sm text-muted hover:text-ink"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>

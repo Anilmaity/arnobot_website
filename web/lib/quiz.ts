@@ -35,17 +35,32 @@ type DbQuestion = {
  * Pick `count` active questions, spread as evenly as possible across the
  * available categories, then shuffle each question's options. Returns the
  * client-safe payload plus the server-only answer key.
+ *
+ * When `skills` is given (a role's required categories), only questions in
+ * those categories are drawn; otherwise the whole active bank is used.
  */
 export async function buildQuiz(
-  count: number
+  count: number,
+  skills?: string[]
 ): Promise<{ served: ServedQuestion[]; key: SelectedMeta[] }> {
-  const rows = await sql<DbQuestion[]>`
-    SELECT id, category, question, image, options, correct
-    FROM questions
-    WHERE active = TRUE
-  `;
+  const useSkills = Array.isArray(skills) && skills.length > 0;
+  const rows = useSkills
+    ? await sql<DbQuestion[]>`
+        SELECT id, category, question, image, options, correct
+        FROM questions
+        WHERE active = TRUE AND category = ANY(${skills})
+      `
+    : await sql<DbQuestion[]>`
+        SELECT id, category, question, image, options, correct
+        FROM questions
+        WHERE active = TRUE
+      `;
   if (rows.length === 0) {
-    throw new Error("No active questions in the bank.");
+    throw new Error(
+      useSkills
+        ? "No active questions for the selected role's skills yet."
+        : "No active questions in the bank."
+    );
   }
 
   // Group by category, shuffle within each, then round-robin to balance.

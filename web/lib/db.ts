@@ -1,5 +1,26 @@
 import postgres from "postgres";
 import { QUESTION_BANK } from "./questions";
+import { randomId } from "./auth";
+
+/** Roles seeded on first run. `skills` are question categories in the bank. */
+const DEFAULT_ROLES: { name: string; skills: string[] }[] = [
+  {
+    name: "Robotics Software Engineer",
+    skills: ["Coding", "Control Theory", "Sensor Integration", "Aptitude & General"],
+  },
+  {
+    name: "Embedded Systems Engineer",
+    skills: ["Microcontrollers", "Sensor Integration", "Coding", "Aptitude & General"],
+  },
+  {
+    name: "Mechanical Design Engineer",
+    skills: ["Mechanical Design", "Kinematics", "Aptitude & General"],
+  },
+  {
+    name: "Controls Engineer",
+    skills: ["Control Theory", "Kinematics", "Sensor Integration", "Aptitude & General"],
+  },
+];
 
 /**
  * Single shared Postgres client. Works with any Postgres provider via a
@@ -119,9 +140,21 @@ async function initSchema(): Promise<void> {
     "cgpa TEXT",
     "projects TEXT",
     "profile JSONB",
+    "role TEXT",
   ]) {
     await sql.unsafe(`ALTER TABLE applicants ADD COLUMN IF NOT EXISTS ${col}`);
   }
+
+  // Roles: each names a job and the skills (question categories) it draws from.
+  await sql`
+    CREATE TABLE IF NOT EXISTS roles (
+      id         TEXT PRIMARY KEY,
+      name       TEXT NOT NULL,
+      skills     JSONB NOT NULL DEFAULT '[]'::jsonb,
+      active     BOOLEAN NOT NULL DEFAULT TRUE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
 
   // Seed questions only when the table is empty.
   const [{ count }] = await sql<{ count: string }[]>`
@@ -139,5 +172,18 @@ async function initSchema(): Promise<void> {
         `;
       }
     });
+  }
+
+  // Seed default roles only when the table is empty.
+  const [{ count: roleCount }] = await sql<{ count: string }[]>`
+    SELECT COUNT(*)::text AS count FROM roles
+  `;
+  if (Number(roleCount) === 0) {
+    for (const r of DEFAULT_ROLES) {
+      await sql`
+        INSERT INTO roles (id, name, skills, active)
+        VALUES (${randomId()}, ${r.name}, ${sql.json(r.skills)}, TRUE)
+      `;
+    }
   }
 }

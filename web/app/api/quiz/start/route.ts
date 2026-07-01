@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ensureDb, sql } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
 import { buildQuiz } from "@/lib/quiz";
+import { getRole } from "@/lib/roles";
 import { isValidEmail, normEmail, signToken } from "@/lib/auth";
 import crypto from "crypto";
 
@@ -31,6 +32,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => null);
     const email = normEmail(String(body?.email || ""));
     const profile = (body?.profile || {}) as Profile;
+    const roleId = String(body?.roleId || "").trim();
 
     if (!isValidEmail(email)) {
       return NextResponse.json({ error: "Invalid email." }, { status: 400 });
@@ -62,18 +64,29 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (rows[0].status === "completed") {
-      return NextResponse.json(
-        {
-          error: "This email has already completed the assessment.",
-          alreadyCompleted: true,
-        },
-        { status: 409 }
-      );
+    // Retakes are allowed. The UPDATE below resets the previous attempt
+    // (score/status/token) so a completed candidate can start fresh.
+
+    // Resolve the chosen role (if any) to the skills its questions draw from.
+    let skills: string[] | undefined;
+    let roleName: string | null = null;
+    if (roleId) {
+      const role = await getRole(roleId);
+      if (!role || !role.active) {
+        return NextResponse.json(
+          {
+            error: "The selected role is no longer available. Please choose a role again.",
+            roleGone: true,
+          },
+          { status: 400 }
+        );
+      }
+      skills = role.skills;
+      roleName = role.name;
     }
 
     const settings = await getSettings();
-    const { served, key } = await buildQuiz(settings.questionsPerTest);
+    const { served, key } = await buildQuiz(settings.questionsPerTest, skills);
     const nonce = crypto.randomBytes(8).toString("hex");
 
     await sql`
@@ -89,6 +102,7 @@ export async function POST(req: NextRequest) {
         cgpa = ${String(profile.cgpa || "").trim() || null},
         projects = ${String(profile.projects || "").trim() || null},
         profile = ${sql.json(profile as unknown as Record<string, string>)},
+        role = ${roleName},
         status = 'in_progress',
         selected_qids = ${sql.json(key)},
         attempt_token = ${nonce},
