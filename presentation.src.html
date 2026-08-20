@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARNOBOT — Robotics Redefined</title>
+<meta name="description" content="ARNOBOT (Arnobot Private Limited) — unmanned ground, climbing and tactical robots for defence and hazardous industrial environments. Capability and investment overview.">
+<link rel="icon" type="image/png" href="assets/arnobot-mark.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  /* ARNOBOT brand — sampled from 01-Company/Brand-Assets/TM-Logo-1.png */
+  --indigo:#230C75;        /* wordmark primary */
+  --steel:#375E9D;         /* wordmark secondary / "R" */
+  --navy:#1F3864;          /* house style, matches the branded PDFs */
+  --navy-deep:#132546;
+
+  --paper:#FFFFFF;
+  --paper-2:#F5F7FA;
+  --paper-3:#EAEFF6;
+  --line:#D6DFEA;
+  --line-soft:#E7ECF3;
+
+  --text-1:#12203A;
+  --text-2:#4C5A6E;
+  --text-3:#7C8A9C;
+
+  --amber:#E39412;         /* hazard / caution accent only */
+  --hazard:#D4462A;
+  --neg:#B32B22;
+  --pos:#1E7A6F;
+  --radius:2px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--paper);
+  color:var(--text-1);
+  font-family:'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--indigo); color:#fff;}
+h1,h2,h3,h4{font-family:'Space Grotesk', 'IBM Plex Sans', sans-serif; font-weight:600; letter-spacing:-0.015em; color:var(--navy);}
+.mono{font-family:'IBM Plex Mono', ui-monospace, monospace;}
+a{color:inherit;}
+img{max-width:100%; display:block;}
+
+/* background grid texture */
+.grid-bg{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(var(--line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+  background-size:64px 64px;
+  opacity:.75;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 85%);
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 85%);
+}
+
+/* hazard stripe divider — signature element */
+.hazard-rule{
+  height:8px;
+  background:repeating-linear-gradient(135deg, var(--navy) 0 14px, var(--amber) 14px 28px);
+  opacity:.92;
+}
+
+/* corner bracket frame — signature element on cards */
+.bracket{
+  position:relative;
+  border:1px solid var(--line);
+  background:var(--paper);
+}
+.bracket::before,.bracket::after,
+.bracket .bl,.bracket .br{
+  content:""; position:absolute; width:10px; height:10px;
+  border-color:var(--steel); border-style:solid;
+}
+.bracket::before{top:-1px; left:-1px; border-width:2px 0 0 2px;}
+.bracket::after{top:-1px; right:-1px; border-width:2px 2px 0 0;}
+.bracket .bl{bottom:-1px; left:-1px; border-width:0 0 2px 2px;}
+.bracket .br{bottom:-1px; right:-1px; border-width:0 2px 2px 0;}
+
+/* layout */
+.shell{display:flex; min-height:100vh; position:relative; z-index:1;}
+nav.rail{
+  width:232px; flex-shrink:0; position:sticky; top:0; height:100vh;
+  border-right:1px solid var(--line); padding:26px 0;
+  display:flex; flex-direction:column; justify-content:space-between;
+  background:var(--paper);
+}
+.rail-top .brand{padding:0 22px 20px; border-bottom:1px solid var(--line);}
+.rail-top .brand img{width:150px;}
+.rail-top .brand .sub{
+  color:var(--steel); font-size:10px; margin-top:9px; text-transform:uppercase;
+  letter-spacing:.16em; font-family:'IBM Plex Mono', monospace;
+}
+ul.navlist{list-style:none; margin-top:16px;}
+ul.navlist li a{
+  display:flex; gap:10px; align-items:baseline;
+  padding:9px 22px; font-size:13px; color:var(--text-2); text-decoration:none;
+  border-left:2px solid transparent;
+  transition:.15s;
+}
+ul.navlist li a .idx{font-family:'IBM Plex Mono',monospace; color:var(--text-3); font-size:11px;}
+ul.navlist li a:hover, ul.navlist li a.active{color:var(--navy); border-left-color:var(--steel); background:var(--paper-2);}
+ul.navlist li a.active .idx{color:var(--steel);}
+.rail-bottom{padding:0 22px; color:var(--text-3); font-size:10px; text-transform:uppercase; letter-spacing:.1em; line-height:1.7;}
+
+main{flex:1; min-width:0;}
+section{padding:96px 64px; border-bottom:1px solid var(--line); position:relative; background:var(--paper);}
+section.alt{background:var(--paper-2);}
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--steel); display:flex; align-items:center; gap:10px; margin-bottom:18px;
+}
+.eyebrow::before{content:""; width:22px; height:2px; background:var(--steel);}
+.sec-title{font-size:clamp(27px,3.3vw,40px); max-width:840px; margin-bottom:14px; line-height:1.14;}
+.sec-lede{color:var(--text-2); max-width:660px; font-size:15.5px; margin-bottom:44px;}
+
+/* HERO */
+.hero{padding:0 64px; min-height:100vh; display:flex; flex-direction:column; justify-content:center; border-bottom:1px solid var(--line);}
+.hero-inner{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; width:100%;}
+.hero .kicker{font-family:'IBM Plex Mono',monospace; color:var(--steel); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:10px;}
+.hero .kicker::before{content:""; width:26px; height:2px; background:var(--amber);}
+.hero h1{font-size:clamp(38px,5.2vw,68px); line-height:1.0; color:var(--navy);}
+.hero h1 em{font-style:normal; color:var(--steel);}
+.hero p.lede{margin-top:24px; max-width:520px; color:var(--text-2); font-size:16.5px;}
+.hero-photo{position:relative; border:1px solid var(--line); background:var(--paper-3);}
+.hero-photo img{width:100%; aspect-ratio:3/2; object-fit:cover;}
+.hero-photo figcaption{
+  position:absolute; left:0; bottom:0; background:var(--navy); color:#fff;
+  font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em;
+  text-transform:uppercase; padding:7px 12px;
+}
+.hero-stats{display:grid; grid-template-columns:repeat(5,1fr); margin-top:44px; border-top:1px solid var(--line); width:100%;}
+.hero-stats .stat{padding:18px 22px 4px 0; border-right:1px solid var(--line);}
+.hero-stats .stat:last-child{border-right:none;}
+.hero-stats .stat .num{font-family:'Space Grotesk', sans-serif; font-size:clamp(20px,1.9vw,28px); color:var(--indigo); font-weight:600; white-space:nowrap;}
+.hero-stats .stat .lbl{font-family:'IBM Plex Mono', monospace; font-size:9.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; margin-top:5px; line-height:1.5;}
+.scroll-cue{position:absolute; bottom:30px; left:64px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--text-3); display:flex; align-items:center; gap:8px; letter-spacing:.12em;}
+.scroll-cue .ln{width:1px; height:32px; background:linear-gradient(var(--steel), transparent); animation:pulse 1.8s infinite;}
+@keyframes pulse{0%,100%{opacity:.25} 50%{opacity:1}}
+
+/* grid helpers */
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line);}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);}
+.grid-5{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line);}
+.grid-6{display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--line);}
+.cell{background:var(--paper); padding:26px;}
+.cell h4{margin-bottom:9px; font-size:15.5px;}
+.cell p{color:var(--text-2); font-size:14px;}
+
+/* company */
+.reg-strip{display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--line); margin-top:36px; background:var(--paper);}
+.reg-item{padding:14px 20px; border-right:1px solid var(--line); flex:1; min-width:160px;}
+.reg-item:last-child{border-right:none;}
+.reg-item .k{font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:.08em;}
+.reg-item .v{font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--navy); margin-top:5px;}
+
+/* leadership */
+.founder{padding:28px; position:relative;}
+.founder .ph{width:54px; height:54px; border:2px solid var(--steel); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk', sans-serif; font-size:19px; color:var(--indigo); margin-bottom:18px; font-weight:600;}
+.founder h3{font-size:19px;}
+.founder .role{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); text-transform:uppercase; letter-spacing:.08em; margin:6px 0 12px;}
+.founder .cred{color:var(--text-2); font-size:12.5px;}
+
+/* products */
+.product{padding:0; overflow:hidden; display:flex; flex-direction:column;}
+.product .shot{background:var(--paper-3); border-bottom:1px solid var(--line-soft);}
+.product .shot img{width:100%; aspect-ratio:16/10; object-fit:cover; object-position:center;}
+/* isolated product renders on white — show the whole object, never crop it */
+.product .shot.tile{background:#fff;}
+.product .shot.tile img{object-fit:contain; padding:14px 20px;}
+.product .shot{position:relative;}
+.product .shot .shot-note{
+  position:absolute; left:0; bottom:0; background:rgba(31,56,100,.88); color:#fff;
+  font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:.08em;
+  text-transform:uppercase; padding:5px 9px;
+}
+.product .head{padding:22px 24px; cursor:pointer; display:flex; justify-content:space-between; align-items:flex-start; gap:14px;}
+.product .name{font-size:21px; color:var(--navy);}
+.product .tag{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); text-transform:uppercase; letter-spacing:.08em; margin-top:6px;}
+.product .plus{font-family:'IBM Plex Mono', monospace; color:var(--text-3); font-size:20px; transition:.2s; flex-shrink:0;}
+.product.open .plus{transform:rotate(45deg); color:var(--indigo);}
+.product .body{max-height:0; overflow:hidden; transition:max-height .34s ease;}
+.product .body-inner{padding:0 24px 24px; border-top:1px solid var(--line-soft);}
+.product .body-inner .row{display:flex; gap:12px; margin-top:14px; font-size:13.5px;}
+.product .body-inner .row .k{color:var(--text-3); font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; width:96px; flex-shrink:0; padding-top:3px;}
+.product .body-inner .row .v{color:var(--text-2);}
+.spec-table{width:100%; border-collapse:collapse; font-family:'IBM Plex Mono', monospace; font-size:11.5px; margin-top:16px;}
+.spec-table td{border-bottom:1px solid var(--line-soft); padding:6px 0;}
+.spec-table td:first-child{color:var(--text-3); text-transform:uppercase; letter-spacing:.05em; width:52%;}
+.spec-table td:last-child{color:var(--navy); text-align:right;}
+
+/* detail gallery */
+.gallery{display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+.gallery figure{background:var(--paper); position:relative;}
+.gallery img{width:100%; aspect-ratio:1/1; object-fit:cover;}
+.gallery figcaption{
+  font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--text-3); padding:8px 9px; text-align:center;
+}
+
+/* tech platform list */
+.svc{padding:22px 24px; display:flex; gap:16px; align-items:flex-start;}
+.svc .n{font-family:'IBM Plex Mono', monospace; color:var(--steel); font-size:12px; flex-shrink:0; padding-top:2px;}
+.svc h4{font-size:15.5px; margin-bottom:5px;}
+.svc p{color:var(--text-2); font-size:13px;}
+
+/* market stat cards */
+.mstat{padding:26px 24px;}
+.mstat .lbl{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; min-height:28px;}
+.mstat .val{font-family:'Space Grotesk', sans-serif; font-size:23px; color:var(--indigo); margin-top:10px; white-space:nowrap; font-weight:600;}
+.mstat .val small{font-size:12.5px; color:var(--text-3); font-family:'IBM Plex Mono', monospace;}
+.mstat .ctx{color:var(--text-3); font-size:11.5px; margin-top:8px;}
+
+/* traction */
+.trac-nums{display:flex; flex-wrap:wrap; border:1px solid var(--line); background:var(--paper);}
+.trac-nums .tn{flex:1; min-width:110px; padding:20px; border-right:1px solid var(--line); text-align:center;}
+.trac-nums .tn:last-child{border-right:none;}
+.trac-nums .tn .num{font-family:'Space Grotesk', sans-serif; font-size:26px; color:var(--indigo); font-weight:600;}
+.trac-nums .tn .lbl{font-family:'IBM Plex Mono', monospace; font-size:9.5px; color:var(--text-3); text-transform:uppercase; margin-top:4px; letter-spacing:.05em;}
+.pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+.pill{border:1px solid var(--line); background:var(--paper-2); padding:6px 12px; font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--navy);}
+
+/* financials */
+.fin-wrap{display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start;}
+.chart-box{border:1px solid var(--line); background:var(--paper); padding:24px; position:relative;}
+.chart-box h4{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); font-family:'IBM Plex Mono', monospace; margin-bottom:18px;}
+.chart-note{color:var(--text-2); font-size:12px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft);}
+.bar-tip{position:absolute; background:var(--navy); color:#fff; border:1px solid var(--navy); padding:5px 9px; font-family:'IBM Plex Mono', monospace; font-size:11px; pointer-events:none; opacity:0; transition:opacity .12s; white-space:nowrap; z-index:5; transform:translate(-50%,-130%);}
+table.fin-table{width:100%; border-collapse:collapse; font-family:'IBM Plex Mono', monospace; font-size:12.5px; margin-top:32px; background:var(--paper);}
+table.fin-table th,table.fin-table td{border:1px solid var(--line); padding:10px 14px; text-align:right;}
+table.fin-table th:first-child,table.fin-table td:first-child{text-align:left; color:var(--text-2);}
+table.fin-table th{color:var(--text-3); font-weight:500; text-transform:uppercase; font-size:10.5px; letter-spacing:.06em; background:var(--paper-2);}
+table.fin-table td{color:var(--navy);}
+td.neg{color:var(--neg);}
+.fin-note{color:var(--text-3); font-size:11.5px; margin-top:10px;}
+
+/* the ask */
+.ask-wrap{display:grid; grid-template-columns:320px 1fr; gap:56px; align-items:center;}
+.donut-legend{list-style:none;}
+.donut-legend li{display:flex; align-items:center; gap:10px; padding:8px 0; font-size:13.5px; color:var(--text-2); cursor:pointer; border-bottom:1px solid var(--line-soft);}
+.donut-legend li .sw{width:10px; height:10px; flex-shrink:0;}
+.donut-legend li .lbl{flex:1; min-width:0;}
+.donut-legend li .amt{font-family:'IBM Plex Mono', monospace; color:var(--text-3); font-size:11.5px; width:82px; text-align:right; flex-shrink:0;}
+.donut-legend li .pct{font-family:'IBM Plex Mono', monospace; color:var(--text-3); width:48px; text-align:right; flex-shrink:0;}
+.donut-legend li.active{color:var(--navy);}
+.donut-legend li.active .pct{color:var(--indigo);}
+.raise-amt{font-family:'Space Grotesk', sans-serif; font-size:50px; color:var(--indigo); font-weight:600; margin-top:8px;}
+.donut-svg text{font-family:'IBM Plex Mono', monospace;}
+
+/* recognition / media */
+.award-row{display:flex; gap:18px; padding:18px 0; border-bottom:1px solid var(--line-soft);}
+.award-row .yr{font-family:'IBM Plex Mono', monospace; color:var(--steel); font-size:11.5px; width:106px; flex-shrink:0; padding-top:2px;}
+.award-row h4{font-size:14.5px;}
+.award-row p{color:var(--text-3); font-size:12.5px; margin-top:3px;}
+
+.video-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); margin-top:16px;}
+.video-slot{background:var(--paper-3); aspect-ratio:16/9; position:relative;}
+.video-slot iframe{width:100%; height:100%; border:0; display:block;}
+.video-placeholder{width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; border:1px dashed var(--line); color:var(--text-3); font-family:'IBM Plex Mono', monospace; font-size:11.5px; text-align:center; padding:20px; line-height:1.7;}
+.video-placeholder .icon{font-size:20px; color:var(--steel);}
+
+/* click-to-play facade — YouTube refuses to embed over file://, so the poster
+   opens the video on YouTube when the page is opened from disk, and upgrades to
+   an inline player when the page is served over http(s). */
+.yt{position:relative; width:100%; height:100%; cursor:pointer; border:0; padding:0; background:#000; display:block; overflow:hidden;}
+.yt img{width:100%; height:100%; object-fit:cover; transition:opacity .2s, transform .3s;}
+.yt:hover img{opacity:.82; transform:scale(1.02);}
+.yt .play{
+  position:absolute; inset:0; margin:auto; width:74px; height:52px; border-radius:11px;
+  background:rgba(20,20,20,.72); display:flex; align-items:center; justify-content:center;
+  transition:background .2s;
+}
+.yt:hover .play{background:#E62117;}
+.yt .play::after{content:""; border-style:solid; border-width:11px 0 11px 19px; border-color:transparent transparent transparent #fff; margin-left:4px;}
+.yt .yt-cap{
+  position:absolute; left:0; bottom:0; background:rgba(31,56,100,.9); color:#fff;
+  font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:.08em;
+  text-transform:uppercase; padding:6px 10px;
+}
+.yt:focus-visible{outline:2px solid var(--steel); outline-offset:2px;}
+
+/* contact */
+.contact-wrap{display:grid; grid-template-columns:1fr; gap:1px; background:var(--line); border:1px solid var(--line);}
+.contact-card{padding:32px; background:var(--paper);}
+.contact-card .role{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--steel); text-transform:uppercase; letter-spacing:.08em;}
+.contact-card h3{font-size:22px; margin:10px 0 14px;}
+.contact-card a.line{display:block; color:var(--text-2); font-family:'IBM Plex Mono', monospace; font-size:13px; margin-top:6px; text-decoration:none;}
+.contact-card a.line:hover{color:var(--indigo);}
+.contact-card .addr{color:var(--text-3); font-family:'IBM Plex Mono', monospace; font-size:11.5px; margin-top:14px; line-height:1.7;}
+.confidential{text-align:center; padding:26px; color:var(--text-3); font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; background:var(--paper-2); border-top:1px solid var(--line);}
+.supported-by{margin-top:40px; padding-top:28px; border-top:1px solid var(--line);}
+.supported-by .lbl{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px;}
+.sb-pills{display:flex; flex-wrap:wrap; gap:10px;}
+.sb-pills span{border:1px solid var(--line); background:var(--paper); padding:8px 14px; font-size:12.5px; color:var(--navy);}
+.foot-mark{display:flex; align-items:center; gap:14px; margin-top:40px; padding-top:26px; border-top:1px solid var(--line);}
+.foot-mark img{width:132px;}
+.foot-mark span{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--text-3); letter-spacing:.1em; text-transform:uppercase;}
+
+.fade-up{opacity:0; transform:translateY(16px); transition:opacity .55s ease, transform .55s ease;}
+.fade-up.in{opacity:1; transform:translateY(0);}
+
+/* mobile */
+@media(max-width:980px){
+  .hero-inner{grid-template-columns:1fr; gap:32px;}
+  .gallery{grid-template-columns:repeat(3,1fr);}
+  .grid-5,.grid-4{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:900px){
+  .shell{display:block;}
+  nav.rail{position:fixed; top:0; left:0; right:0; height:auto; width:100%; flex-direction:row; z-index:20; background:var(--paper); padding:10px 16px; align-items:center; overflow-x:auto; border-right:none; border-bottom:1px solid var(--line);}
+  .rail-top{display:flex; align-items:center; gap:16px; width:100%;}
+  .rail-top .brand{border:none; padding:0; white-space:nowrap;}
+  .rail-top .brand img{width:104px;}
+  .rail-top .brand .sub{display:none;}
+  ul.navlist{display:flex; margin-top:0; gap:2px; overflow-x:auto;}
+  ul.navlist li a{padding:8px 10px; white-space:nowrap; border-left:none; border-bottom:2px solid transparent;}
+  ul.navlist li a.active{border-left:none; border-bottom-color:var(--steel);}
+  .rail-bottom{display:none;}
+  main{padding-top:58px;}
+  section{padding:56px 22px;}
+  .hero{padding:76px 22px 56px; min-height:auto;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .hero-stats .stat{padding:16px 14px 12px 0; border-bottom:1px solid var(--line);}
+  .hero-stats .stat:nth-child(2n){border-right:none;}
+  .grid-2,.grid-3,.grid-4,.grid-5,.grid-6{grid-template-columns:1fr;}
+  .gallery{grid-template-columns:repeat(2,1fr);}
+  .fin-wrap,.ask-wrap,.contact-wrap,.video-grid{grid-template-columns:1fr;}
+  .scroll-cue{display:none;}
+}
+
+/* print */
+@media print{
+  .grid-bg,nav.rail,.scroll-cue{display:none !important;}
+  body{background:#fff;}
+  section{padding:26px 0; break-inside:avoid;}
+  .hero{min-height:auto; padding:0 0 26px;}
+  .fade-up{opacity:1 !important; transform:none !important;}
+  .product .body{max-height:none !important;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<div class="shell">
+  <nav class="rail">
+    <div class="rail-top">
+      <div class="brand">
+        <img src="assets/arnobot-wordmark.png" alt="ARNOBOT™">
+        <div class="sub">Robotics Redefined</div>
+      </div>
+      <ul class="navlist">
+        <li><a href="#overview"><span class="idx">00</span> Overview</a></li>
+        <li><a href="#company"><span class="idx">01</span> Company</a></li>
+        <li><a href="#products"><span class="idx">02</span> Products</a></li>
+        <li><a href="#market"><span class="idx">03</span> Market</a></li>
+        <li><a href="#traction"><span class="idx">04</span> Traction</a></li>
+        <li><a href="#financials"><span class="idx">05</span> Financials</a></li>
+        <li><a href="#ask"><span class="idx">06</span> The Ask</a></li>
+        <li><a href="#recognition"><span class="idx">07</span> Recognition</a></li>
+        <li><a href="#contact"><span class="idx">08</span> Contact</a></li>
+      </ul>
+    </div>
+    <div class="rail-bottom">Ahmedabad, India<br>Est. 2024<br><br>Private &amp; Confidential</div>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <section id="overview" class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="kicker">Defence &amp; Industrial Robotics — Capability &amp; Investment Overview</div>
+          <h1>Unmanned systems<br>for <em>where humans</em><br>shouldn't go.</h1>
+          <p class="lede">ARNOBOT designs and builds mission-ready ground, climbing and tactical robots for hazardous environments across defence, energy, maritime and industrial sectors — engineered end-to-end, in-house.</p>
+        </div>
+        <figure class="hero-photo">
+          <img src="assets/saibya-hero.jpg" alt="SAIBYA unmanned ground vehicle deployed on open terrain">
+          <figcaption>SAIBYA (surveillance fit) — field deployment</figcaption>
+        </figure>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">2024</div><div class="lbl">Founded, Ahmedabad</div></div>
+        <div class="stat"><div class="num">4</div><div class="lbl">Robotic platforms in production</div></div>
+        <div class="stat"><div class="num">60+</div><div class="lbl">Competition wins since 2021</div></div>
+        <div class="stat"><div class="num">3H / 5L</div><div class="lbl">Units/month in-house capacity</div></div>
+        <div class="stat"><div class="num">₹4 Cr</div><div class="lbl">Current raise — Project Sentinel</div></div>
+      </div>
+      <div class="scroll-cue"><div class="ln"></div>SCROLL</div>
+    </section>
+
+    <!-- COMPANY -->
+    <section id="company">
+      <div class="eyebrow">01 — Company &amp; Mission</div>
+      <h2 class="sec-title">Engineering excellence, built from the competition floor up.</h2>
+      <p class="sec-lede">Arnobot Private Limited was founded on a foundation laid during the founders' academic years — a focused commitment to robotics and autonomous systems that has since scaled into a full-stack robotics company serving defence and industry.</p>
+
+      <div class="grid-2">
+        <div class="cell">
+          <h4>Mission</h4>
+          <p>To revolutionise operational landscapes by delivering precise, scalable and intelligent robotic platforms that enhance efficiency, reliability and safety — empowering organisations with tailored automation for their most demanding challenges.</p>
+        </div>
+        <div class="cell">
+          <h4>Vision</h4>
+          <p>To become a global leader in robotics-driven asset lifecycle management — making industrial maintenance safer, smarter and more efficient through intelligent robotics.</p>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:1px;">
+        <div class="cell">
+          <h4>Core Activity</h4>
+          <p>Unmanned Ground Vehicles (UGVs) · Industrial inspection robots · Vertical climbing robots · Defence &amp; mission-critical robotic systems · Automation for hazardous industrial environments.</p>
+        </div>
+        <div class="cell">
+          <h4>Values</h4>
+          <div class="pill-row" style="margin-top:4px;">
+            <span class="pill">Engineering Excellence</span>
+            <span class="pill">Safety First</span>
+            <span class="pill">Client-Centric Innovation</span>
+            <span class="pill">Data-Driven Decisions</span>
+            <span class="pill">Made in India</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-strip">
+        <div class="reg-item"><div class="k">CIN</div><div class="v">U28199GJ2024PTC148328</div></div>
+        <div class="reg-item"><div class="k">Registered</div><div class="v">RoC Gujarat &amp; Dadra Nagar Haveli</div></div>
+        <div class="reg-item"><div class="k">DPIIT Startup Reg.</div><div class="v">D1PP190026</div></div>
+        <div class="reg-item"><div class="k">GST</div><div class="v">24ABACA1106F1ZJ</div></div>
+        <div class="reg-item"><div class="k">Registered Office</div><div class="v">G-2, Parul Apartments, Satellite Road, Ahmedabad – 380015</div></div>
+      </div>
+
+      <div style="margin-top:60px;">
+        <div class="eyebrow" style="margin-bottom:24px;">Leadership</div>
+        <div class="grid-3">
+          <div class="cell bracket founder"><span class="bl"></span><span class="br"></span>
+            <div class="ph">AS</div>
+            <h3>Anmol Shah</h3>
+            <div class="role">Founder &amp; CEO</div>
+            <div class="cred">B.E. Mechatronics — Industrial Automation &amp; Maintenance, TPM</div>
+          </div>
+          <div class="cell bracket founder"><span class="bl"></span><span class="br"></span>
+            <div class="ph">AM</div>
+            <h3>Anil Maity</h3>
+            <div class="role">Co-Founder &amp; CTO</div>
+            <div class="cred">B.E. Mechatronics — Robotics &amp; Software Development</div>
+          </div>
+          <div class="cell bracket founder"><span class="bl"></span><span class="br"></span>
+            <div class="ph">AS</div>
+            <h3>Amit Shah</h3>
+            <div class="role">Co-Founder &amp; Director</div>
+            <div class="cred">B.Com, LLB, D.L.P, D.T.P — Interior Designer</div>
+          </div>
+        </div>
+        <p style="color:var(--text-3); font-size:12.5px; margin-top:14px;">Backed by an 8-professional core team spanning robotics engineering, product design, system integration and strategic management.</p>
+      </div>
+    </section>
+
+    <div class="hazard-rule"></div>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="alt">
+      <div class="eyebrow">02 — Product Range</div>
+      <h2 class="sec-title">Four platforms. One mission-ready fleet.</h2>
+      <p class="sec-lede">Every platform is designed, fabricated and integrated in-house. Click a unit to expand its verified specification, use case and target industries.</p>
+
+      <div class="grid-2" id="productGrid">
+        <div class="bracket product" data-p="1"><span class="bl"></span><span class="br"></span>
+          <div class="shot tile"><img src="assets/prod-saibya.jpg" alt="SAIBYA heavy-duty 4×4 unmanned ground vehicle"></div>
+          <div class="head">
+            <div><div class="name">SAIBYA</div><div class="tag">Heavy-Duty Unmanned Ground Vehicle</div></div>
+            <div class="plus">+</div>
+          </div>
+          <div class="body"><div class="body-inner">
+            <div class="row"><div class="k">Overview</div><div class="v">Rugged, high-payload 4×4 UGV for defence logistics, hazardous material transport, industrial inspection and mission-critical ground operations. Modular deck accepts mission-specific payloads.</div></div>
+            <div class="row"><div class="k">Mission fits</div><div class="v">Night surveillance · Mine dispensing · Sub-surface cable mapping (GPR + active EM) · Weed cutting · Payload carriage.</div></div>
+            <div class="row"><div class="k">Industry</div><div class="v">Defence, solar &amp; renewables, construction, asset-heavy industry.</div></div>
+            <table class="spec-table">
+              <tr><td>External dimensions</td><td>1078 × 692 × 402 mm</td></tr>
+              <tr><td>Weight</td><td>70 kg</td></tr>
+              <tr><td>Max payload</td><td>200 kg (90 kg all-terrain)</td></tr>
+              <tr><td>Drivetrain</td><td>4×4 · zero-radius turn</td></tr>
+              <tr><td>Max speed</td><td>8 km/h</td></tr>
+              <tr><td>Climb grade / stair step</td><td>30° · 150 mm</td></tr>
+              <tr><td>Ground clearance</td><td>130 mm</td></tr>
+              <tr><td>Battery</td><td>NMC 24 V 50 Ah</td></tr>
+              <tr><td>Runtime / charge</td><td>3 h · 5 h</td></tr>
+              <tr><td>User power take-off</td><td>24 V / 12 V @ 10 A</td></tr>
+            </table>
+          </div></div>
+        </div>
+
+        <div class="bracket product" data-p="2"><span class="bl"></span><span class="br"></span>
+          <div class="shot"><img src="assets/nexus-studio.jpg" alt="NEXUS compact tactical ground robot"></div>
+          <div class="head">
+            <div><div class="name">NEXUS</div><div class="tag">Nano Exploration &amp; Utility System</div></div>
+            <div class="plus">+</div>
+          </div>
+          <div class="body"><div class="body-inner">
+            <div class="row"><div class="k">Overview</div><div class="v">Compact, invertible tactical robot — drives equally well upside down. Small enough for tight spaces, rugged enough to scout hazardous areas before a team enters.</div></div>
+            <div class="row"><div class="k">Use case</div><div class="v">Tactical reconnaissance, pre-entry surveillance, indoor security inspection, border monitoring.</div></div>
+            <div class="row"><div class="k">Industry</div><div class="v">Defence, police, protection forces, disaster response.</div></div>
+            <table class="spec-table">
+              <tr><td>Dimensions</td><td>350 × 330 × 140 mm</td></tr>
+              <tr><td>Drive</td><td>4WD — wheels or chain tracks</td></tr>
+              <tr><td>Payload</td><td>Up to 2 kg (modular)</td></tr>
+              <tr><td>RC range</td><td>300 m LOS / 100 m NLOS</td></tr>
+              <tr><td>Camera</td><td>Live digital video feed</td></tr>
+              <tr><td>Thermal tolerance</td><td>60 °C loaded, 30 min</td></tr>
+              <tr><td>Orientation</td><td>Fully invertible</td></tr>
+            </table>
+          </div></div>
+        </div>
+
+        <div class="bracket product" data-p="3"><span class="bl"></span><span class="br"></span>
+          <div class="shot tile"><img src="assets/prod-altius.jpg" alt="ALTIUS vertical climbing robot"></div>
+          <div class="head">
+            <div><div class="name">ALTIUS</div><div class="tag">Vertical Climbing Robot</div></div>
+            <div class="plus">+</div>
+          </div>
+          <div class="body"><div class="body-inner">
+            <div class="row"><div class="k">Overview</div><div class="v">Climbs ferromagnetic surfaces for inspection, cleaning and monitoring of high-altitude and hard-to-reach assets — removing the need for scaffolding, rope access and confined-space entry.</div></div>
+            <div class="row"><div class="k">Use case</div><div class="v">Ship-hull and storage-tank cleaning &amp; inspection, silo and infrastructure inspection, critical asset mapping.</div></div>
+            <div class="row"><div class="k">Industry</div><div class="v">Maritime &amp; shipbuilding, oil &amp; gas, power generation, manufacturing.</div></div>
+            <table class="spec-table">
+              <tr><td>Surface</td><td>Ferromagnetic, vertical</td></tr>
+              <tr><td>Ingress protection</td><td>Up to IP-65</td></tr>
+              <tr><td>Power</td><td>Continuous supply from station</td></tr>
+              <tr><td>Control</td><td>RF wireless drive</td></tr>
+              <tr><td>Payload</td><td>Modular tooling, multiple payloads</td></tr>
+              <tr><td>Data</td><td>Cloud-based live monitoring</td></tr>
+            </table>
+          </div></div>
+        </div>
+
+        <div class="bracket product" data-p="4"><span class="bl"></span><span class="br"></span>
+          <div class="shot tile"><img src="assets/prod-atm.jpg" alt="ATM all-terrain heavy carrier platform"></div>
+          <div class="head">
+            <div><div class="name">ATM</div><div class="tag">Any Terrain Machine</div></div>
+            <div class="plus">+</div>
+          </div>
+          <div class="body"><div class="body-inner">
+            <div class="row"><div class="k">Overview</div><div class="v">Heavy-class all-terrain carrier built around payload capacity and mounting flexibility for defence and heavy-construction duty.</div></div>
+            <div class="row"><div class="k">Use case</div><div class="v">Heavy payload carriage, anti-drone system carriage, accessory and weapon-station mounting.</div></div>
+            <div class="row"><div class="k">Industry</div><div class="v">Defence, construction.</div></div>
+            <div class="row"><div class="k">Configuration</div><div class="v">All-terrain wheeled carrier, camouflage finish. Detailed specification issued on request — configuration is defined per mission profile.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div style="margin-top:56px;">
+        <div class="eyebrow" style="margin-bottom:20px;">Build Detail — SAIBYA Surveillance Fit</div>
+        <div class="gallery">
+          <figure><img src="assets/detail-camera.jpg" alt="Camera and antenna head"><figcaption>Camera &amp; antenna head</figcaption></figure>
+          <figure><img src="assets/detail-light.jpg" alt="LED floodlight bar"><figcaption>LED floodlight</figcaption></figure>
+          <figure><img src="assets/detail-siren.jpg" alt="Deterrent siren"><figcaption>Deterrent siren</figcaption></figure>
+          <figure><img src="assets/detail-branding.jpg" alt="Deck sensor and ARNOBOT branding"><figcaption>Deck sensor</figcaption></figure>
+          <figure><img src="assets/detail-wheels.jpg" alt="Chassis and all-terrain wheels"><figcaption>Chassis &amp; wheels</figcaption></figure>
+          <figure><img src="assets/detail-panel.jpg" alt="Operator control panel"><figcaption>Control panel</figcaption></figure>
+        </div>
+      </div>
+
+      <div style="margin-top:56px;">
+        <div class="eyebrow" style="margin-bottom:20px;">Platform &amp; Services</div>
+        <div class="grid-2">
+          <div class="cell svc"><div class="n">01</div><div><h4>ARNOBOT GCS Software</h4><p>Ground-control station for human–robot interaction: live video, sensor telemetry, SLAM maps, mission control and exportable field-usable mission reports.</p></div></div>
+          <div class="cell svc"><div class="n">02</div><div><h4>Multi-Sensor Payload Integration</h4><p>LiDAR, thermal imaging, gas sensors, GPR and active-EM survey heads, and custom payloads tailored to defence and industrial requirements.</p></div></div>
+          <div class="cell svc"><div class="n">03</div><div><h4>Field Deployment &amp; Ops Support</h4><p>On-site robot operation, mission execution and safety-critical deployment services — delivered as a managed service where the client prefers outcomes to assets.</p></div></div>
+          <div class="cell svc"><div class="n">04</div><div><h4>R&amp;D Collaboration</h4><p>Joint development programmes with defence units, industry and research organisations, including custom attachment engineering on the SAIBYA chassis.</p></div></div>
+        </div>
+      </div>
+
+      <div style="margin-top:56px;">
+        <div class="eyebrow" style="margin-bottom:20px;">Field Footage</div>
+        <div class="video-grid">
+          <!-- To add another: copy a button below. YouTube -> data-yt="VIDEO_ID";
+               Google Drive -> data-drive="FILE_ID" (the file must be shared "anyone with the link"). -->
+          <div class="video-slot">
+            <button class="yt" data-drive="1WRgcXtniGM7O_sUm11s0Wto3DwWiGKma" aria-label="Play: ALTIUS ship-hull trial at Alang">
+              <img src="assets/video-altius-alang.jpg" alt="ARNOBOT engineers running the ALTIUS climbing robot on a ship hull at Alang">
+              <span class="play"></span>
+              <span class="yt-cap">ALTIUS — ship-hull trial, Alang</span>
+            </button>
+          </div>
+          <div class="video-slot">
+            <button class="yt" data-drive="1-cVEB8JkxcN3BBFlSW9r0QFixCi6jm3r" aria-label="Play: ATM vehicle demonstration">
+              <img src="assets/video-atm-demo.jpg" alt="ATM all-terrain vehicle demonstration ground">
+              <span class="play"></span>
+              <span class="yt-cap">ATM — vehicle demonstration</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARKET -->
+    <section id="market">
+      <div class="eyebrow">03 — Market Opportunity</div>
+      <h2 class="sec-title">A policy-backed shift toward remote, unmanned operations.</h2>
+      <p class="sec-lede">Extreme hazards — toxins, explosions, radiation, confined spaces — across power, shipbuilding, defence and maritime operations are driving structural demand for reliable, standardised unmanned platforms.</p>
+
+      <div class="grid-5">
+        <div class="cell mstat"><div class="lbl">Industrial Robotics — India</div><div class="val">$4.86<small>Bn</small> → $13.47<small>Bn</small></div><div class="ctx">By 2033 · CAGR ≈ 13%</div></div>
+        <div class="cell mstat"><div class="lbl">Defence / Deep-Tech — India</div><div class="val">$30<small>Bn</small></div><div class="ctx">Deep-tech market by 2030</div></div>
+        <div class="cell mstat"><div class="lbl">UGV Market — Global</div><div class="val">$3.2<small>Bn</small> → $5.9<small>Bn</small></div><div class="ctx">By 2035 · CAGR ≈ 6–9%</div></div>
+        <div class="cell mstat"><div class="lbl">Shipbuilding — India</div><div class="val">$1.12<small>Bn</small> → $8<small>Bn</small></div><div class="ctx">By 2033 · CAGR ≈ 60%</div></div>
+        <div class="cell mstat"><div class="lbl">Maritime Investment — India</div><div class="val">₹3–3.5<small>L Cr</small></div><div class="ctx">Planned govt. investment by 2030</div></div>
+      </div>
+
+      <div class="grid-2" style="margin-top:1px;">
+        <div class="cell">
+          <h4>Value Proposition</h4>
+          <p>Robotic systems that make inspection, surveillance and asset protection safe and repeatable in environments where sending a person is slow, costly or dangerous — with the data captured, structured and reportable.</p>
+        </div>
+        <div class="cell">
+          <h4>Customer Segments</h4>
+          <div class="pill-row">
+            <span class="pill">Defence &amp; Homeland Security</span><span class="pill">Oil &amp; Gas</span><span class="pill">Power Generation</span><span class="pill">Shipyards &amp; Maritime</span><span class="pill">Renewables / Solar</span><span class="pill">Infrastructure &amp; Disaster Response</span>
+          </div>
+        </div>
+      </div>
+      <p class="fin-note">Market figures are company-compiled estimates from published third-party research; sources available on request.</p>
+    </section>
+
+    <div class="hazard-rule"></div>
+
+    <!-- TRACTION -->
+    <section id="traction" class="alt">
+      <div class="eyebrow">04 — Traction &amp; Validation</div>
+      <h2 class="sec-title">From competition floor to field deployment.</h2>
+
+      <div class="trac-nums">
+        <div class="tn"><div class="num">2</div><div class="lbl">Awards</div></div>
+        <div class="tn"><div class="num">2</div><div class="lbl">IP Filings</div></div>
+        <div class="tn"><div class="num">1</div><div class="lbl">Publications</div></div>
+        <div class="tn"><div class="num">18+</div><div class="lbl">Exhibitions</div></div>
+        <div class="tn"><div class="num">2+</div><div class="lbl">Lectures</div></div>
+        <div class="tn"><div class="num">2</div><div class="lbl">Recognitions</div></div>
+        <div class="tn"><div class="num">1</div><div class="lbl">Provisional Patents</div></div>
+      </div>
+
+      <div class="grid-2" style="margin-top:24px;">
+        <div class="cell">
+          <h4>Active Relationships</h4>
+          <p>Active commercial relationships in private industry and Indian Army units, with a purchase order in line from an EPC / renewable-energy project. Field pilots completed with a ship-recycling yard, a power-generation company, multiple Army formations and an industrial surveillance project.</p>
+          <div class="pill-row" style="margin-top:16px;">
+            <span class="pill">Indian Army formations</span><span class="pill">Renewable / EPC</span><span class="pill">Ship recycling</span><span class="pill">Power generation</span><span class="pill">Industrial surveillance</span>
+          </div>
+        </div>
+        <div class="cell">
+          <h4>Revenue Streams</h4>
+          <div class="pill-row" style="margin-top:4px;">
+            <span class="pill">Product Sales</span><span class="pill">Custom Development</span><span class="pill">Service Contracts</span><span class="pill">Government Projects</span><span class="pill">Robotics-as-a-Service</span>
+          </div>
+          <h4 style="margin-top:26px;">Live Opportunities</h4>
+          <p>Solar-plant night surveillance (managed service and outright), sub-surface cable mapping at utility scale, defence electro-optic / weapon-station integration, and robotic HVAC duct cleaning.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANCIALS -->
+    <section id="financials">
+      <div class="eyebrow">05 — Financial Snapshot</div>
+      <h2 class="sec-title">Early-stage trajectory, FY24–FY26.</h2>
+      <p class="sec-lede">All figures in ₹ thousands, per the June 2026 snapshot. Revenue has compounded every year; FY26 earnings reflect a deliberate step-up in scale investment ahead of the current raise.</p>
+
+      <div class="fin-wrap">
+        <div class="chart-box">
+          <h4>Net Sales (₹ '000)</h4>
+          <svg id="salesChart" viewBox="0 0 320 200" style="width:100%; overflow:visible;"></svg>
+          <p class="chart-note">Up 6.5× across two years — a ≈156% compound annual growth rate.</p>
+        </div>
+        <div class="chart-box">
+          <h4>EBITDA (₹ '000)</h4>
+          <svg id="ebitdaChart" viewBox="0 0 320 200" style="width:100%; overflow:visible;"></svg>
+          <p class="chart-note">Profitable at small scale in FY24–25; FY26 is the planned investment year.</p>
+        </div>
+      </div>
+
+      <table class="fin-table">
+        <tr><th>Particulars</th><th>FY24</th><th>FY25</th><th>FY26</th></tr>
+        <tr><td>Net Sales</td><td>80.00</td><td>200.00</td><td>523.73</td></tr>
+        <tr><td>EBITDA</td><td>31.87</td><td>21.37</td><td class="neg">(1,024.50)</td></tr>
+        <tr><td>EBITDA %</td><td>39.8%</td><td>10.7%</td><td class="neg">-195.6%</td></tr>
+        <tr><td>PAT</td><td>31.87</td><td>21.37</td><td class="neg">(1,024.50)</td></tr>
+        <tr><td>Networth</td><td>131.87</td><td>153.25</td><td class="neg">(871.25)</td></tr>
+        <tr><td>Promoter's Debt</td><td>1.00</td><td>—</td><td>1,105.00</td></tr>
+      </table>
+      <p class="fin-note">Source: Project Sentinel financial snapshot, June 2026. Strictly private &amp; confidential.</p>
+    </section>
+
+    <div class="hazard-rule"></div>
+
+    <!-- THE ASK -->
+    <section id="ask" class="alt">
+      <div class="eyebrow">06 — The Ask</div>
+      <h2 class="sec-title">Raising ₹4 Cr to scale product, infrastructure and field validation.</h2>
+      <p class="sec-lede">Seeking strategic stakeholders who understand real-world operational needs in defence and high-risk industries. Hover a segment to see its allocation.</p>
+
+      <div class="ask-wrap">
+        <div style="text-align:center;">
+          <svg id="donutChart" class="donut-svg" viewBox="0 0 200 200" width="270" height="270" style="margin:0 auto; display:block;"></svg>
+          <div class="raise-amt">₹4 Cr</div>
+          <div style="color:var(--text-3); font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em;">Total Ask</div>
+        </div>
+        <ul class="donut-legend" id="donutLegend"></ul>
+      </div>
+    </section>
+
+    <!-- RECOGNITION -->
+    <section id="recognition">
+      <div class="eyebrow">07 — Recognition &amp; Media</div>
+      <h2 class="sec-title">Awards, publications and press coverage.</h2>
+
+      <div class="grid-2">
+        <div class="cell">
+          <h4 style="margin-bottom:6px;">Awards &amp; Recognition</h4>
+          <div class="award-row"><div class="yr">Apr 2025</div><div><h4>Startup Maharathi, Startup Mahakumbh</h4><p>Bharat Mandapam, New Delhi · Category: B2B</p></div></div>
+          <div class="award-row"><div class="yr">2025</div><div><h4>Robotics Startup of the Year</h4><p>World STEM &amp; Robotics Olympiad (WSRO)</p></div></div>
+          <div class="award-row"><div class="yr">Jan 2025</div><div><h4>Startup Demo Day</h4><p>KPGU Vadodara — Recognition</p></div></div>
+          <div class="award-row"><div class="yr">2025/26</div><div><h4>Distinguished Lecture Recognition</h4><p>Karnavati University — Startup &amp; Ecosystem</p></div></div>
+          <div class="award-row" style="border-bottom:none;"><div class="yr">2026</div><div><h4>Pride of Gujarat — Defence Category</h4><p>Vibrant Gujarat 2026, Rajkot</p></div></div>
+        </div>
+        <div class="cell">
+          <h4 style="margin-bottom:6px;">Media Coverage</h4>
+          <div class="award-row"><div class="yr">Jan 2026</div><div><h4>Efficient Manufacturing (EM) Magazine</h4><p>Vol. 17, Issue 03</p></div></div>
+          <div class="award-row"><div class="yr">20 Jun 2026</div><div><h4>Divyabhaskar — City Activity</h4><p>Newspaper feature</p></div></div>
+          <div class="award-row" style="border-bottom:none;"><div class="yr">19 Jun 2026</div><div><h4>Gujarat First — News Channel</h4><p>Soft publication / on-air recognition</p></div></div>
+          <div class="video-slot" style="margin-top:16px;">
+            <button class="yt" data-yt="TWqw0dBhC78" aria-label="Play: Gujarat First coverage of ARNOBOT">
+              <img src="assets/video-gujarat-first.jpg" alt="Gujarat First news coverage of ARNOBOT">
+              <span class="play"></span>
+              <span class="yt-cap">Gujarat First — 19 Jun 2026</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" style="padding-bottom:0; border-bottom:none;">
+      <div class="eyebrow">08 — Contact</div>
+      <h2 class="sec-title">Let's talk.</h2>
+
+      <div class="contact-wrap">
+        <div class="contact-card">
+          <div class="role">Founder &amp; CEO — Company</div>
+          <h3>Anmol Shah</h3>
+          <a class="line" href="mailto:anmol@arnobot.in">anmol@arnobot.in</a>
+          <a class="line" href="tel:+919925512860">+91 99255 12860</a>
+          <a class="line" href="https://arnobot.in" target="_blank" rel="noopener">arnobot.in</a>
+          <div class="addr">Arnobot Private Limited<br>G-2, Parul Apartments, Satellite Road<br>Ahmedabad – 380015, Gujarat, India</div>
+        </div>
+      </div>
+
+      <div class="supported-by">
+        <div class="lbl">Supported By</div>
+        <div class="sb-pills">
+          <span>i-Hub — Gujarat Government Enterprise</span>
+          <span>KIIF — Karnavati Innovation &amp; Incubation Foundation</span>
+          <span>AIC RRU Incubation Foundation</span>
+          <span>GUSEC</span>
+          <span>KPGU Vadodara</span>
+          <span>SSIP Gujarat</span>
+        </div>
+      </div>
+
+      <div class="foot-mark">
+        <img src="assets/arnobot-wordmark.png" alt="ARNOBOT™">
+        <span>Robotics Redefined · Made in India</span>
+      </div>
+      <div style="height:36px;"></div>
+    </section>
+    <div class="hazard-rule"></div>
+    <div class="confidential">Strictly Private &amp; Confidential — Prepared for discussion purposes only</div>
+  </main>
+</div>
+
+<script>
+// ---- scroll spy ----
+const sections = document.querySelectorAll('main section');
+const navLinks = document.querySelectorAll('.navlist a');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const link = document.querySelector(`.navlist a[href="#${e.target.getAttribute('id')}"]`);
+      if(link) link.classList.add('active');
+    }
+  });
+},{rootMargin:'-40% 0px -55% 0px'});
+sections.forEach(s=>io.observe(s));
+
+// ---- fade-up reveal ----
+const fio = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); fio.unobserve(e.target); } });
+},{threshold:.12});
+document.querySelectorAll('.cell, .product, .mstat, .trac-nums, .reg-strip, .gallery, .hero-photo')
+  .forEach(el=>{ el.classList.add('fade-up'); fio.observe(el); });
+
+// ---- product accordion ----
+document.querySelectorAll('.product').forEach(p=>{
+  const head = p.querySelector('.head');
+  const body = p.querySelector('.body');
+  head.addEventListener('click', ()=>{
+    const isOpen = p.classList.contains('open');
+    document.querySelectorAll('.product').forEach(o=>{ o.classList.remove('open'); o.querySelector('.body').style.maxHeight=null; });
+    if(!isOpen){ p.classList.add('open'); body.style.maxHeight = body.scrollHeight+'px'; }
+  });
+});
+
+// ---- click-to-play video facades (YouTube + Google Drive) ----
+// Opened from disk (file://) both providers refuse to embed — YouTube returns "Error 153"
+// and Drive blocks the null origin. So from file:// we open the video in a new tab; served
+// over http(s) we swap the poster for a real inline player.
+document.querySelectorAll('.yt').forEach(el=>{
+  const id = el.dataset.yt;
+  const drive = el.dataset.drive;
+  const watch = drive ? `https://drive.google.com/file/d/${drive}/view`
+                      : `https://youtu.be/${id}`;
+  const embed = drive ? `https://drive.google.com/file/d/${drive}/preview`
+                      : `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  el.addEventListener('click', ()=>{
+    if(location.protocol === 'file:'){
+      window.open(watch, '_blank', 'noopener');
+      return;
+    }
+    const f = document.createElement('iframe');
+    f.src = embed;
+    f.title = el.getAttribute('aria-label') || 'ARNOBOT video';
+    f.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture';
+    f.allowFullscreen = true;
+    el.replaceWith(f);
+  });
+});
+
+// ---- bar charts ----
+const BRAND = {steel:'#375E9D', indigo:'#230C75', navy:'#1F3864', neg:'#B32B22', line:'#D6DFEA', mute:'#7C8A9C'};
+const NS='http://www.w3.org/2000/svg';
+const fmt = n => Math.abs(n).toLocaleString('en-IN',{minimumFractionDigits:2, maximumFractionDigits:2});
+const money = n => n < 0 ? `(${fmt(n)})` : fmt(n);
+
+function txt(parent, x, y, s, {size=9.5, fill=BRAND.mute, anchor='middle', weight=400}={}){
+  const t=document.createElementNS(NS,'text');
+  t.setAttribute('x',x); t.setAttribute('y',y);
+  t.setAttribute('text-anchor',anchor); t.setAttribute('font-size',size);
+  t.setAttribute('fill',fill); t.setAttribute('font-weight',weight);
+  t.setAttribute('font-family','IBM Plex Mono, monospace');
+  t.textContent=s; parent.appendChild(t); return t;
+}
+
+function drawBarChart(svgId, labels, values, opts={}){
+  const svg = document.getElementById(svgId);
+  svg.innerHTML='';
+  const w=320, padL=8, padR=8;
+  const plotTop = opts.showDelta ? 40 : 34, plotBottom = 152;
+  const yearY = 180;
+  const span = plotBottom - plotTop;
+
+  const maxPos = Math.max(0, ...values);
+  const maxNeg = Math.max(0, ...values.map(v=>-v));
+  let zeroY, scale;
+  if(maxNeg === 0){ zeroY = plotBottom; scale = span/maxPos; }
+  else if(maxPos === 0){ zeroY = plotTop; scale = span/maxNeg; }
+  else { const total = maxPos+maxNeg; zeroY = plotTop + span*(maxPos/total); scale = span/total; }
+
+  const slot = (w-padL-padR)/values.length;
+  const barW = Math.min(slot-30, 58);
+
+  // zero / baseline reference
+  const axis=document.createElementNS(NS,'line');
+  axis.setAttribute('x1',padL); axis.setAttribute('x2',w-padR);
+  axis.setAttribute('y1',zeroY); axis.setAttribute('y2',zeroY);
+  axis.setAttribute('stroke', maxNeg ? BRAND.mute : BRAND.line);
+  axis.setAttribute('stroke-width','1');
+  svg.appendChild(axis);
+  if(maxNeg) txt(svg, w-padR, zeroY-4, '0', {size:8, anchor:'end', fill:BRAND.mute});
+
+  values.forEach((v,i)=>{
+    const x = padL + i*slot + (slot-barW)/2;
+    const barH = Math.max(Math.abs(v)*scale, 2.5);
+    const y = v>=0 ? zeroY-barH : zeroY;
+    const base = opts.color || BRAND.steel;
+
+    const rect=document.createElementNS(NS,'rect');
+    rect.setAttribute('x',x); rect.setAttribute('y',y);
+    rect.setAttribute('width',barW); rect.setAttribute('height',barH);
+    rect.setAttribute('fill', v>=0 ? base : BRAND.neg);
+    rect.style.cursor='pointer'; rect.style.transition='fill .12s';
+    rect.addEventListener('mouseenter',()=>{ rect.setAttribute('fill', v>=0 ? BRAND.indigo : '#8E1F18'); showTip(svgId, x+barW/2, y, `${labels[i]}  ₹${money(v)}k`); });
+    rect.addEventListener('mouseleave',()=>{ rect.setAttribute('fill', v>=0 ? base : BRAND.neg); hideTip(svgId); });
+    svg.appendChild(rect);
+
+    // value printed on the bar's free end — readable without hovering
+    txt(svg, x+barW/2, v>=0 ? y-7 : y+barH+12, money(v),
+        {size:10, fill: v>=0 ? BRAND.navy : BRAND.neg, weight:600});
+
+    txt(svg, x+barW/2, yearY, labels[i], {size:11});
+  });
+
+  // year-on-year change between consecutive bars
+  if(opts.showDelta){
+    for(let i=1;i<values.length;i++){
+      const prev=values[i-1], cur=values[i];
+      if(!prev) continue;
+      const pct = Math.round((cur-prev)/Math.abs(prev)*100);
+      const x = padL + (i-0.5)*slot + slot/2;
+      txt(svg, x, 16, `${pct>=0?'+':''}${pct}%`, {size:9.5, fill:BRAND.steel, weight:600});
+    }
+  }
+}
+function tipFor(svgId){
+  const box = document.getElementById(svgId).parentElement;
+  let tip = box.querySelector('.bar-tip');
+  if(!tip){ tip=document.createElement('div'); tip.className='bar-tip'; box.appendChild(tip); }
+  return {box, tip};
+}
+function showTip(svgId,x,y,text){
+  const svg = document.getElementById(svgId);
+  const {box, tip} = tipFor(svgId);
+  const sr = svg.getBoundingClientRect(), br = box.getBoundingClientRect();
+  tip.textContent = text;
+  tip.style.left = (sr.left - br.left + (x/320)*sr.width) + 'px';
+  tip.style.top  = (sr.top  - br.top  + (y/200)*sr.height) + 'px';
+  tip.style.opacity = '1';
+}
+function hideTip(svgId){
+  const tip = document.getElementById(svgId).parentElement.querySelector('.bar-tip');
+  if(tip) tip.style.opacity='0';
+}
+drawBarChart('salesChart',  ['FY24','FY25','FY26'], [80.00, 200.00, 523.73], {showDelta:true});
+drawBarChart('ebitdaChart', ['FY24','FY25','FY26'], [31.87, 21.37, -1024.50]);
+
+// ---- donut: fund allocation (brand ramp) ----
+const TOTAL_CR = 4;
+const allocation = [
+  {label:'R&D & Product Development',    pct:25, color:'#230C75'},
+  {label:'Infrastructure & Lab',         pct:20, color:'#2F3F8E'},
+  {label:'Team & Hiring',                pct:15, color:'#375E9D'},
+  {label:'Business Development',         pct:10, color:'#5A85BE'},
+  {label:'Certifications & Compliance',  pct:10, color:'#8AA9D2'},
+  {label:'Testing & Field Trials',       pct:10, color:'#E39412'},
+  {label:'Working Capital',              pct:10, color:'#B7C6DA'},
+];
+(function(){
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.getElementById('donutChart');
+  const cx=100, cy=100, r=76, sw=26;
+  const C = 2*Math.PI*r;
+  let offset=0;
+  const legend = document.getElementById('donutLegend');
+
+  function centerLabel(text){
+    let t = svg.querySelector('.center-label');
+    if(!t){
+      t=document.createElementNS(ns,'text'); t.setAttribute('class','center-label');
+      t.setAttribute('x',cx); t.setAttribute('y',cy+3); t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-size','8.5'); t.setAttribute('fill','#1F3864'); svg.appendChild(t);
+    }
+    t.textContent=text;
+  }
+  function reset(){
+    svg.querySelectorAll('circle').forEach(c=>c.setAttribute('opacity','1'));
+    legend.querySelectorAll('li').forEach(l=>l.classList.remove('active'));
+    centerLabel('');
+  }
+
+  allocation.forEach((a,i)=>{
+    const len = (a.pct/100)*C;
+    const circle=document.createElementNS(ns,'circle');
+    circle.setAttribute('cx',cx); circle.setAttribute('cy',cy); circle.setAttribute('r',r);
+    circle.setAttribute('fill','none'); circle.setAttribute('stroke',a.color);
+    circle.setAttribute('stroke-width',sw);
+    circle.setAttribute('stroke-dasharray', `${len} ${C-len}`);
+    circle.setAttribute('stroke-dashoffset', -offset);
+    circle.setAttribute('transform', `rotate(-90 ${cx} ${cy})`);
+    circle.style.transition='opacity .15s'; circle.style.cursor='pointer';
+    circle.dataset.idx=i;
+    svg.appendChild(circle);
+    offset += len;
+
+    const amount = (TOTAL_CR*a.pct/100).toFixed(2).replace(/\.00$/,'');
+    const li=document.createElement('li');
+    li.innerHTML=`<span class="sw" style="background:${a.color}"></span><span class="lbl">${a.label}</span><span class="amt">₹${amount} Cr</span><span class="pct">${a.pct}%</span>`;
+    li.dataset.idx=i;
+    legend.appendChild(li);
+
+    function highlight(){
+      svg.querySelectorAll('circle').forEach(c=>c.setAttribute('opacity', c.dataset.idx==i ? '1':'0.22'));
+      legend.querySelectorAll('li').forEach(l=>l.classList.toggle('active', l===li));
+      centerLabel(`₹${amount} Cr · ${a.pct}%`);
+    }
+    circle.addEventListener('mouseenter',highlight);
+    circle.addEventListener('mouseleave',reset);
+    li.addEventListener('mouseenter',highlight);
+    li.addEventListener('mouseleave',reset);
+  });
+})();
+</script>
+</body>
+</html>
