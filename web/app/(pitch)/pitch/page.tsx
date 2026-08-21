@@ -204,7 +204,7 @@ export default function PitchPage() {
               </div>
 
               <div className="bracket product" data-p="4"><span className="bl" /><span className="br" />
-                <div className="shot tile"><img src={`${A}/prod-atm.jpg`} alt="ATM all-terrain heavy carrier platform" /></div>
+                <div className="shot"><img src={`${A}/prod-atm.jpg`} alt="ATM all-terrain heavy carrier platform" /></div>
                 <div className="head">
                   <div><div className="name">ATM</div><div className="tag">Any Terrain Machine</div></div>
                   <div className="plus">+</div>
