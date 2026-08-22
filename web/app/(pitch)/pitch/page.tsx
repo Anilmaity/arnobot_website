@@ -39,7 +39,7 @@ export default function PitchPage() {
                 <p className="lede">ARNOBOT designs and builds mission-ready ground, climbing and tactical robots for hazardous environments across defence, energy, maritime and industrial sectors — engineered end-to-end, in-house.</p>
               </div>
               <figure className="hero-photo">
-                <img src={`${A}/saibya-hero.jpg`} alt="SAIBYA unmanned ground vehicle deployed on open terrain" />
+                <img src={`${A}/saibya-hero.jpg`} alt="SAIBYA unmanned ground vehicle alongside the ATM at a desert field exercise" />
                 <figcaption>SAIBYA (surveillance fit) — field deployment</figcaption>
               </figure>
             </div>
