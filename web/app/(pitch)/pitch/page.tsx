@@ -219,18 +219,6 @@ export default function PitchPage() {
             </div>
 
             <div style={{ marginTop: '56px' }}>
-              <div className="eyebrow" style={{ marginBottom: '20px' }}>Build Detail — SAIBYA Surveillance Fit</div>
-              <div className="gallery">
-                <figure><img src={`${A}/detail-camera.jpg`} alt="Camera and antenna head" /><figcaption>Camera &amp; antenna head</figcaption></figure>
-                <figure><img src={`${A}/detail-light.jpg`} alt="LED floodlight bar" /><figcaption>LED floodlight</figcaption></figure>
-                <figure><img src={`${A}/detail-siren.jpg`} alt="Deterrent siren" /><figcaption>Deterrent siren</figcaption></figure>
-                <figure><img src={`${A}/detail-branding.jpg`} alt="Deck sensor and ARNOBOT branding" /><figcaption>Deck sensor</figcaption></figure>
-                <figure><img src={`${A}/detail-wheels.jpg`} alt="Chassis and all-terrain wheels" /><figcaption>Chassis &amp; wheels</figcaption></figure>
-                <figure><img src={`${A}/detail-panel.jpg`} alt="Operator control panel" /><figcaption>Control panel</figcaption></figure>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '56px' }}>
               <div className="eyebrow" style={{ marginBottom: '20px' }}>Platform &amp; Services</div>
               <div className="grid-2">
                 <div className="cell svc"><div className="n">01</div><div><h4>ARNOBOT GCS Software</h4><p>Ground-control station for human–robot interaction: live video, sensor telemetry, SLAM maps, mission control and exportable field-usable mission reports.</p></div></div>

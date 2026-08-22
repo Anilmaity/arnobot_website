@@ -284,7 +284,7 @@ export default function PitchScripts() {
       { threshold: 0.12 },
     );
     document
-      .querySelectorAll('.cell, .product, .mstat, .trac-nums, .reg-strip, .gallery, .hero-photo')
+      .querySelectorAll('.cell, .product, .mstat, .trac-nums, .reg-strip, .hero-photo')
       .forEach((el) => {
         el.classList.add('fade-up');
         fio.observe(el);
