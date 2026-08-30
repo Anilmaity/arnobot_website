@@ -1,0 +1,142 @@
+/* Styles ported from the inline <style> block of the original home.php intro page. */
+
+.videoBg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.videoBg video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  object-fit: cover;
+  min-width: 100%;
+  min-height: 100%;
+
+  width: auto;
+  height: auto;
+
+  transform: translate(-50%, -50%);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+
+  background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  /* Bottom */
+  padding-bottom: 8vh;
+  /* Responsive bottom spacing */
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.content {
+  text-align: center;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.enterBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 18px 42px;
+  border-radius: 60px;
+
+  background: #fff;
+  color: #111;
+  text-decoration: none;
+
+  font-size: 17px;
+  font-weight: 600;
+
+  transition: 0.35s;
+  box-sizing: border-box;
+}
+
+.enterBtn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+}
+
+/* Tablet */
+
+@media (max-width: 991px) {
+  .overlay {
+    padding-bottom: 7vh;
+  }
+
+  .enterBtn {
+    padding: 16px 36px;
+    font-size: 16px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 767px) {
+  .overlay {
+    padding-bottom: 6vh;
+  }
+
+  .enterBtn {
+    padding: 15px 30px;
+    font-size: 15px;
+    border-radius: 50px;
+  }
+}
+
+/* Small Mobile */
+
+@media (max-width: 480px) {
+  .overlay {
+    padding-bottom: 5vh;
+  }
+
+  .enterBtn {
+    width: 85%;
+    max-width: 280px;
+    justify-content: center;
+    padding: 14px 24px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .videoBg video {
+    object-fit: contain;
+    background: #000;
+  }
+
+  .overlay {
+    padding-bottom: 7vh;
+  }
+
+  .enterBtn {
+    width: 85%;
+    max-width: 260px;
+    padding: 15px 20px;
+    font-size: 15px;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,62 @@
+import 'server-only';
+
+import nodemailer, { type Transporter } from 'nodemailer';
+
+/**
+ * Replaces the PHPMailer setup shared by contact_submit.php, career_submit.php
+ * and schedule_demo_submit.php.
+ *
+ * The PHP scripts hard-coded the Gmail account and app password in source; those
+ * values now come from the environment. See .env.example.
+ */
+const SMTP_HOST = process.env.SMTP_HOST ?? 'smtp.gmail.com';
+const SMTP_PORT = Number(process.env.SMTP_PORT ?? 587);
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
+
+export const MAIL_FROM = process.env.MAIL_FROM ?? 'contact@arnobot.in';
+export const MAIL_TO = process.env.MAIL_TO ?? 'contact@arnobot.in';
+
+export function isMailConfigured(): boolean {
+  return Boolean(SMTP_USER && SMTP_PASS);
+}
+
+let transporter: Transporter | null = null;
+
+function getTransporter(): Transporter {
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      // STARTTLS on 587, matching PHPMailer::ENCRYPTION_STARTTLS.
+      secure: SMTP_PORT === 465,
+      auth: { user: SMTP_USER as string, pass: SMTP_PASS as string },
+    });
+  }
+  return transporter;
+}
+
+export interface OutgoingMail {
+  readonly fromName: string;
+  readonly subject: string;
+  readonly html: string;
+  readonly text: string;
+  readonly replyTo?: { readonly name: string; readonly address: string };
+  readonly attachments?: ReadonlyArray<{ readonly filename: string; readonly content: Buffer }>;
+}
+
+export async function sendMail(message: OutgoingMail): Promise<void> {
+  if (!isMailConfigured()) {
+    throw new Error('SMTP credentials are not configured (set SMTP_USER and SMTP_PASS).');
+  }
+
+  await getTransporter().sendMail({
+    from: { name: message.fromName, address: MAIL_FROM },
+    to: { name: 'ARNOBOT', address: MAIL_TO },
+    replyTo: message.replyTo?.address ? message.replyTo : undefined,
+    subject: message.subject,
+    html: message.html,
+    text: message.text,
+    attachments: message.attachments ? [...message.attachments] : undefined,
+  });
+}

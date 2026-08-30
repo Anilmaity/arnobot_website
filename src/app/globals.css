@@ -1,0 +1,108 @@
+/* ==========================================================================
+   Tailwind entry point.
+
+   The site's design lives in public/assets/css/style.css — the original,
+   unmodified stylesheet from the PHP build. Tailwind is layered *underneath*
+   it rather than replacing it:
+
+   - Preflight is deliberately NOT imported. Tailwind's base reset would
+     re-style headings, lists, images and borders that style.css already
+     defines, which would change the design.
+   - Only the theme (custom properties) and the utilities actually used are
+     emitted, so nothing is applied to legacy markup that does not opt in.
+
+   Utilities are used for the parts of the UI that did not exist before
+   (loading, error and empty states) and for new layout work.
+   ========================================================================== */
+
+@layer theme, components;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css';
+
+/* Only application source needs scanning — public/ holds 600 MB of media. */
+@source '../**/*.{ts,tsx}';
+
+/*
+  `container`, `visible` and `hidden` are class names style.css already owns
+  (`.container` has four responsive overrides; `.contact-success.visible` and
+  `.career-job-card.hidden` are state flags). Tailwind ships utilities under the
+  same names, and a duplicate `.container { width: 100% }` would break the page
+  gutters, so those three candidates are excluded.
+
+  To re-check after adding markup, compare the class names in style.css with the
+  utilities Tailwind emits into .next/static/chunks/*.css.
+*/
+@source not inline('container visible hidden');
+
+/* The brand tokens declared in style.css, exposed to Tailwind so new UI can
+   use `text-accent`, `bg-footer`, … and stay in sync with the legacy palette. */
+@theme {
+  --color-ink: #070322;
+  --color-accent: #375e9d;
+  --color-footer: #121c2e;
+  --color-muted: #5f626d;
+  --color-page: #dfe1e5;
+
+  --font-display: 'Russo One', 'Arial Black', sans-serif;
+  --font-body: 'Outfit', Arial, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility additions.
+
+   The original stylesheet never defined a focus style, so keyboard users got
+   only the browser default (and none at all on elements with `outline: none`).
+   These rules add a visible ring on keyboard focus only — `:focus-visible`
+   never fires for mouse clicks, so the resting design is untouched.
+   -------------------------------------------------------------------------- */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(html) {
+    scroll-behavior: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Two rules that style.css cannot express on its own.
+
+   Selectors are one step more specific than their style.css counterparts so
+   they win regardless of which stylesheet the browser applies first.
+   -------------------------------------------------------------------------- */
+
+/* main.js used to inject this at runtime so the caret tracks the toggle.
+   It is a static rule, so it belongs in a stylesheet. */
+.nav-dropdown .dropdown-menu::before {
+  left: var(--arrow-left, 50%);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* The PRODUCT menu trigger is a real <button> (it opens a menu, it is not a
+   link). style.css styles its siblings via `.main-nav a`, so the button repeats
+   those four declarations and drops the user-agent button chrome. */
+.main-nav .nav-dropdown-toggle {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #11153a;
+  text-decoration: none;
+}
+
+/* The press-release headlines open a dialog. They stay anchors so that
+   `.spotlight-title a` / `.press-card-title a` keep styling them and the
+   heading's -webkit-line-clamp keeps working; they carry role="button" and
+   tabindex instead of the PHP page's `href="javascript:void(0)"`, so they only
+   need the pointer cursor an href would have given them. */
+.spotlight-title a[role='button'],
+.press-card-title a[role='button'] {
+  cursor: pointer;
+}
