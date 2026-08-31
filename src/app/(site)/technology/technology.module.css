@@ -1,0 +1,857 @@
+/* ==========================================================================
+   Technology page — editorial "chapter band" layout.
+
+   The rhythm is: a full-bleed dark media band (hero, then chapter markers)
+   alternating with a light section that carries the copy. Every section is at
+   least one screen tall, so the reader meets one idea at a time.
+
+   Everything is expressed through the site's own tokens, declared in
+   public/assets/css/style.css (:root) — Russo One for display, Outfit for body,
+   --ink / --accent / --footer for colour — so the page reads as part of the
+   site rather than a transplant. Fallbacks are inlined in case this module
+   ever renders before style.css lands.
+   ========================================================================== */
+
+.page {
+  --tech-dark: var(--footer, #121c2e);
+  --tech-ink: var(--ink, #070322);
+  --tech-accent: var(--accent, #375e9d);
+  --tech-muted: var(--muted, #5f626d);
+  --tech-line: rgba(7, 3, 34, 0.12);
+
+  --tech-display: "Russo One", "Arial Black", sans-serif;
+  --tech-body: "Outfit", Arial, sans-serif;
+
+  /* Sections are viewport-height, so the padding only has to keep content off
+     the edges — the screen itself supplies the vertical rhythm. */
+  --pad-standard: clamp(72px, 10vw, 128px);
+  --page-margin: clamp(24px, 5vw, 64px);
+  --gutter: clamp(24px, 3vw, 32px);
+
+  background: #fff;
+  font-family: var(--tech-body);
+  color: var(--tech-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Shared type scale
+   -------------------------------------------------------------------------- */
+
+.displayXl,
+.statementTitle,
+.bandTitle {
+  font-family: var(--tech-display);
+  font-weight: 400; /* Russo One ships a single weight */
+  letter-spacing: -0.01em;
+}
+
+.displayXl {
+  font-size: clamp(40px, 8vw, 92px);
+  line-height: 1.02;
+}
+
+.statementTitle,
+.bandTitle {
+  font-size: clamp(32px, 5.6vw, 76px);
+  line-height: 1.08;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--tech-body);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tech-accent);
+  margin-bottom: 12px;
+}
+
+.lead {
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.65;
+  color: var(--tech-muted);
+}
+
+.rule {
+  width: 96px;
+  height: 2px;
+  background: var(--tech-accent);
+  border: 0;
+}
+
+.ruleCenter {
+  composes: rule;
+  margin-inline: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal.
+
+   Piggybacks on the site-wide IntersectionObserver in
+   src/lib/behaviors/revealOnScroll.ts, which adds `.visible` to any `.reveal`
+   element. No second observer and no client component needed.
+   -------------------------------------------------------------------------- */
+
+.fadeUp {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+
+:global(.visible) .fadeUp,
+.fadeUp:global(.visible) {
+  opacity: 1;
+  transform: none;
+}
+
+.d1 {
+  transition-delay: 0.08s;
+}
+
+.d2 {
+  transition-delay: 0.16s;
+}
+
+/* The reduced-motion guard for the whole page lives at the end of this file,
+   so it wins on source order against every animated rule below. */
+
+/* --------------------------------------------------------------------------
+   Media bands (hero + chapter markers)
+   -------------------------------------------------------------------------- */
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--tech-dark);
+}
+
+.media video,
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  /* A slow drift keeps a short loop from reading as a still frame. */
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+/* Keeps display type legible over whatever frame the loop happens to be on.
+   Weighted to the left where the words sit and fully clear on the right, so the
+   footage reads as footage rather than a dark texture behind a panel. The
+   second, shallow pass only darkens the top edge, which is where the docked
+   header sits over the frame. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(18, 28, 46, 0.86) 0%,
+      rgba(18, 28, 46, 0.6) 32%,
+      rgba(18, 28, 46, 0.14) 62%,
+      rgba(18, 28, 46, 0) 100%
+    ),
+    linear-gradient(180deg, rgba(18, 28, 46, 0.3) 0%, rgba(18, 28, 46, 0) 30%);
+}
+
+@media (max-width: 900px) {
+  /* One column on a phone, so the text needs cover across the whole frame —
+     but the floor is kept low enough that the footage still shows through. */
+  .scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(18, 28, 46, 0.8) 0%,
+      rgba(18, 28, 46, 0.58) 55%,
+      rgba(18, 28, 46, 0.44) 100%
+    );
+  }
+}
+
+/* Every section on this page is at least one screen tall, so the reader meets
+   one idea at a time. `min-height` rather than `height`, so a section that
+   outgrows the viewport (the spec table on a phone) simply gets taller.
+   `svh` keeps mobile browser chrome from pushing content out of view. */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: var(--pad-standard) var(--page-margin);
+  background: var(--tech-dark);
+  overflow: hidden;
+}
+
+.hero .media video {
+  opacity: 0.72;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: 60rem;
+}
+
+.heroTitle {
+  composes: displayXl;
+  color: #fff;
+  margin-bottom: 28px;
+}
+
+.heroLead {
+  composes: lead;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 46rem;
+  margin-top: 28px;
+}
+
+/* Chapter marker — a full-screen video band that opens each part. */
+.band {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: var(--pad-standard) var(--page-margin);
+  background: var(--tech-dark);
+  overflow: hidden;
+}
+
+/* Capped well short of the full width: the open right-hand third is what makes
+   the video behind the band readable as video. */
+.bandInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--gutter);
+  align-items: start;
+  width: 100%;
+  max-width: 62rem;
+  margin-right: auto;
+}
+
+.bandBody {
+  max-width: 34rem;
+  margin: 24px 0 0;
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+@media (max-width: 900px) {
+  .bandInner {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+}
+
+.bandLabel {
+  composes: eyebrow;
+  color: #fff;
+  opacity: 0.92;
+}
+
+.bandRule {
+  width: 100%;
+  height: 2px;
+  background: var(--tech-accent);
+  border: 0;
+}
+
+.bandTitle {
+  color: #fff;
+}
+
+/* Now that the footage runs bright, the white type carries its own contrast
+   rather than relying on the scrim: a tight shadow for the edge and a wide,
+   soft one that lifts the letterforms off a pale frame. Costs nothing on a
+   dark frame, and lets the video stay visible on every frame. */
+.heroTitle,
+.bandTitle {
+  text-shadow:
+    0 1px 2px rgba(7, 3, 34, 0.4),
+    0 8px 40px rgba(7, 3, 34, 0.5);
+}
+
+.heroLead,
+.bandBody,
+.bandLabel,
+.hero .eyebrow {
+  text-shadow: 0 1px 14px rgba(7, 3, 34, 0.55);
+}
+
+/* --------------------------------------------------------------------------
+   Light content sections
+   -------------------------------------------------------------------------- */
+
+/* Padding is deliberately lighter than the mockup's 240px rhythm now that the
+   section is a full screen — the viewport height supplies the air instead. */
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* The fixed header consumes no layout space, so a 100svh section hides its
+     first 62px under the docked bar. Reserve it on the top edge only. */
+  padding: calc(var(--nav-height, 62px) + clamp(20px, 2.5vh, 40px)) var(--page-margin) clamp(48px, 6vh, 88px);
+  border-bottom: 1px solid var(--tech-line);
+  background: #fff;
+}
+
+.sectionTight {
+  composes: section;
+}
+
+/* Applied both to a whole section and to a section's head block, so it keeps
+   its own flex context; `.section` supplies the vertical centring. */
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.statementInner {
+  max-width: 56rem;
+}
+
+.statementTitle {
+  margin-bottom: 24px;
+}
+
+.statementLead {
+  composes: lead;
+  max-width: 42rem;
+  margin: 0 auto 40px;
+}
+
+.sectionHead {
+  max-width: 62rem;
+  margin: 0 auto clamp(24px, 3.5vh, 44px);
+}
+
+.sectionHead .ruleCenter {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-family: var(--tech-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1.1;
+}
+
+/* Square-cornered, high-contrast button matching the mockup's CTA treatment. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 48px;
+  border: 2px solid var(--tech-dark);
+  border-radius: 0;
+  background: var(--tech-dark);
+  color: #fff;
+  font-family: var(--tech-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background: var(--tech-accent);
+  border-color: var(--tech-accent);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Content blocks used inside the light sections
+   -------------------------------------------------------------------------- */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+  max-width: 78rem;
+  margin: 0 auto;
+}
+
+.splitMedia {
+  border: 1px solid var(--tech-line);
+  background: #f5f6f8;
+  overflow: hidden;
+}
+
+.splitMedia img,
+.splitMedia video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.blockTitle {
+  font-family: var(--tech-display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+
+.blockBody {
+  composes: lead;
+  margin-bottom: 32px;
+}
+
+/* Feature rows — icon rail on the left, copy on the right. */
+.featureList {
+  display: grid;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.featureIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--tech-line);
+  color: var(--tech-accent);
+}
+
+.featureIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.featureTitle {
+  display: block;
+  font-family: var(--tech-display);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.featureBody {
+  display: block;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--tech-muted);
+}
+
+/* Standfirst under a centred section title. */
+.sectionLead {
+  max-width: 46rem;
+  margin: 20px auto 0;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--tech-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Architecture diagram.
+
+   The four-layer stack is drawn as inline SVG so it scales without a raster
+   asset, stays legible in a screenshot, and can be recoloured from these
+   tokens rather than re-exported.
+   -------------------------------------------------------------------------- */
+
+.diagram {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  border: 1px solid var(--tech-line);
+  background: #fafbfc;
+  padding: clamp(20px, 3vw, 36px);
+}
+
+/* The section is one screen tall and the head and pull-quote take their share,
+   so the diagram is sized by HEIGHT first and only then capped by width. Without
+   this it renders at its natural aspect ratio and runs off the bottom of the
+   screen — the layers below the fold are the ones that carry the argument. */
+.stackSvg {
+  display: block;
+  width: auto;
+  /* Budgeted against the rest of the section, not the whole screen: the head
+     and the pull-quote below take their share first, so a diagram sized to
+     half the viewport pushed the section past one screen. */
+  height: min(34svh, 320px);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  /* Stacked layout has the vertical room, so let it size by width instead. */
+  .stackSvg {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.stackBox {
+  fill: #fff;
+  stroke: var(--tech-line);
+  stroke-width: 1;
+}
+
+.stackArrow,
+.stackRail {
+  stroke: var(--tech-accent);
+  stroke-width: 1.5;
+}
+
+.stackRail {
+  stroke-dasharray: 3 5;
+}
+
+.stackArrowHead {
+  fill: var(--tech-accent);
+}
+
+.stackName {
+  font-family: var(--tech-display);
+  font-size: 17px;
+  fill: var(--tech-ink);
+}
+
+.stackRole {
+  font-family: var(--tech-body);
+  font-size: 13px;
+  font-style: italic;
+  fill: var(--tech-accent);
+}
+
+.stackDesc {
+  font-family: var(--tech-body);
+  font-size: 13px;
+  fill: var(--tech-muted);
+}
+
+/* Layers resolve one after another as the section reveals, so the reader sees
+   the stack assemble top-down rather than arrive all at once. Per-element
+   delays are set inline in the component. */
+.stackLayer {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.55s ease-out,
+    transform 0.55s ease-out;
+}
+
+:global(.visible) .stackLayer {
+  opacity: 1;
+  transform: none;
+}
+
+/* The one argument on the page that earns its own typographic moment. */
+.pullQuote {
+  max-width: 46rem;
+  margin: clamp(20px, 3vh, 36px) auto 0;
+  padding-left: 24px;
+  border-left: 3px solid var(--tech-accent);
+  font-size: clamp(17px, 1.6vw, 20px);
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Analytics & Operations — the software showcase.
+
+   The clip is already a laptop standing on a pure-white ground, so it needs no
+   frame, no scrim and no crop: the section's white simply continues the clip's
+   own. Copy sits at the top of the screen and the machine runs edge to edge
+   underneath it, which is the whole point of a shot of the software.
+   -------------------------------------------------------------------------- */
+
+.showcaseSection {
+  composes: section;
+  align-items: center;
+  /* Top-aligned rather than centred, so the copy stays high on the screen and
+     the footage takes the space it frees. */
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+/* The clip carries its own white margin above the lid, so the head needs less
+   room beneath it here than in a section that opens straight onto text. */
+.showcaseSection .sectionHead {
+  margin-bottom: clamp(4px, 1vh, 16px);
+}
+
+.showcase {
+  /* Cancels the page gutter: the clip runs the full width of the viewport. */
+  align-self: stretch;
+  margin: 0 calc(var(--page-margin) * -1);
+  padding: 0;
+}
+
+.showcase video {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Declared up front so the section does not reflow when metadata lands. */
+  aspect-ratio: 16 / 9;
+  /* Runs at its native 16:9 so the machine spans the full width of the screen.
+     The cap is only a safety valve for very wide or very short viewports; when
+     it bites, the clip letterboxes invisibly — its ground is the section's. */
+  max-height: 92svh;
+  object-fit: contain;
+}
+
+/* On a phone the clip is only a fifth of the screen tall, so top-aligning it
+   would leave the bottom half of the section empty. Centre it instead. */
+@media (max-width: 900px) {
+  .showcaseSection {
+    justify-content: center;
+  }
+
+  .showcaseSection .sectionHead {
+    margin-bottom: clamp(16px, 3vh, 32px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Perceive / Localise / Decide.
+   -------------------------------------------------------------------------- */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--tech-line);
+  border: 1px solid var(--tech-line);
+  max-width: 78rem;
+  margin: 0 auto;
+  list-style: none;
+  padding: 0;
+}
+
+.step {
+  background: #fff;
+  padding: 36px 32px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.55s ease-out,
+    transform 0.55s ease-out;
+}
+
+/* Staggered so the three read left to right as a sequence, not a row. */
+:global(.visible) .step {
+  opacity: 1;
+  transform: none;
+}
+
+:global(.visible) .step:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+:global(.visible) .step:nth-child(3) {
+  transition-delay: 0.24s;
+}
+
+.stepIndex {
+  display: block;
+  font-family: var(--tech-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--tech-accent);
+  margin-bottom: 16px;
+}
+
+.stepName {
+  font-family: var(--tech-display);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
+
+.stepBody {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--tech-muted);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Platform comparison table.
+
+   Below 700px every row becomes its own card and each cell is prefixed with
+   the column it came from, carried in `data-label`.
+   -------------------------------------------------------------------------- */
+
+.specs {
+  max-width: 78rem;
+  margin: 0 auto;
+}
+
+.specsTitle {
+  composes: blockTitle;
+  margin-bottom: 28px;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 18px 20px 18px 0;
+  vertical-align: top;
+}
+
+.table thead tr {
+  border-bottom: 2px solid var(--tech-dark);
+}
+
+.table th {
+  font-family: var(--tech-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tech-ink);
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--tech-line);
+}
+
+.table td {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--tech-muted);
+}
+
+.rowHead {
+  font-weight: 600;
+  color: var(--tech-ink);
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .table,
+  .table thead,
+  .table tbody,
+  .table th,
+  .table td,
+  .table tr {
+    display: block;
+  }
+
+  /* Visually hidden, but the header cells stay in the accessibility tree so
+     the `scope="col"` association still works for screen readers. */
+  .table thead tr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .table tbody tr {
+    border: 1px solid var(--tech-line);
+    margin-bottom: 16px;
+    padding: 20px;
+  }
+
+  .table td {
+    position: relative;
+    padding: 0 0 10px 45%;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    font-weight: 700;
+    color: var(--tech-ink);
+  }
+
+  .table th.rowHead,
+  .table td.rowHead {
+    padding-left: 0;
+  }
+
+  .rowHead::before {
+    content: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Motion guard.
+
+   Last in the file on purpose: every rule it cancels is defined above it, and
+   at equal specificity the later rule wins. Covers the scroll reveals, the
+   diagram's layer sequence, the step stagger and the drifting band footage.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeUp,
+  .stackLayer,
+  .step {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0s;
+  }
+
+  .media video,
+  .media img {
+    animation: none;
+    transform: none;
+  }
+}

@@ -62,7 +62,6 @@ export const FOOTER_NAV: ReadonlyArray<{
     links: [
       { href: '/about', label: 'About' },
       { href: '/technology', label: 'Technology' },
-      { href: '/industries', label: 'Industries' },
       { href: '/career', label: 'Careers' },
     ],
   },

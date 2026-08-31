@@ -26,7 +26,7 @@ export default async function BlogDetailsPage({ searchParams }: PageProps) {
 
   return (
     <main className="blog-details-page">
-      <section className="blog-hero blog-details-hero" id="blog-hero">
+      <section className="blog-hero blog-details-hero" id="blog-hero" data-cinematic-hero>
         <div className="hero-grid-checks" />
         <BlogHeroRadar />
         <div className="hero-shape-glow" />

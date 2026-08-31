@@ -1,4 +1,4 @@
-import { Disposer, queryAll } from '@/lib/dom';
+import { Disposer, prefersReducedMotion, queryAll } from '@/lib/dom';
 import type { Cleanup } from '@/types';
 
 const AUTOPLAY_MS = 4000;
@@ -8,10 +8,6 @@ function cardsPerView(): number {
   if (window.innerWidth <= 600) return 1;
   if (window.innerWidth <= 1024) return 2;
   return 4;
-}
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 /**

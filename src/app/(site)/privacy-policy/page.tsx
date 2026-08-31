@@ -20,7 +20,7 @@ const SECTIONS: readonly LegalSection[] = [
           <strong>&quot;us&quot;</strong>, or <strong>&quot;our&quot;</strong>), headquartered in Ahmedabad, Gujarat,
           India, is committed to safeguarding the privacy and confidentiality of individuals, partners, defense and
           industrial clients who interact with our website (
-          <a href="https://arnobot.in" style={{ color: '#2563eb', textDecoration: 'none' }}>
+          <a href="https://arnobot.in" className="legal-link">
             arnobot.in
           </a>
           ), Ground Control Station (GCS) software, autonomous unmanned ground vehicles (UGVs), magnetic climbing

@@ -78,9 +78,19 @@ export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     heroBg: '/assets/images/hero-bg.png',
     heroVideo: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
     mainImage: '/assets/images/products/atm/atm_main.png',
-    brochure: '/assets/brochures/Saibya_Brochure.pdf',
+    // TODO: no PDF yet — the page falls back to "Request Brochure".
+    brochure: '/assets/brochures/ATM_Brochure.pdf',
     gallery: [
       '/assets/images/products/atm/atm_main.png',
+      '/assets/images/products/atm/atm_rover_full.png',
+      '/assets/images/products/atm/atm_field_1.jpg',
+      '/assets/images/products/atm/atm_field_2.jpg',
+      '/assets/images/products/atm/atm_field_3.jpg',
+      '/assets/images/products/atm/atm_field_4.jpg',
+      '/assets/images/products/atm/atm_field_7.jpg',
+      '/assets/images/products/atm/atm_field_8.jpg',
+      '/assets/images/products/atm/atm_field_10.jpg',
+      '/assets/images/products/atm/atm_wheel.png',
       '/assets/images/products/atm/field_trial_5.jpg',
       '/assets/images/products/atm/field_trial_6.jpg',
     ],
@@ -105,7 +115,25 @@ export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       'Surveillance',
       'Grass cutting',
     ],
-    // No showcase — the block was commented out in the original product.php.
+    // ATM ships only one clip (atm_vehicle_demo.mp4), so all three cards open
+    // it. Point each at its own footage as more is captured.
+    showcase: [
+      {
+        title: 'Heavy Load Transport',
+        img: '/assets/images/products/atm/atm_field_1.jpg',
+        video: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
+      },
+      {
+        title: 'All-Terrain Field Operations',
+        img: '/assets/images/products/atm/atm_field_7.jpg',
+        video: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
+      },
+      {
+        title: 'Suspension & Drivetrain',
+        img: '/assets/images/products/atm/atm_wheel.png',
+        video: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
+      },
+    ],
   },
 
   nexus: {
@@ -116,7 +144,8 @@ export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     heroBg: '/assets/images/hero-bg.png',
     heroVideo: '/assets/videos/products/nexus/nexus_trial_1.mp4',
     mainImage: '/assets/images/products/nexus/nexus_perspective.png',
-    brochure: '/assets/brochures/Saibya_Brochure.pdf',
+    // TODO: no PDF yet — the page falls back to "Request Brochure".
+    brochure: '/assets/brochures/Nexus_Brochure.pdf',
     gallery: [
       '/assets/images/products/nexus/nexus_perspective.png',
       '/assets/images/products/nexus/nexus_front.jpg',

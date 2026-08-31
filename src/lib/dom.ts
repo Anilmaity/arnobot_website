@@ -134,3 +134,14 @@ export function lockScroll(): Cleanup {
     if (scrollLocks === 0) document.body.style.overflow = '';
   };
 }
+
+/**
+ * Whether the visitor has asked the operating system to reduce motion.
+ *
+ * Shared rather than re-declared per behaviour: the carousel, the GSAP page
+ * animations and anything added later must agree on the answer, and a second
+ * copy is a second thing to forget.
+ */
+export function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}

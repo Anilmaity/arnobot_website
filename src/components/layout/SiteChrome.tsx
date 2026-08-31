@@ -2,6 +2,7 @@ import { Suspense, type ReactNode } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import SiteBehaviors from './SiteBehaviors';
+import ScrollToTop from './ScrollToTop';
 import PageLoading from '@/components/ui/PageLoading';
 import VideoModal from '@/components/modals/VideoModal';
 import IndustryModal from '@/components/modals/IndustryModal';
@@ -34,6 +35,12 @@ export default function SiteChrome({ children }: { readonly children: ReactNode 
 
       <div className="site">
         <Header />
+
+        {/* Outside the content boundary: it must stay mounted while a page
+            suspends, so it can tell a link click from a back/forward. */}
+        <Suspense fallback={null}>
+          <ScrollToTop />
+        </Suspense>
 
         <Suspense fallback={<PageLoading />}>
           {children}

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <main className="blog-page">
-      <section className="blog-hero" id="blog-hero">
+      <section className="blog-hero" id="blog-hero" data-cinematic-hero>
         <div className="blog-hero-container">
           <div className="blog-hero-content reveal">
             <span className="eyebrow">ARNOBOT Insights</span>

@@ -16,7 +16,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { readonly children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // `style.css` sets `html { scroll-behavior: smooth }`. Next 16 stopped
+    // overriding that during route transitions unless this attribute opts in,
+    // which left it animating (and dropping) the scroll it manages itself.
+    <html lang="en" data-scroll-behavior="smooth">
       <head>
         {/*
           Outfit + Russo One, as loaded by the original includes/header.php.

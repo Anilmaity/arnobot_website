@@ -83,7 +83,7 @@ const ASSET_CARDS: readonly AssetCard[] = [
 export default function MediaKitPage() {
   return (
     <main className="media-kit-page">
-      <section className="blog-hero media-kit-hero" id="media-kit-hero">
+      <section className="blog-hero media-kit-hero" id="media-kit-hero" data-cinematic-hero>
         <div className="blog-hero-container">
           <div className="blog-hero-content reveal">
             <span className="eyebrow">Brand &amp; Press Resources</span>

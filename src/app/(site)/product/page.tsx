@@ -35,7 +35,7 @@ export default async function ProductPage({ searchParams }: PageProps) {
 
   return (
     <main>
-      <section className="hero product-hero" id="product-hero">
+      <section className="hero product-hero" id="product-hero" data-cinematic-hero>
         <video className="hero-video" autoPlay muted loop playsInline key={product.heroVideo}>
           <source src={product.heroVideo} type="video/mp4" />
         </video>

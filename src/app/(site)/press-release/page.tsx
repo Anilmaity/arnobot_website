@@ -36,7 +36,7 @@ const TICKER_ITEMS: readonly TickerItem[] = [
 export default function PressReleasePage() {
   return (
     <main className="press-page">
-      <section className="press-hero" id="press-hero">
+      <section className="press-hero" id="press-hero" data-cinematic-hero>
         <div className="press-hero-container">
           <div className="press-hero-content reveal">
             <span className="eyebrow">Newsroom &amp; Media Relations</span>

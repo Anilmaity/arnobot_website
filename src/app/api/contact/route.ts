@@ -5,7 +5,18 @@ import { field, hasAll, isValidEmail } from '@/lib/validation';
 
 export const runtime = 'nodejs';
 
-const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
+/**
+ * Pairs with the client's development fallback: when the widget renders with
+ * Google's test site key, only the matching test secret will verify its token.
+ * Never used in production — there, a missing RECAPTCHA_SECRET_KEY still means
+ * "nothing to verify against", exactly as before.
+ *
+ * https://developers.google.com/recaptcha/docs/faq#localhost
+ */
+const GOOGLE_TEST_SECRET = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
+
+const RECAPTCHA_SECRET =
+  process.env.RECAPTCHA_SECRET_KEY ?? (process.env.NODE_ENV === 'development' ? GOOGLE_TEST_SECRET : undefined);
 const VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 const VERIFY_TIMEOUT_MS = 15_000;
 

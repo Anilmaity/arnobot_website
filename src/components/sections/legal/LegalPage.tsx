@@ -82,7 +82,7 @@ export function LegalContactCard({ heading, items }: {
 }) {
   return (
     <div className="legal-contact-card">
-      <h4 className="russo" style={{ color: '#0f172a', margin: '0 0 10px', fontSize: '16px' }}>
+      <h4 className="russo legal-contact-title">
         {heading}
       </h4>
       <div className="legal-contact-grid">

@@ -150,11 +150,16 @@ function excellenceSection(): void {
     scrollTrigger: { trigger: '.excellence', start: 'top 80%', ...PLAY_ONCE },
   });
 
+  // The metrics are a 2x2 grid, so a long travel with a wide stagger leaves one
+  // card landed while its row-mate is still 40px low — which reads as a broken
+  // layout rather than a reveal, especially to anyone scrolling past mid-flight.
+  // A short hop and a tight stagger keep the four visually a group: no card is
+  // ever more than 16px out of line with the row it belongs to.
   gsap.from('.metric', {
     opacity: 0,
-    y: 40,
-    duration: 0.8,
-    stagger: 0.15,
+    y: 16,
+    duration: 0.5,
+    stagger: 0.06,
     ease: 'power2.out',
     scrollTrigger: { trigger: '.excellence', start: 'top 80%', ...PLAY_ONCE },
   });

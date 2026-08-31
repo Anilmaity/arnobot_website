@@ -17,7 +17,7 @@ const SECTIONS: readonly LegalSection[] = [
       <>
         <p className="legal-text">
           Welcome to Arnobot Private Limited (<strong>&quot;ARNOBOT&quot;</strong>). By accessing our website (
-          <a href="https://arnobot.in" style={{ color: '#2563eb', textDecoration: 'none' }}>
+          <a href="https://arnobot.in" className="legal-link">
             arnobot.in
           </a>
           ), scheduling a live field trial, downloading technical brochures, or entering into a commercial deployment for

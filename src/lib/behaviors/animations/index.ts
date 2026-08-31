@@ -1,6 +1,7 @@
 import { gsap, ScrollTrigger } from '@/lib/gsap';
-import { queryAll } from '@/lib/dom';
+import { prefersReducedMotion, queryAll } from '@/lib/dom';
 import type { Cleanup } from '@/types';
+import { consumeScrollTarget } from '../scrollReset';
 import { homeAnimations } from './home';
 import { aboutAnimations } from './about';
 import { productAnimations } from './product';
@@ -50,6 +51,15 @@ function defaultRevealAnimation(): void {
  * GSAP applied. Sections that are not on the page are skipped by their own guards.
  */
 export function pageAnimations(): Cleanup {
+  // Read before the early return below, so a target can never leak into a
+  // later navigation and move the page unasked.
+  const scrollTarget = consumeScrollTarget();
+
+  // Every animation below is a `.from()` that starts an element at opacity 0.
+  // Skipping them leaves the page in its natural, fully visible state, so the
+  // reduced-motion path needs no compensating "show everything" pass.
+  if (prefersReducedMotion()) return () => {};
+
   const context = gsap.context(() => {
     defaultRevealAnimation();
     homeAnimations();
@@ -58,7 +68,17 @@ export function pageAnimations(): Cleanup {
   });
 
   // Images and fonts settle after hydration; recompute trigger positions once.
-  const frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+  const frame = requestAnimationFrame(() => {
+    ScrollTrigger.refresh();
+
+    // refresh() ends by restoring the scroll position it recorded before
+    // measuring — across a route change, the previous page's. Reassert where
+    // this navigation actually belongs. `scrollTarget` is null when no
+    // navigation set one (an in-page refresh), and then the restore stands.
+    if (scrollTarget !== null && Math.round(window.scrollY) !== scrollTarget) {
+      window.scrollTo({ top: scrollTarget, left: 0, behavior: 'instant' });
+    }
+  });
 
   return () => {
     cancelAnimationFrame(frame);

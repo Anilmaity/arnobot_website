@@ -3,8 +3,25 @@
 import Script from 'next/script';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 
+/**
+ * The production key is registered against arnobot.in only, so on localhost the
+ * widget refuses to render with "Localhost is not in the list of supported
+ * domains for this site key". Google publishes a test pair that is accepted on
+ * every domain and always passes verification, which is what development gets.
+ *
+ * https://developers.google.com/recaptcha/docs/faq#localhost
+ *
+ * Set NEXT_PUBLIC_RECAPTCHA_SITE_KEY to override either default. To exercise
+ * the real key locally instead, add `localhost` to the key's domain list in the
+ * reCAPTCHA admin console — the test key is only a development convenience, and
+ * a form guarded by it is NOT actually protected.
+ */
+const GOOGLE_TEST_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+const ARNOBOT_SITE_KEY = '6LeOIUEtAAAAAI7RDLFBKe0dMjemzaf1rbovBZ9Q';
+
 const RECAPTCHA_SITE_KEY =
-  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? '6LeOIUEtAAAAAI7RDLFBKe0dMjemzaf1rbovBZ9Q';
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ??
+  (process.env.NODE_ENV === 'development' ? GOOGLE_TEST_SITE_KEY : ARNOBOT_SITE_KEY);
 
 const INQUIRY_OPTIONS = [
   'Schedule a Consultation',

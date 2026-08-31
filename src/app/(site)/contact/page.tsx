@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const MAP_SRC =
-  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.737766498456!2d72.52660971503337!3d23.025197684958!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84f5dd47a3e3%3A0x4ea5a6b7a7f2e9a!2sShivranjini%2C%20Ahmedabad%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1719393600000!5m2!1sen!2sin';
+  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.9!2d72.5307435!3d23.020647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e850d0bde37eb%3A0x3f979e2fb117d1f7!2sArnobot%20Private%20Limited!5e0!3m2!1sen!2sin!4v1756500000000!5m2!1sen!2sin';
 
 const INFO_CARDS: ReadonlyArray<{
   readonly icon: ReactNode;
@@ -41,7 +41,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
 
   return (
     <main>
-      <section className="contact-hero" id="contact-hero">
+      <section className="contact-hero" id="contact-hero" data-cinematic-hero>
         <div className="contact-hero-container">
           <div className="contact-hero-content">
             <span className="eyebrow">Get In Touch</span>
@@ -100,7 +100,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
         <div className="contact-map-full">
           <iframe
             id="contact-map-iframe"
-            title="ARNOBOT office location – Shivranjini, Ahmedabad"
+            title="Arnobot Private Limited – Ambawadi, Ahmedabad"
             src={MAP_SRC}
             allowFullScreen
             loading="lazy"

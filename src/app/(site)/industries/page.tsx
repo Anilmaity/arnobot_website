@@ -154,7 +154,7 @@ const INDUSTRY_CARDS: readonly IndustryCard[] = [
 export default function IndustriesPage() {
   return (
     <main>
-      <section className="mk-hero">
+      <section className="mk-hero" data-cinematic-hero>
         <div className="mk-hero-bg">
           <img src="/assets/images/abt-hero.png" alt="" aria-hidden="true" className="mk-hero-bg-img" />
         </div>

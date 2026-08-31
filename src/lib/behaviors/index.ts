@@ -3,6 +3,7 @@ import { revealOnScroll } from './revealOnScroll';
 import { industrySlider } from './industrySlider';
 import { pageAnimations } from './animations';
 import { closingViewport } from './closingViewport';
+import { legalToc } from './legalToc';
 
 /**
  * Behaviours that operate on server-rendered markup rather than React state.
@@ -13,6 +14,7 @@ const BEHAVIORS: ReadonlyArray<() => Cleanup> = [
   pageAnimations,
   industrySlider,
   closingViewport,
+  legalToc,
 ];
 
 /** Starts every behaviour and returns a single teardown for all of them. */

@@ -27,7 +27,7 @@ export default async function CareerPage({ searchParams }: PageProps) {
 
   return (
     <main>
-      <section className="career-hero" id="career-hero">
+      <section className="career-hero" id="career-hero" data-cinematic-hero>
         <div className="career-hero-bg-wrap">
           <div className="career-hero-particles" id="career-particles" />
           <div className="career-hero-grid-overlay" />

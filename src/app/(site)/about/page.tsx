@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Cta from '@/components/sections/Cta';
 import WhyChooseBackdrop from '@/components/svg/WhyChooseBackdrop';
+import { RocketIcon, ShieldCheckIcon, TargetIcon } from '@/components/ui/Icons';
 
 export const metadata: Metadata = {
   title: 'Company',
@@ -27,7 +28,7 @@ const FACILITY_ITEMS: ReadonlyArray<{ readonly image: string; readonly label: st
 export default function AboutPage() {
   return (
     <main>
-      <section className="about-hero" id="about-hero">
+      <section className="about-hero" id="about-hero" data-cinematic-hero>
         <div className="about-hero-container">
           <div className="about-hero-content">
             <span className="eyebrow">About Us</span>
@@ -107,7 +108,7 @@ export default function AboutPage() {
           <div className="vision-mission-cards">
             <div className="vision-mission-card">
               <div className="card-icon">
-                <img src="/assets/icons/mission.png" alt="" />
+                <TargetIcon size={34} />
               </div>
               <h3 className="russo">Our Vision</h3>
               <p>Arnobot visions is to become a global leader in robotics-driven asset lifecycle management.</p>
@@ -115,7 +116,7 @@ export default function AboutPage() {
 
             <div className="vision-mission-card">
               <div className="card-icon">
-                <img src="/assets/icons/mission.png" alt="" />
+                <RocketIcon size={34} />
               </div>
               <h3 className="russo">Our Mission</h3>
               <p>
@@ -126,7 +127,7 @@ export default function AboutPage() {
 
             <div className="vision-mission-card">
               <div className="card-icon">
-                <img src="/assets/icons/mission.png" alt="" />
+                <ShieldCheckIcon size={34} />
               </div>
               <h3 className="russo">Values</h3>
               <ul>
@@ -197,7 +198,9 @@ export default function AboutPage() {
                 {FACILITY_ITEMS.map((item) => (
                   <div className="facility-item" key={item.label}>
                     <div className="facility-photo">
-                      <img src={item.image} alt={item.label} />
+                      {/* The visible .facility-label names the photo directly beneath it, so a
+                          matching alt would have every tile announced twice. */}
+                      <img src={item.image} alt="" />
                     </div>
                     <span className="facility-label">{item.label}</span>
                   </div>

@@ -12,8 +12,36 @@ const MENU_WIDTH_FALLBACK = 220;
 const EDGE_GUTTER = 8;
 /** Frames to keep retrying focus while the menu's open transition runs. */
 const MENU_FOCUS_ATTEMPTS = 10;
-/** Fraction of the home hero that must scroll past before the header docks. */
+/** Fraction of the hero that must scroll past before the header docks. */
 const HERO_MERGE_RATIO = 0.5;
+/**
+ * Routes whose hero the header dissolves into before docking as a solid bar.
+ *
+ * A route is listed here AND its hero element carries `data-cinematic-hero`,
+ * which is what the scroll threshold measures. Legibility does not depend on
+ * the hero being dark: `.header-over-hero` paints its own top scrim, so the
+ * white nav reads over the light heroes (careers, contact, product) too.
+ */
+const CINEMATIC_HERO_ROUTES = new Set([
+  '/',
+  '/technology',
+  '/about',
+  '/product',
+  '/industries',
+  '/career',
+  '/contact',
+  '/blog',
+  '/blog-details',
+  '/press-release',
+  '/media-kit',
+]);
+
+/**
+ * Routes that dock the solid bar immediately, with no hero to dissolve into.
+ * The legal pages open straight onto the document title on a white page, so a
+ * floating glass panel has nothing to float over.
+ */
+const SOLID_HEADER_ROUTES = new Set(['/privacy-policy', '/terms-conditions']);
 
 /**
  * Site header — port of includes/header.php.
@@ -32,35 +60,43 @@ export default function Header() {
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number; arrow: number } | null>(null);
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
 
-  // The home hero is a full-bleed video, so the header dissolves into it until the
-  // user scrolls off the hero, then docks as a full-width solid bar. Every other
-  // route keeps the floating glass panel throughout.
-  const isHome = pathname === '/';
-  const overHero = isHome && !scrolledPastHero && !mobileOpen;
-  const solid = isHome && !overHero;
+  // Home and Technology both open on a full-bleed video hero, so the header
+  // dissolves into it until the user scrolls off the hero, then docks as a
+  // full-width solid bar. Every other route keeps the floating glass panel.
+  const hasCinematicHero = CINEMATIC_HERO_ROUTES.has(pathname);
+  const overHero = hasCinematicHero && !scrolledPastHero && !mobileOpen;
+  const solid = (hasCinematicHero && !overHero) || SOLID_HEADER_ROUTES.has(pathname);
 
   useEffect(() => {
-    if (pathname !== '/') return;
+    if (!hasCinematicHero) return;
 
-    const hero = document.querySelector<HTMLElement>('.hero-cinematic');
+    const hero = document.querySelector<HTMLElement>('[data-cinematic-hero], .hero-cinematic');
+
     // Cached rather than measured per scroll event, so the listener never forces
     // a layout; the hero is viewport-height, so only a resize can change it.
-    let threshold = (hero?.offsetHeight ?? window.innerHeight) * HERO_MERGE_RATIO;
+    // `||` not `??`: a hero measured before layout reports 0, and a 0 threshold
+    // would dock the solid bar at the very top of the page.
+    const measure = () => (hero?.offsetHeight || window.innerHeight) * HERO_MERGE_RATIO;
+    let threshold = measure();
 
     const onScroll = () => setScrolledPastHero(window.scrollY > threshold);
     const onResize = () => {
-      threshold = (hero?.offsetHeight ?? window.innerHeight) * HERO_MERGE_RATIO;
+      threshold = measure();
       onScroll();
     };
 
     onScroll();
+    // The hero can settle later than this effect — fonts, the poster image, and
+    // the video all change its height — so re-measure once everything has loaded.
+    window.addEventListener('load', onResize);
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
     return () => {
+      window.removeEventListener('load', onResize);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
     };
-  }, [pathname]);
+  }, [pathname, hasCinematicHero]);
 
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);

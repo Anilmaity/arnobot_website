@@ -2,7 +2,7 @@ const HERO_VIDEO = '/assets/videos/full-arno.mp4';
 
 export default function HeroSection() {
   return (
-    <section className="hero hero-cinematic" id="home">
+    <section className="hero hero-cinematic" id="home" data-cinematic-hero>
       {/* Layer 0 — poster fallback, sits behind the video in case it never paints. */}
       <img className="hero-bg" src="/assets/images/hero-bg.png" alt="ARNOBOT robot payload field test" />
       {/* Layer 1 — the video is the hero background. */}
