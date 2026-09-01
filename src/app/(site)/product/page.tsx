@@ -4,7 +4,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Cta from '@/components/sections/Cta';
 import ProductGallery from '@/components/sections/product/ProductGallery';
+import ProductSpinViewer from '@/components/sections/product/ProductSpinViewer';
+import { ProductIcon } from '@/components/ui/ProductIcons';
 import { resolveProduct } from '@/data/products';
+import type { ProductIconItem } from '@/types';
 
 interface PageProps {
   readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -28,6 +31,45 @@ async function brochureExists(brochure: string): Promise<boolean> {
   }
 }
 
+/**
+ * One titled column of icon-marked rows. Two of these sit side by side, so the
+ * features and the applications are read together on one screen rather than a
+ * band apiece.
+ *
+ * The caption says what the column is for, which is the difference between a
+ * reader knowing at a glance what they are looking at and having to infer it
+ * from the six rows underneath.
+ */
+function IconColumn({
+  title,
+  caption,
+  items,
+}: {
+  readonly title: string;
+  readonly caption: string;
+  readonly items: readonly ProductIconItem[];
+}) {
+  return (
+    <div className="icon-band-column">
+      <h2 className="icon-band-title russo">{title}</h2>
+      <p className="icon-band-caption">{caption}</p>
+      <ul className="icon-band-rows">
+        {items.map((item) => (
+          <li className="icon-band-row" key={item.label}>
+            <span className="icon-band-badge">
+              <ProductIcon name={item.icon} />
+            </span>
+            <span className="icon-band-label">
+              {item.lead ? <strong className="icon-band-lead">{item.lead}</strong> : null}
+              {item.label}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /** Port of product.php */
 export default async function ProductPage({ searchParams }: PageProps) {
   const product = resolveProduct((await searchParams).id);
@@ -35,11 +77,22 @@ export default async function ProductPage({ searchParams }: PageProps) {
 
   return (
     <main>
-      <section className="hero product-hero" id="product-hero" data-cinematic-hero>
-        <video className="hero-video" autoPlay muted loop playsInline key={product.heroVideo}>
-          <source src={product.heroVideo} type="video/mp4" />
-        </video>
-        <img className="hero-bg" src={product.heroBg} alt={`${product.name} hero`} />
+      <section
+        className={`hero product-hero${product.heroImage ? ' product-hero-still' : ''}`}
+        id="product-hero"
+        data-cinematic-hero
+      >
+        {/* A product with a hero render shows it instead of playing anything. */}
+        {product.heroImage ? null : (
+          <video className="hero-video" autoPlay muted loop playsInline key={product.heroVideo}>
+            <source src={product.heroVideo} type="video/mp4" />
+          </video>
+        )}
+        <img
+          className="hero-bg"
+          src={product.heroImage ?? product.heroBg}
+          alt={`${product.name} hero`}
+        />
 
         <div className="hero-content">
           <h1 className="russo">
@@ -49,19 +102,31 @@ export default async function ProductPage({ searchParams }: PageProps) {
           </h1>
         </div>
 
-        <img
-          className="hero-play play-trigger"
-          src="/assets/icons/play.png"
-          alt={`Play ${product.name} video`}
-          data-video={product.heroVideo}
-          role="button"
-          tabIndex={0}
-        />
+        {product.heroImage ? null : (
+          <img
+            className="hero-play play-trigger"
+            src="/assets/icons/play.png"
+            alt={`Play ${product.name} video`}
+            data-video={product.heroVideo}
+            role="button"
+            tabIndex={0}
+          />
+        )}
       </section>
 
       <section className="product-details reveal">
         <div className="container product-details-grid">
-          <ProductGallery key={product.id} name={product.name} mainImage={product.mainImage} gallery={product.gallery} />
+          {/* A turntable where one has been rendered, the photo gallery otherwise. */}
+          {product.spin ? (
+            <ProductSpinViewer key={product.id} name={product.name} spin={product.spin} />
+          ) : (
+            <ProductGallery
+              key={product.id}
+              name={product.name}
+              mainImage={product.mainImage}
+              gallery={product.gallery}
+            />
+          )}
 
           <div className="product-details-copy">
             <h2 className="product-name russo">{product.name}</h2>
@@ -96,27 +161,42 @@ export default async function ProductPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <section className="product-specs-section reveal" style={{ backgroundImage: "url('/assets/images/why-chs.png')" }}>
-        <div className="container specs-cards-grid">
-          <div className="specs-card">
-            <h3 className="card-title russo">Key Features</h3>
-            <ul className="specs-bullet-list">
-              {product.features.map((feature) => (
-                <li key={feature}>{feature}</li>
-              ))}
-            </ul>
+      {product.featureItems && product.applicationItems ? (
+        /* Both lists on one screen, each row marked with an icon that depicts
+           the thing it names — so the set can be scanned rather than read. */
+        <section className="product-specs-section product-icon-band reveal">
+          <div className="container icon-band-columns">
+            <IconColumn title="Features" caption="What the machine does" items={product.featureItems} />
+            <IconColumn
+              title="Applications"
+              caption="Where it is put to work"
+              items={product.applicationItems}
+            />
           </div>
+        </section>
+      ) : (
+        <section className="product-specs-section reveal" style={{ backgroundImage: "url('/assets/images/why-chs.png')" }}>
+          <div className="container specs-cards-grid">
+            <div className="specs-card">
+              <h3 className="card-title russo">Key Features</h3>
+              <ul className="specs-bullet-list">
+                {product.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="specs-card">
-            <h3 className="card-title russo">Applications</h3>
-            <ul className="specs-bullet-list">
-              {product.applications.map((application) => (
-                <li key={application}>{application}</li>
-              ))}
-            </ul>
+            <div className="specs-card">
+              <h3 className="card-title russo">Applications</h3>
+              <ul className="specs-bullet-list">
+                {product.applications.map((application) => (
+                  <li key={application}>{application}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {product.showcase && product.showcase.length > 0 ? (
         <section className="product-showcase-section reveal">

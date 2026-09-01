@@ -8,6 +8,71 @@ export interface ProductShowcaseItem {
   readonly video: string;
 }
 
+/** Line icons drawn by `ProductIcon`, keyed by what they depict. */
+export type ProductIconName =
+  | 'payload'
+  | 'drive'
+  | 'suspension'
+  | 'stairs'
+  | 'lightweight'
+  | 'invertible'
+  | 'rugged'
+  | 'magnet'
+  | 'control'
+  | 'encrypted'
+  | 'rapid'
+  | 'quiet'
+  | 'modular'
+  | 'tooling'
+  | 'feed'
+  | 'transmit'
+  | 'analytics'
+  | 'defence'
+  | 'ammunition'
+  | 'transport'
+  | 'towing'
+  | 'industrial'
+  | 'surveillance'
+  | 'recon'
+  | 'building'
+  | 'bridge'
+  | 'border'
+  | 'radar'
+  | 'disaster'
+  | 'hazard'
+  | 'spray'
+  | 'paint'
+  | 'grass'
+  | 'mapping';
+
+export interface ProductIconItem {
+  readonly icon: ProductIconName;
+  /**
+   * The figure the row turns on — a payload, a weight, a drive layout — set
+   * apart from the rest of the phrase so it can be read without reading the
+   * sentence. Only where the row genuinely states one.
+   */
+  readonly lead?: string;
+  readonly label: string;
+}
+
+/**
+ * A turntable render published as a numbered frame set — `frame-00.webp`
+ * through `frame-<frames-1>.webp` inside `dir` — which `ProductSpinViewer`
+ * spins in place of the photo gallery.
+ */
+export interface ProductSpin {
+  /** Directory under `public/`, no trailing slash. */
+  readonly dir: string;
+  /** Frames in one full revolution. */
+  readonly frames: number;
+  /** The frame the viewer opens on and returns to. */
+  readonly startIndex: number;
+  /** Intrinsic frame size, so the stage reserves its box before anything loads. */
+  readonly width: number;
+  readonly height: number;
+}
+
 export interface Product {
   readonly id: ProductId;
   readonly name: string;
@@ -16,6 +81,12 @@ export interface Product {
   readonly heroTitleLines: readonly [string, string];
   readonly heroBg: string;
   readonly heroVideo: string;
+  /**
+   * A still that stands in for the hero video. Where one is set the hero plays
+   * nothing and offers no play button — the render is the hero — and the band
+   * drops to three quarters of the screen so the product below it is in view.
+   */
+  readonly heroImage?: string;
   readonly mainImage: string;
   readonly brochure: string;
   readonly gallery: readonly string[];
@@ -23,7 +94,20 @@ export interface Product {
   readonly specs: ReadonlyArray<readonly [label: string, value: string]>;
   readonly features: readonly string[];
   readonly applications: readonly string[];
+  /**
+   * `features` and `applications` paired with an icon, which lets the product
+   * page set each as a marked row instead of a bullet. Optional and supplied
+   * together: a product without them keeps the bullet cards.
+   */
+  readonly featureItems?: readonly ProductIconItem[];
+  readonly applicationItems?: readonly ProductIconItem[];
   readonly showcase?: readonly ProductShowcaseItem[];
+  /**
+   * A 360° render of the machine. Where one exists it replaces `mainImage` and
+   * `gallery` on the product page: a turntable a reader can actually turn says
+   * more about the geometry than a strip of photographs of it.
+   */
+  readonly spin?: ProductSpin;
 }
 
 export type IndustryId =

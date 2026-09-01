@@ -74,8 +74,16 @@ export const FOOTER_NAV: ReadonlyArray<{
   },
 ];
 
-export const SOCIAL_LINKS: ReadonlyArray<{ readonly icon: string; readonly label: string }> = [
-  { icon: '/assets/icons/linkedin.png', label: 'LinkedIn' },
-  { icon: '/assets/icons/instam.png', label: 'Instagram' },
-  { icon: '/assets/icons/youtube.png', label: 'Youtube' },
+/** Footer social profiles. `href` is where the icon links out to. */
+export const SOCIAL_LINKS: ReadonlyArray<{
+  readonly icon: string;
+  readonly label: string;
+  readonly href: string;
+}> = [
+  {
+    icon: '/assets/icons/linkedin.png',
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/arnobot/posts/?feedView=all',
+  },
+  { icon: '/assets/icons/instam.png', label: 'Instagram', href: 'https://www.instagram.com/robots_arnobot/' },
 ];

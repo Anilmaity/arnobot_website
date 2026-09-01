@@ -32,29 +32,63 @@ export function legalToc(): Cleanup {
   const last = entries[entries.length - 1];
   if (!first || !last) return disposer.cleanup;
 
-  // Matches the header's docked height plus a little breathing room, so a
-  // heading counts as "reached" at the point it clears the bar.
-  const OFFSET = 96;
+  /**
+   * The line down the screen at which a heading takes over as "what I am
+   * reading": clear of the docked header, then a quarter into the space it
+   * leaves. Measuring against the header's own token keeps it honest when the
+   * bar shrinks at narrow widths.
+   *
+   * Testing against the top edge of the viewport instead makes the sidebar lag
+   * a section behind — a heading can fill the screen while the entry above it
+   * is still lit, because its top has not yet crossed the bar.
+   */
+  const readingLine = () => {
+    const nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'));
+    const top = (Number.isFinite(nav) ? nav : 62) + 16;
+    return top + (window.innerHeight - top) * 0.25;
+  };
+
+  /**
+   * Keeps the lit entry inside the sidebar's own scrollport, for a document
+   * with more sections than fit beside it. No-ops when the list is short
+   * enough to show every entry, which is the usual case.
+   */
+  const keepInView = (link: HTMLAnchorElement) => {
+    const box = link.closest<HTMLElement>('.legal-toc');
+    if (!box || box.scrollHeight <= box.clientHeight + 1) return;
+
+    const linkRect = link.getBoundingClientRect();
+    const boxRect = box.getBoundingClientRect();
+    const margin = 12;
+
+    if (linkRect.top < boxRect.top + margin) box.scrollTop -= boxRect.top + margin - linkRect.top;
+    else if (linkRect.bottom > boxRect.bottom - margin) box.scrollTop += linkRect.bottom - (boxRect.bottom - margin);
+  };
 
   let current: HTMLAnchorElement | null = null;
 
   const sync = () => {
+    const line = readingLine();
     let active = first;
 
     for (const entry of entries) {
-      if (entry.section.getBoundingClientRect().top - OFFSET <= 0) active = entry;
+      if (entry.section.getBoundingClientRect().top <= line) active = entry;
       else break;
     }
 
     // Once the page is scrolled to the bottom the last section may never reach
-    // the offset, so claim it explicitly.
+    // the line, so claim it explicitly.
     const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
     if (atBottom) active = last;
 
     if (active.link === current) return;
     current?.classList.remove('active');
+    current?.removeAttribute('aria-current');
     active.link.classList.add('active');
+    // Announces the same thing the highlight shows, for a screen reader.
+    active.link.setAttribute('aria-current', 'true');
     current = active.link;
+    keepInView(active.link);
   };
 
   // rAF-throttled: scroll fires far more often than the highlight can change,
@@ -72,7 +106,10 @@ export function legalToc(): Cleanup {
   sync();
   disposer.on(window, 'scroll', onScroll, { passive: true });
   disposer.on(window, 'resize', onScroll);
-  disposer.add(() => current?.classList.remove('active'));
+  disposer.add(() => {
+    current?.classList.remove('active');
+    current?.removeAttribute('aria-current');
+  });
 
   return disposer.cleanup;
 }

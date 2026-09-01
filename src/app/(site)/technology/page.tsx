@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Cta from '@/components/sections/Cta';
-import { PRODUCTS } from '@/data/products';
-import type { ProductId } from '@/types';
 import styles from './technology.module.css';
 
 export const metadata: Metadata = {
@@ -109,63 +107,6 @@ const RELIABILITY_POINTS: ReadonlyArray<{ readonly tag: string; readonly name: s
   },
 ];
 
-
-/**
- * Comparison rows are derived from `PRODUCTS` so the table cannot drift from
- * the product pages. `—` marks a dimension that does not apply to a platform.
- */
-const COMPARISON_ORDER: readonly ProductId[] = ['saibya', 'atm', 'nexus', 'altius'];
-
-const COMPARISON_ROWS: ReadonlyArray<{ readonly label: string; readonly values: Record<ProductId, string> }> = [
-  {
-    label: 'Class',
-    values: {
-      saibya: 'Heavy-Duty UGV',
-      atm: 'High-Payload UGV',
-      nexus: 'Compact Tactical Robot',
-      altius: 'Vertical Climbing Robot',
-    },
-  },
-  {
-    label: 'Payload',
-    values: { saibya: '200 kg', atm: '500 kg', nexus: '3 kg class (self-weight)', altius: '30 kg vertical' },
-  },
-  {
-    label: 'Drive System',
-    values: {
-      saibya: '4×4 all-terrain',
-      atm: 'All-terrain with suspension',
-      nexus: 'Invertible compact drive',
-      altius: 'Magnetic vertical grip',
-    },
-  },
-  {
-    label: 'Control Modes',
-    values: {
-      saibya: 'Remote, semi-autonomous, autonomous',
-      atm: 'Remote & autonomous',
-      nexus: 'Encrypted remote',
-      altius: 'Remote with ground station',
-    },
-  },
-  {
-    label: 'Live Feed',
-    values: { saibya: 'Telemetry & video', atm: 'Telemetry & video', nexus: 'Onboard camera', altius: 'Real-time video' },
-  },
-  {
-    label: 'Modular Payloads',
-    values: { saibya: 'Yes', atm: 'Yes', nexus: '—', altius: 'Interchangeable tooling' },
-  },
-  {
-    label: 'Primary Use',
-    values: {
-      saibya: 'Defence logistics & transport',
-      atm: 'Heavy material transport',
-      nexus: 'Surveillance & reconnaissance',
-      altius: 'Inspection & cleaning at height',
-    },
-  },
-];
 
 /* ---------------------------------------------------------------------------
    Building blocks
@@ -493,42 +434,6 @@ export default function TechnologyPage() {
           ))}
         </ul>
       </section>
-
-      {/* Comparison table */}
-      <section className={`${styles.sectionTight} reveal`} id="tech-specs">
-        <div className={`${styles.specs} ${styles.fadeUp}`}>
-          <h3 className={styles.specsTitle}>Platform specifications</h3>
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th scope="col">Specification</th>
-                  {COMPARISON_ORDER.map((id) => (
-                    <th scope="col" key={id}>
-                      {PRODUCTS[id].name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {COMPARISON_ROWS.map((row) => (
-                  <tr key={row.label}>
-                    <th scope="row" className={styles.rowHead}>
-                      {row.label}
-                    </th>
-                    {COMPARISON_ORDER.map((id) => (
-                      <td key={id} data-label={`${PRODUCTS[id].name} — ${row.label}`}>
-                        {row.values[id]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
       <Cta />
     </main>
   );

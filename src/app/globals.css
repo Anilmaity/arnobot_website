@@ -62,9 +62,10 @@
   border-radius: 2px;
 }
 
-/* Anchor targets clear the docked header (62px) instead of hiding under it. */
+/* Anchor targets clear the docked header instead of hiding under it. Quoted
+   from the bar's own height so the two cannot drift apart. */
 :root {
-  scroll-padding-top: 78px;
+  scroll-padding-top: calc(var(--nav-height, 53px) + 16px);
 }
 
 /* `:root` (0,1,0), not `:where(html)` (0,0,0) — style.css sets
@@ -254,8 +255,28 @@
   max-width: 1240px;
 }
 
+/* style.css ends with `html, body, .site, main { overflow-x: hidden !important }`
+   as a horizontal-overflow guard. `hidden` on one axis forces the other to
+   compute to `auto`, which makes all four elements scroll containers — and a
+   `position: sticky` child sticks to its nearest scroll container, not the
+   viewport, so the table of contents scrolled away with the page.
+
+   `clip` guards against the same overflow without creating a scroll container,
+   which is what `clip` exists for. The selectors and `!important` are only here
+   to outrank that rule; style.css itself is left as the original stylesheet. */
+:root,
+html body,
+body .site,
+body main {
+  overflow-x: clip !important;
+}
+
 .site .legal-toc {
-  top: 96px;
+  top: calc(var(--nav-height, 53px) + 34px);
+  /* A contents list must never outgrow the screen it is pinned to. */
+  max-height: calc(100svh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* Brand accent in place of the off-palette blue the TOC and badges used. */
@@ -263,6 +284,25 @@
 .site .legal-toc-link.active {
   color: var(--accent, #375e9d);
   background: #eef2fa;
+}
+
+.site .legal-toc-link {
+  position: relative;
+}
+
+/* The entry being read carries a marker as well as a tint. Down a column of
+   nine near-identical lines a colour shift alone is easy to miss, and hover
+   already uses one — the bar is what separates "where I am" from "what is
+   under the pointer". */
+.site .legal-toc-link.active::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent, #375e9d);
 }
 
 .site .legal-num-badge {
@@ -291,7 +331,7 @@
 
 .site .legal-block {
   margin-bottom: 44px;
-  scroll-margin-top: 96px;
+  scroll-margin-top: calc(var(--nav-height, 53px) + 34px);
 }
 
 .site .legal-link {
@@ -743,3 +783,475 @@
 /* Heroes are the exception: their copy is already placed well clear of the top
    and the header is transparent over them, so reserving the bar would only
    push the headline down the screen. */
+
+/* --------------------------------------------------------------------------
+   Industry / demo modal backdrop.
+
+   style.css scrimmed the page with `rgba(7, 3, 34, 0.88)` — the ink token at
+   near-full opacity. At that strength it stops being a backdrop and becomes a
+   flat indigo panel: the page behind survives only as a few ghost shapes, and
+   the whole screen reads purple.
+
+   Neutral and genuinely see-through instead: only the tint and its strength
+   change, so style.css keeps its 12px frost and goes on doing the focusing,
+   while the colour on screen stays the page's own. Keyed off the modal rather
+   than `.site`, since both dialogs render outside that wrapper.
+   -------------------------------------------------------------------------- */
+.industry-modal .industry-modal-overlay {
+  background: rgba(6, 8, 14, 0.5);
+}
+
+/* The video lightbox had the same indigo cast. It keeps its heavier dim — a
+   video wants a dark room around it — but the tint goes neutral, so the two
+   dialogs no longer disagree about what colour "behind" is. */
+.video-modal .video-modal-overlay {
+  background: rgba(6, 8, 14, 0.82);
+}
+
+/* --------------------------------------------------------------------------
+   Product features / applications band.
+
+   Modelled on a printed spec page: two headed columns of rows, each pairing a
+   ringed icon with the thing it names and separated by hairlines rather than
+   boxed in a card. The bullet cards this replaces gave twelve equal lines of
+   grey text with nothing to catch the eye on the way down.
+
+   Both lists share one screen, so the reader compares what the machine does
+   with where it is put to work without scrolling between them.
+
+   Only products carrying `featureItems` render this; the rest keep the cards.
+   -------------------------------------------------------------------------- */
+
+.site .product-icon-band {
+  background: #f1f2f4;
+  background-image: none;
+}
+
+.site .icon-band-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(32px, 5vw, 88px);
+  align-items: start;
+}
+
+.site .icon-band-title {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 2.6vw, 40px);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--ink, #070322);
+}
+
+/* Says what the column is, so the reader is not inferring it from the rows. */
+.site .icon-band-caption {
+  margin: 0 0 clamp(12px, 1.8vh, 24px);
+  font-size: clamp(13px, 1.05vw, 15px);
+  letter-spacing: 0.02em;
+  color: var(--muted, #5f626d);
+}
+
+.site .icon-band-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rule under every row is what lines the two columns up with each other;
+   it runs the width of its own column, as on a spec sheet. */
+.site .icon-band-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 24px);
+  padding: clamp(11px, 1.5vh, 20px) 0;
+  border-bottom: 1px solid rgba(7, 3, 34, 0.14);
+}
+
+/* Accent on a tinted disc rather than a dark outline: the icon is the part
+   that carries meaning down the column, so it should be the part the eye lands
+   on, and the brand blue separates it from the ink the labels are set in. */
+.site .icon-band-badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: clamp(46px, 3.9vw, 60px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(55, 94, 157, 0.18);
+  border-radius: 50%;
+  background: #eef2fa;
+  color: var(--accent, #375e9d);
+}
+
+.site .icon-band-badge svg {
+  width: 54%;
+  height: 54%;
+}
+
+/* Sentence case, not caps. The reference set three-word labels; these run to
+   seven, and at that length uppercase costs the word shapes a reader scans by.
+   Weight and colour carry the emphasis instead. */
+.site .icon-band-label {
+  font-size: clamp(14px, 1.15vw, 17px);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+  color: var(--ink, #070322);
+}
+
+/* The figure the row is really about — 200 kg, 4×4 — pulled ahead of the
+   phrase so the column can be skimmed for numbers alone. */
+.site .icon-band-lead {
+  margin-right: 0.4em;
+  font-size: 1.16em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--accent, #375e9d);
+}
+
+/* One column on a phone: the two lists stack, and the section drops its
+   full-screen height there anyway. */
+@media (max-width: 767px) {
+  .site .icon-band-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 7vw, 44px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Header — shorter, translucent, and out of the way while reading.
+
+   style.css loads after this file (SiteChrome injects it with a `site`
+   precedence) and pins every header height with `!important`, so these rules
+   answer in kind: one step more specific, and `!important` against `!important`.
+
+   Three changes:
+   1. Every state loses 15% of its height, at each breakpoint the original
+      stepped through. The bar was sized for a marketing splash; at 53px docked
+      it still clears the logo and gives the page back most of a line of text.
+   2. The docked bar goes translucent. It was the one state painting flat
+      white — the floating panel over a hero has always been glass — so the
+      page now runs under it instead of stopping at it.
+   3. It tucks away on the way down the page and returns on the way up, driven
+      by `.header-tucked` from Header.tsx.
+   -------------------------------------------------------------------------- */
+
+/* Layout clearance is quoted from the docked height, so it has to move with
+   it. Doubled selector only to outrank the `:root` that sets it in style.css. */
+:root:root {
+  --nav-height: 53px;
+}
+
+/* The floating glass panel, on routes with no hero to dissolve into: 80 → 68,
+   and the two smaller steps the original stepped down to. */
+.site .header .header-inner {
+  height: 68px !important;
+  min-height: 68px !important;
+}
+
+@media (max-width: 1024px) {
+  .site .header .header-inner {
+    height: 58px !important;
+    min-height: 58px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .site .header .header-inner {
+    height: 54px !important;
+    min-height: 54px !important;
+  }
+}
+
+/* Dissolved into a hero: 77 → 65. */
+.site .header.header-over-hero .header-inner {
+  height: 65px !important;
+  min-height: 65px !important;
+}
+
+/* Docked: 62 → 53, tracking `--nav-height` so the clearance cannot drift. */
+.site .header.header-solid .header-inner {
+  height: var(--nav-height) !important;
+  min-height: var(--nav-height) !important;
+  /* Glass rather than flat white: the same treatment the floating panel has
+     always had, so the two states now differ in shape, not in kind. Opaque
+     enough that dark nav labels hold over a photograph passing underneath.
+
+     Held in a custom property on purpose. Lightning CSS resolves a literal
+     `backdrop-filter` to the `-webkit-` spelling alone for the default browser
+     targets, and Blink lets the unprefixed `none` in style.css beat that alias
+     — so the literal form silently loses. Behind `var()` the value is opaque
+     to the transform and the standard property survives. */
+  backdrop-filter: blur(18px) saturate(1.4);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+@media (max-width: 700px) {
+  .site .header.header-over-hero .header-inner {
+    height: 54px !important;
+    min-height: 54px !important;
+  }
+
+  .site .header.header-solid .header-inner {
+    height: var(--nav-height) !important;
+    min-height: var(--nav-height) !important;
+  }
+
+  :root:root {
+    --nav-height: 46px;
+  }
+}
+
+/* The logo was cut to fit the shorter bar; at 220px it filled a 62px bar edge
+   to edge and would overrun a 53px one. */
+.site .header .logo {
+  width: 186px;
+}
+
+@media (max-width: 700px) {
+  .site .header .logo {
+    width: 158px;
+  }
+}
+
+/* `translate` rather than `transform`: the docked bar already carries
+   `transform: none !important`, and the floating panel centres itself with
+   `translateX(-50%)`. The individual property composes with both instead of
+   fighting either. The extra 24px carries the bar past its own top offset and
+   box shadow, so nothing peeks. */
+.site .header {
+  transition:
+    top 0.35s ease,
+    width 0.35s ease,
+    height 0.35s ease,
+    padding 0.35s ease,
+    background 0.35s ease,
+    border-color 0.35s ease,
+    border-radius 0.35s ease,
+    box-shadow 0.35s ease,
+    translate 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site .header.header-tucked {
+  translate: 0 calc(-100% - 24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site .header {
+    transition: none;
+  }
+}
+
+/* The footer social icons became links; the anchor has to be the flex item so
+   the row keeps its spacing and loses the inline baseline gap under each icon. */
+.site .socials a {
+  display: inline-flex;
+  border-radius: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Product 360° render viewer.
+
+   No panel, no border, no card. The frames are keyed to transparency and the
+   machine sits directly on the section, so the render reads as an object on
+   the page rather than a picture pasted into a box — which is the whole reason
+   for shipping a turntable instead of a photograph.
+
+   The stage stretches to the height of the copy beside it, so the two columns
+   of the details band square off against each other.
+
+   Every frame is stacked in one grid cell and switched by opacity. No
+   transition on that switch: a turn is a sequence of stills, and cross-fading
+   between them would smear the edges of a machine meant to look milled.
+   -------------------------------------------------------------------------- */
+
+.site .product-details-spin {
+  align-self: stretch;
+  justify-content: center;
+  gap: 0;
+}
+
+.site .spin-stage {
+  position: relative;
+  display: grid;
+  height: 100%;
+  min-height: clamp(300px, 34vh, 420px);
+  cursor: grab;
+  /* Horizontal drags rotate; vertical ones still scroll the page past it. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.site .spin-stage:active {
+  cursor: grabbing;
+}
+
+/* Until the whole turntable is decoded the stage will not turn, so it should
+   not offer a grab handle either. */
+.site .spin-stage:not(.is-ready) {
+  cursor: progress;
+}
+
+.site .spin-stage:not(.is-ready) .spin-cue {
+  animation: spin-cue-breathe 1.4s ease-in-out infinite;
+}
+
+@keyframes spin-cue-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.42;
+  }
+}
+
+.site .spin-frames {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+/* One cell, every frame in it. `grid-area: 1 / 1` rather than absolute
+   positioning, so the stage is still sized by the frames it contains. */
+.site .spin-frame {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* style.css rounds and drops a shadow on every image in this slot, which on
+     a keyed-out render draws the empty box the machine floats in. */
+  border-radius: 0;
+  box-shadow: none;
+  /* The render is lit for a white studio; a grounding shadow keeps the machine
+     from floating flat on a page that has no floor under it. */
+  filter: drop-shadow(0 22px 26px rgba(15, 23, 42, 0.14));
+  pointer-events: none;
+}
+
+/* The one mark on the stage. It reads as part of the render rather than as a
+   control, and steps back once the reader has taken hold of the model. */
+/* The glyph on a tinted disc, the same badge the features list marks its rows
+   with — a loose line drawing in the corner of a white panel read as a smudge,
+   where a disc reads as a control and can actually be found.
+
+   The disc is the look; where it sits belongs to whatever is showing it, so the
+   hero and the turntable can carry the same mark in different corners. */
+.site .spin-cue {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: clamp(46px, 3.8vw, 58px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(55, 94, 157, 0.2);
+  border-radius: 50%;
+  background: #eef2fa;
+  color: var(--accent, #375e9d);
+  box-shadow: 0 6px 18px rgba(55, 94, 157, 0.14);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* Once the reader has hold of the model the glyph has said its piece, so it
+   steps back — but stays legible rather than disappearing. */
+.site .spin-stage.is-engaged .spin-cue {
+  opacity: 0.55;
+}
+
+.site .spin-stage .spin-cue {
+  top: clamp(2px, 0.8vw, 10px);
+  left: clamp(2px, 0.8vw, 10px);
+}
+
+.site .spin-cue svg {
+  display: block;
+  width: 66%;
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  .site .spin-stage {
+    min-height: clamp(240px, 52vw, 340px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site .spin-cue {
+    transition: none;
+  }
+
+  .site .spin-stage:not(.is-ready) .spin-cue {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Product hero carrying a render instead of a video.
+
+   Three quarters of the screen, not the full height every other hero takes:
+   the machine is the whole subject here, and stopping short of the fold puts
+   the turntable underneath in view as the reader arrives.
+
+   style.css fades `.hero-bg` to 0.45 because it was a still laid over playing
+   video. There is no video under this one — the render is the hero — so it
+   comes back to full strength and sits to the right, clear of the title.
+   -------------------------------------------------------------------------- */
+
+.site .hero.product-hero.product-hero-still {
+  min-height: 75vh;
+  min-height: 75svh;
+  height: auto;
+}
+
+/* `contain`, not the inherited `cover`: a render is a subject with edges, and
+   at any viewport `cover` clips a track or a corner off it. The white studio
+   matte is keyed out of the file, so what is left is the machine on the band's
+   own colour — no picture edge to catch the eye — and the shadow is what gives
+   it a floor to stand on. */
+/* A raw turntable frame is close to square, so across the full hero it would
+   either sit under the title or hug the right edge. It gets a box of its own on
+   the right instead — inset from the edge by roughly the page gutter — and is
+   centred inside that, which is what leaves the machine air on both sides. */
+.site .product-hero-still .hero-bg {
+  opacity: 1;
+  object-fit: contain;
+  object-position: center;
+  left: auto;
+  right: clamp(16px, 5vw, 110px);
+  width: min(58%, 860px);
+  filter: drop-shadow(0 30px 42px rgba(7, 3, 34, 0.18));
+}
+
+/* style.css washes the whole hero at 90% down to 48% so a title can sit over
+   playing video. That wash is what turned the render grey. It is rebuilt to
+   cover the title column alone and clear the machine entirely. */
+.site .hero.product-hero.product-hero-still::after {
+  background: linear-gradient(
+    90deg,
+    rgba(245, 245, 245, 0.96) 0%,
+    rgba(245, 245, 245, 0.88) 22%,
+    rgba(245, 245, 245, 0) 44%
+  );
+}
+
+/* One column on a phone: the wash goes vertical so the title keeps its ground
+   and the machine sits under it rather than behind it. */
+@media (max-width: 900px) {
+  .site .hero.product-hero.product-hero-still::after {
+    background: linear-gradient(
+      180deg,
+      rgba(245, 245, 245, 0.96) 0%,
+      rgba(245, 245, 245, 0.88) 42%,
+      rgba(245, 245, 245, 0.1) 78%
+    );
+  }
+
+  /* One column: the render takes the full width back and sits under the copy. */
+  .site .product-hero-still .hero-bg {
+    left: 0;
+    right: auto;
+    width: 100%;
+    object-position: center bottom;
+  }
+}
+

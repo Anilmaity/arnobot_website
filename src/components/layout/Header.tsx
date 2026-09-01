@@ -59,6 +59,7 @@ export default function Header() {
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number; arrow: number } | null>(null);
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
+  const [tucked, setTucked] = useState(false);
 
   // Home and Technology both open on a full-bleed video hero, so the header
   // dissolves into it until the user scrolls off the hero, then docks as a
@@ -97,6 +98,52 @@ export default function Header() {
       window.removeEventListener('resize', onResize);
     };
   }, [pathname, hasCinematicHero]);
+
+  /**
+   * Tucks the bar away while the reader scrolls down and brings it back the
+   * moment they scroll up, so the page keeps its full height when reading and
+   * the nav is one flick away when wanted.
+   *
+   * Held open near the top of the page — a bar that vanishes on the first
+   * nudge of a hero reads as a glitch. An open menu stops the listener here
+   * and is also answered by `barTucked` below, since sliding the anchor out
+   * from under an open dropdown would strand it mid-air.
+   */
+  useEffect(() => {
+    if (mobileOpen || dropdownOpen) return;
+
+    /** Scroll below this and the bar stays put; roughly one hero-title height. */
+    const HOLD_OPEN_ABOVE = 180;
+    /** Movement under this is noise — a trackpad settling, an elastic bounce. */
+    const DEAD_ZONE = 5;
+
+    let last = window.scrollY;
+    let queued = false;
+
+    const sync = () => {
+      queued = false;
+      const y = window.scrollY;
+      const delta = y - last;
+      if (Math.abs(delta) < DEAD_ZONE) return;
+
+      last = y;
+      setTucked(delta > 0 && y > HOLD_OPEN_ABOVE);
+    };
+
+    // rAF-throttled: scroll fires far more often than the bar can change state.
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(sync);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [pathname, mobileOpen, dropdownOpen]);
+
+  /* Derived rather than forced from the effect: an open menu has to keep the
+     bar on screen, and computing that here avoids a second render pass. */
+  const barTucked = tucked && !mobileOpen && !dropdownOpen;
 
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
@@ -229,7 +276,9 @@ export default function Header() {
 
   return (
     <>
-      <header className={cn('header', overHero && 'header-over-hero', solid && 'header-solid')}>
+      <header
+        className={cn('header', overHero && 'header-over-hero', solid && 'header-solid', barTucked && 'header-tucked')}
+      >
         <div className="header-inner">
           <Link href="/" className="logo-wrap">
             <img

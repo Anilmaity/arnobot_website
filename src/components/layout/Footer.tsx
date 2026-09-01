@@ -68,7 +68,16 @@ export default function Footer() {
             <h4>Connect</h4>
             <div className="socials">
               {SOCIAL_LINKS.map((social) => (
-                <img key={social.label} src={social.icon} alt={social.label} />
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  /* Profiles on someone else's domain: no referrer, and no
+                     handle on this window from the tab that opens. */
+                  rel="noreferrer noopener"
+                >
+                  <img src={social.icon} alt={social.label} />
+                </a>
               ))}
             </div>
           </div>
