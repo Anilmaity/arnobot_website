@@ -35,25 +35,12 @@
    Hero
    -------------------------------------------------------------------------- */
 
-/* Every section on this page is at least one screen tall — the rhythm the rest
-   of the site runs, so the reader meets one idea at a time. It also fixes what
-   the header measures: `data-cinematic-hero` docks the bar at 50% of the hero,
-   and a 250px hero made that 125px here against a half-screen everywhere else.
-
-   `min-height`, never `height`: once "Load more" has run the grid is several
-   screens tall and simply grows instead of clipping. `svh` keeps mobile browser
-   chrome from pushing the title out of view.
-
-   No navbar reserve on the hero — the header is transparent over it and the
-   copy already sits clear of the top, so reserving would only push the headline
-   down the screen. Same exception globals.css makes for every other hero. */
+/* A compact band, not a full screen: eyebrow, title and lead in a dark strip
+   a little under 300px tall, with the article grid starting right below it.
+   The top padding clears the fixed header, which is transparent over the band
+   (`data-cinematic-hero`) and docks once half of it has scrolled past. */
 .hero {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: clamp(96px, 12vw, 150px) 0 clamp(56px, 7vw, 84px);
+  padding: clamp(84px, 9vw, 100px) 0 clamp(32px, 4vw, 44px);
   background: var(--in-dark);
   text-align: center;
 }
