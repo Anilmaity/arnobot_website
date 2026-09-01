@@ -1,9 +1,9 @@
 /* ==========================================================================
    Tailwind entry point.
 
-   The site's design lives in public/assets/css/style.css — the original,
-   unmodified stylesheet from the PHP build. Tailwind is layered *underneath*
-   it rather than replacing it:
+   The site's design lives in public/assets/css/style.css — the stylesheet
+   from the PHP build, pruned of the rules for pages the rebuild dropped.
+   Tailwind is layered *underneath* it rather than replacing it:
 
    - Preflight is deliberately NOT imported. Tailwind's base reset would
      re-style headings, lists, images and borders that style.css already
@@ -106,16 +106,6 @@
   text-decoration: none;
 }
 
-/* The press-release headlines open a dialog. They stay anchors so that
-   `.spotlight-title a` / `.press-card-title a` keep styling them and the
-   heading's -webkit-line-clamp keeps working; they carry role="button" and
-   tabindex instead of the PHP page's `href="javascript:void(0)"`, so they only
-   need the pointer cursor an href would have given them. */
-.spotlight-title a[role='button'],
-.press-card-title a[role='button'] {
-  cursor: pointer;
-}
-
 /* --------------------------------------------------------------------------
    Transparent header legibility.
 
@@ -165,11 +155,6 @@
    style.css counterparts and win regardless of stylesheet order.
    -------------------------------------------------------------------------- */
 
-.site .about-hero,
-.site .career-hero,
-.site .blog-hero,
-.site .press-hero,
-.site .mk-hero,
 .site .hero.product-hero {
   min-height: 100vh;
   min-height: 100svh;
@@ -181,21 +166,8 @@
   height: auto;
 }
 
-.site .about-story,
-.site .why-choose-us,
-.site .vision-mission,
-.site .leadership,
-.site .facility,
 .site .product-details,
-.site .product-specs-section,
-.site .mk-platform,
-.site .mk-industries,
-.site .mk-opp,
-.site .mk-section,
-.site .career-form-section,
-.site .blog-grid-section,
-.site .blog-details-body-section,
-.site .press-main-section {
+.site .product-specs-section {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -206,21 +178,8 @@
 @media (max-width: 767px) {
   /* A full screen per section is a lot of scrolling on a phone, and these
      sections are already tall there. Let them size to their content. */
-  .site .about-story,
-  .site .why-choose-us,
-  .site .vision-mission,
-  .site .leadership,
-  .site .facility,
   .site .product-details,
-  .site .product-specs-section,
-  .site .mk-platform,
-  .site .mk-industries,
-  .site .mk-opp,
-  .site .mk-section,
-  .site .career-form-section,
-  .site .blog-grid-section,
-  .site .blog-details-body-section,
-  .site .press-main-section {
+  .site .product-specs-section {
     min-height: 0;
   }
 }
@@ -469,36 +428,6 @@ body main {
 }
 
 /* --------------------------------------------------------------------------
-   Home — Engineering Excellence metric cards.
-
-   Two problems, opposite ends of the same block. `.field-band > .excellence`
-   zeroes the section's top padding, but the stacked layout below 1100px then
-   adds a 40px flex gap under the title, so the cards were pushed well down.
-   At the foot, 60px of padding was not enough to clear `.excellence-line` —
-   the animated 1px rule pinned to `bottom: 0` — so the second row of cards sat
-   almost on top of it.
-
-   Tighten the gap above, open up the space below.
-   -------------------------------------------------------------------------- */
-
-.site .field-band > .excellence {
-  padding-bottom: clamp(56px, 8vh, 92px);
-}
-
-@media (max-width: 1100px) {
-  /* The stacked title-over-metrics gap, down from a flat 40px. */
-  .site .excellence {
-    gap: clamp(18px, 2.5vh, 26px);
-  }
-}
-
-/* The row gap inside the grid was 24px against a 40px column gap, which read as
-   the rows being crowded relative to the columns. */
-.site .metrics {
-  gap: 20px 32px;
-}
-
-/* --------------------------------------------------------------------------
    Product page — section rhythm inside the full-screen bands.
 
    Each section already centres its content in a `.container`; what the
@@ -565,40 +494,13 @@ body main {
 }
 
 /* --------------------------------------------------------------------------
-   Hero contrast and alignment, made consistent across pages.
+   Product hero alignment.
 
-   Raising every hero to a full screen changed how each background image is
-   cropped by `cover`: the light and dark regions moved, and two heroes ended up
-   with their titles over the wrong half. These rules make contrast a property
-   of the hero rather than an accident of the crop.
+   Raising every hero to a full screen left the product hero's copy hanging at
+   the top: its padding was sized for the old 560px band, while every other
+   hero centres its copy. Centre this one too.
    -------------------------------------------------------------------------- */
 
-/* About was the only light hero with no gradient wash over its photograph —
-   contact, blog and press all layer one. Without it the navy title sat on the
-   dark robot and was practically unreadable. Same 105deg wash they use. */
-.site .about-hero {
-  background:
-    linear-gradient(105deg, rgba(245, 245, 245, 0.96) 0%, rgba(245, 245, 245, 0.78) 55%, rgba(245, 245, 245, 0.45) 100%),
-    url('/assets/images/abt-hero.png') no-repeat center right / cover;
-}
-
-/* Industries is the inverse case: white title over a photograph that is light
-   on the left at full-screen height. A dark scrim on the text side, mirroring
-   the technology page's video bands. */
-.site .mk-hero-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    rgba(7, 3, 34, 0.82) 0%,
-    rgba(7, 3, 34, 0.55) 45%,
-    rgba(7, 3, 34, 0.15) 100%
-  );
-}
-
-/* The product hero's top padding was sized for the old 560px band, so at full
-   height its title hung at the top while every other hero centres its copy. */
 .site .hero.product-hero {
   display: flex;
   align-items: center;
@@ -607,220 +509,6 @@ body main {
 .site .hero.product-hero .hero-content {
   padding-top: 0;
   width: 100%;
-}
-
-/* --------------------------------------------------------------------------
-   Company page — Vision / Mission / Values.
-
-   The section was built for a layout that no longer exists: `.vision-mission`
-   reserves 245px of top padding and `.vision-mission-cards` pulls itself up by
-   -120px, so the row of cards would straddle the bottom edge of a
-   `.vision-mission-hero` image. That image is not in the markup, so the pull
-   fought a gap that was never filled and the cards floated with a large dead
-   band above them.
-
-   With no image to overlap, the offset pair cancels out and the cards are
-   spaced on the section's own rhythm instead.
-   -------------------------------------------------------------------------- */
-
-.site .vision-mission {
-  padding-block: clamp(64px, 9vh, 112px);
-}
-
-.site .vision-mission-cards {
-  margin-top: 0;
-  /* The icon disc is centred on the top edge of each card, so the row needs
-     half an icon of clearance above it. */
-  padding: 32px clamp(24px, 5vw, 60px) 0;
-  gap: clamp(28px, 4vw, 48px);
-  align-items: stretch;
-}
-
-/* Three cards of different shapes — two paragraphs and a list — were sizing
-   independently. Stretching them to a shared height puts the three icon discs
-   on one line and the three headings on one baseline. */
-.site .vision-mission-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-/* Bodies start directly under their heading in all three cards, so the gap
-   below the title is identical across the row and the leftover height pools at
-   the foot of the shorter cards. Centring them instead left the two paragraphs
-   floating mid-card while the list sat tight under its heading. */
-.site .vision-mission-card p,
-.site .vision-mission-card ul {
-  margin-top: 0;
-  margin-bottom: auto;
-}
-
-/* Five values in a two-column grid wrapped the longer labels onto second lines
-   and left "Made in India" alone in a half-empty final row. One column fits
-   every label on a single line and reads as a list rather than a broken table. */
-.site .vision-mission-card ul {
-  grid-template-columns: 1fr;
-  row-gap: 10px;
-  width: max-content;
-  max-width: 100%;
-  margin-inline: auto;
-  padding-top: 8px;
-}
-
-@media (max-width: 900px) {
-  .site .vision-mission-cards {
-    grid-template-columns: 1fr;
-    gap: 56px;
-  }
-}
-
-/* The disc used to be painted inside each SVG file, so the three carried their
-   own background and their own idea of how big the glyph should be. It is now a
-   CSS medallion holding a `currentColor` icon: one shape, one size, one weight,
-   and the brand colour lives in the stylesheet where it can change once. */
-.site .vision-mission-card .card-icon {
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--accent, #375e9d);
-  color: #fff;
-  /* A ring in the card's own colour separates the disc from the card edge it
-     straddles, so the medallion reads as sitting on top rather than punched in. */
-  box-shadow: 0 0 0 6px #f4f5f8, 0 10px 22px rgba(7, 3, 34, 0.16);
-}
-
-/* Card interior rhythm: the medallion overhangs the top edge by half its height,
-   so the heading needs clearance beneath it. */
-.site .vision-mission-card {
-  padding: 52px 32px 40px;
-}
-
-.site .vision-mission-card h3 {
-  margin-bottom: 14px;
-  letter-spacing: 0.3px;
-}
-
-/* --------------------------------------------------------------------------
-   Company page — "Build In-House" facility block.
-
-   Stays on the page's white ground. The emphasis comes from the photographs
-   themselves: they run at full colour on the container's full width, which
-   makes them half again as large as before, and the block opens with an accent
-   rule. An inverted dark band was tried and read as heavier than the page
-   around it.
-
-   Scale is taken from the page, not invented here. Every other section on this
-   page puts its heading above its content and lets that content run the full
-   1258px container; this block was the exception, with the heading beside the
-   gallery squeezing four photographs into the leftover ~940px. Stacking it puts
-   them on the same measure as the value cards above and the letter below.
-   -------------------------------------------------------------------------- */
-
-.site .facility {
-  padding-block: clamp(56px, 7vh, 104px);
-}
-
-/* The accent rule that opens the block, drawn rather than added to the markup. */
-.site .facility-left::before {
-  content: '';
-  display: block;
-  width: 56px;
-  height: 3px;
-  margin-bottom: 22px;
-  background: var(--accent, #375e9d);
-}
-
-.site .facility-left h2 {
-  font-size: clamp(30px, 4.4vw, 46px);
-  line-height: 1.12;
-}
-
-.site .facility-grid {
-  grid-template-columns: 1fr;
-  gap: clamp(28px, 4vh, 44px);
-}
-
-.site .facility-gallery {
-  gap: clamp(18px, 2vw, 28px);
-}
-
-/* Square, as it always was — the size increase comes from the full-width
-   measure, not from a taller crop, which is what keeps the block on one screen. */
-.site .facility-photo {
-  aspect-ratio: 1 / 1;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-}
-
-/* Resting grayscale was total, which left a facility the page is meant to be
-   proud of looking derelict until hovered. These photographs are the argument
-   the section makes, so they run at full colour. */
-.site .facility-photo img {
-  filter: none;
-}
-
-.site .facility-item:hover .facility-photo {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 34px rgba(7, 3, 34, 0.14);
-}
-
-/* The one-line summary is the point of the block, so it is set as a statement
-   with its own accent rule rather than as fine print under a tick. */
-.site .facility-caption {
-  border-left: 3px solid var(--accent, #375e9d);
-  /* Square on the ruled edge only: the panel's 10px radius was clipping the
-     ends of the accent bar. */
-  border-radius: 0 10px 10px 0;
-  padding-left: 22px;
-  align-items: center;
-}
-
-.site .facility-caption p {
-  font-size: clamp(16px, 1.5vw, 20px);
-  line-height: 1.6;
-  color: var(--ink, #070322);
-}
-
-/* --------------------------------------------------------------------------
-   Company page — the founder's letter.
-
-   Structure is left exactly as it was: prose, then the portrait, signature and
-   role in a row beneath it. Only the spacing is changed — the section kept its
-   own 85px/120px padding on top of the full-screen height it now has, so the
-   letter floated in a very large empty band above and below.
-   -------------------------------------------------------------------------- */
-
-.site .leadership {
-  padding-block: clamp(64px, 9vh, 104px);
-}
-
-.site .leadership .section-title {
-  margin-bottom: clamp(28px, 4vh, 44px);
-}
-
-
-/* --------------------------------------------------------------------------
-   One section, one screen — the remaining overruns.
-
-   Measured with a CDP probe at 1440x804 rather than by eye. Each of these was
-   content plus padding exceeding 100svh, so the section grew and the rhythm
-   broke. Padding is what gives way; the content itself is untouched.
-   -------------------------------------------------------------------------- */
-
-.site .mk-industries,
-.site .mk-opp,
-.site .career-form-section {
-  padding-block: clamp(32px, 4vh, 56px);
-}
-
-/* The industries grid is the densest block on the site. Tightening the gutters
-   and the card padding recovers the height that its own spacing was spending,
-   without dropping a card or shrinking the type. */
-.site .mk-industries-grid,
-.site .mk-grid {
-  gap: clamp(16px, 1.8vw, 24px);
 }
 
 /* --------------------------------------------------------------------------
@@ -839,22 +527,9 @@ body main {
    its own rhythm and only gains the bar's height.
    -------------------------------------------------------------------------- */
 
-.site .about-story,
-.site .why-choose-us,
-.site .vision-mission,
-.site .leadership,
-.site .facility,
 .site .product-details,
 .site .product-specs-section,
-.site .product-showcase-section,
-.site .mk-platform,
-.site .mk-industries,
-.site .mk-opp,
-.site .mk-section,
-.site .career-form-section,
-.site .blog-grid-section,
-.site .blog-details-body-section,
-.site .press-main-section {
+.site .product-showcase-section {
   padding-top: calc(var(--nav-height, 62px) + clamp(24px, 3vh, 48px));
 }
 
@@ -1351,3 +1026,31 @@ body main {
   }
 }
 
+/* --------------------------------------------------------------------------
+   Primary nav — fitting the row on a narrow desktop.
+
+   style.css sets a flat 45px gap and a 60px left margin on `.main-nav`, sized
+   for the five links it shipped with. Adding Insights pushed the row past the
+   bar's width: at around 1100px "CONTACT US" broke onto a second line, which
+   takes the bar's height and vertical alignment with it.
+
+   Two rules. Labels never break mid-item — a nav label wrapping is always a
+   fault, not a reflow. And the gap tightens between the desktop breakpoint and
+   1300px so six items fit without shrinking the type. Selectors are a step
+   more specific than style.css, which loads after this file.
+   -------------------------------------------------------------------------- */
+
+/* Direct children only. The product dropdown's items live inside `.main-nav`
+   too, and they are a vertical list of long labels that are entitled to wrap
+   inside their own panel. */
+.site .header .main-nav > a,
+.site .header .main-nav > .nav-dropdown .nav-dropdown-toggle {
+  white-space: nowrap;
+}
+
+@media (min-width: 1025px) and (max-width: 1300px) {
+  .site .header .main-nav {
+    gap: 26px;
+    margin-left: 30px;
+  }
+}

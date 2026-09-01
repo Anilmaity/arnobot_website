@@ -34,10 +34,10 @@ Node 20.9+ (developed on Node 24).
 
 ## How Tailwind and `style.css` coexist
 
-`public/assets/css/style.css` is the original stylesheet and remains the source of
-truth for the design. It is served from `/public` via a `<link>` rather than bundled,
-because bundling would rewrite its relative `url()`s and fail on one that points at a
-file that does not exist (`cta-bg.webp`).
+`public/assets/css/style.css` is the PHP build's stylesheet — pruned of the rules for
+pages the rebuild dropped — and remains the source of truth for the design. It is
+served from `/public` via a `<link>` rather than bundled, so its relative `url()`s
+keep resolving as they always have.
 
 Tailwind is layered underneath it in `src/app/globals.css`:
 
@@ -65,29 +65,32 @@ src/
     global-error.tsx           root boundary (no stylesheet dependency)
     (site)/
       layout.tsx  error.tsx    site chrome + error boundary
-      page.tsx, about/, technology/, product/, industries/,
-      career/, contact/, blog/, blog-details/, press-release/,
-      media-kit/, privacy-policy/, terms-conditions/
-    intro/                     the standalone splash (home.php)
+      page.tsx, about/, technology/, product/, career/,
+      contact/, insights/, insights/[slug]/,
+      privacy-policy/, terms-conditions/
     api/contact | career | schedule-demo
   components/
     layout/    Header, Footer, SiteChrome, SiteBehaviors
-    sections/  Cta, Ticker, StatusSection + per-page section components
+    sections/  Cta, StatusSection + per-page section components
     modals/    VideoModal, IndustryModal, DemoModal
     forms/     ContactForm, CareerForm, ResumeUpload, FormAlert
-    ui/        Icons, Toast, Skeleton, PageLoading
-    svg/       RadarRings, WhyChooseBackdrop, BlogHeroRadar, FooterRover
-  hooks/       useDelegatedClick, useModalDismiss, useCopyToClipboard
+    ui/        Icons, ProductIcons, Skeleton, PageLoading, SpinCue
+    svg/       RadarRings
+  hooks/       useDelegatedClick, useModalDismiss
   lib/
-    behaviors/ revealOnScroll, industrySlider, animations/{home,about,product}
+    behaviors/ revealOnScroll, industrySlider, recognitionMarquee, legalToc,
+               closingViewport, scrollReset, animations/{home,product}
     email/     transport + templates
     dom.ts     Disposer, focus trap, scroll lock, cn()
     gsap.ts    single GSAP registration point
-  data/        products, industries, pressReleases, blogArticles, site
+  data/        products, industries, insights, recognition, site
   types/       shared domain types
 ```
 
 Old `.php` URLs still work — `next.config.ts` permanently redirects all fifteen.
+The pages that were dropped in the rebuild (the splash, blog, press releases,
+media kit and the standalone industries page) redirect to their nearest
+surviving equivalent instead of a 404.
 
 ## Server vs client
 
@@ -101,7 +104,7 @@ client leaves:
   bubble-phase listener would run after `next/link` had already navigated.
 - The industry modal renders its robot cards from typed data — the original built
   them with `innerHTML`. No `innerHTML` remains anywhere.
-- `Header`, `PressReleaseList`, `ProductGallery`, `TableOfContents` and the forms
+- `Header`, `ProductGallery`, `ProductSpinViewer`, `InsightsIndex` and the forms
   are client components that own their own state.
 
 ### `SiteBehaviors` and the Suspense boundary
@@ -141,9 +144,8 @@ pending label, and failures render in an inline live region instead of `alert()`
 - **Loading** — `PageLoading` skeleton behind the site chrome while content streams.
 - **Error** — `(site)/error.tsx` with a retry button and the error digest;
   `global-error.tsx` as the inline-styled last resort.
-- **Empty** — press-release filters, the blog index and the related-articles sidebar
-  all render an empty state when their list is empty; the product showcase is omitted
-  when a product has none.
+- **Empty** — the insights index renders an empty state when a filter matches
+  nothing; the product showcase is omitted when a product has none.
 - **Focus** — the original stylesheet defined no focus style at all. `:focus-visible`
   rings are added globally; they never fire on mouse clicks, so the resting design is
   untouched. Modals trap focus and restore it on close.
@@ -157,11 +159,6 @@ pending label, and failures render in an inline live region instead of `alert()`
 rather than set by hand. The PRODUCT menu is a real `<button>` with the standard
 menu-button keys (Enter/Space/ArrowUp/ArrowDown); it repeats four declarations from
 `.main-nav a` in `globals.css` because it no longer matches that selector.
-
-The press-release headlines stay anchors on purpose. Turning them into buttons broke
-the design twice — Chrome's user-agent `button { text-transform: none }` dropped the
-uppercase, and the heading's `-webkit-line-clamp` stopped applying — so they carry
-`role="button"` plus keyboard activation instead.
 
 ## Deliberate deviations
 
@@ -182,11 +179,6 @@ uppercase, and the heading's `-webkit-line-clamp` stopped applying — so they c
   Only the real submission remains.
 - `assets/drive_downloads/` (125 MB of unreferenced raw footage) was not copied.
 
-## Known pre-existing issue carried over
-
-`style.css` references `../images/cta-bg.webp`, which does not exist in the asset
-folder (only `cta-bg.png`). Left as-is — changing it would change the CTA background.
-
 ## Verification
 
 `npm run build`, `npm run lint` and `npm run typecheck` are clean.
@@ -204,8 +196,7 @@ Checked in headless Chrome against a production build:
   lock, Escape, keyboard activation), video lightbox, industries slider, demo modal,
   desktop dropdown (positioning, `aria-expanded`, arrow-key focus), mobile drawer and
   submenu, SPA navigation re-init without duplicate handlers, product gallery hover
-  swap, Fancybox, showcase videos, press filters/modal, blog TOC scroll-spy, media-kit
-  copy toast, contact reCAPTCHA gate, form alert states, 404, intro isolation, and API
+  swap, Fancybox, showcase videos, contact reCAPTCHA gate, form alert states, 404, and API
   validation for all three endpoints.
 - **Pixel-diffed** 59 desktop and 91 mobile screenshots against the pre-refactor
   build. Every page height matches, and the remaining differences are confined to

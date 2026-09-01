@@ -36,25 +36,6 @@ export function CalendarIcon(props: IconProps) {
   );
 }
 
-export function LinkIcon(props: IconProps) {
-  return (
-    <Icon strokeWidth="2" {...props}>
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-    </Icon>
-  );
-}
-
-export function DownloadIcon(props: IconProps) {
-  return (
-    <Icon strokeWidth="2" {...props}>
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </Icon>
-  );
-}
-
 export function CloseIcon(props: IconProps) {
   return (
     <Icon strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -124,28 +105,11 @@ export function PinIcon(props: IconProps) {
   );
 }
 
-export function CheckIcon(props: IconProps) {
-  return (
-    <Icon strokeWidth="2" {...props}>
-      <polyline points="20 6 9 17 4 12" />
-    </Icon>
-  );
-}
-
 export function CheckCircleIcon(props: IconProps) {
   return (
     <Icon strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <path d="m9 11 3 3L22 4" />
-    </Icon>
-  );
-}
-
-export function SearchIcon(props: IconProps) {
-  return (
-    <Icon strokeWidth="1.5" {...props}>
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </Icon>
   );
 }

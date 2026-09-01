@@ -3,7 +3,6 @@ import { prefersReducedMotion, queryAll } from '@/lib/dom';
 import type { Cleanup } from '@/types';
 import { consumeScrollTarget } from '../scrollReset';
 import { homeAnimations } from './home';
-import { aboutAnimations } from './about';
 import { productAnimations } from './product';
 
 /**
@@ -12,16 +11,10 @@ import { productAnimations } from './product';
  */
 const SECTIONS_WITH_CUSTOM_ANIMATION = [
   'about',
-  'excellence',
   'products',
   'environment',
   'industries',
   'cta',
-  'about-story',
-  'why-choose-us',
-  'vision-mission',
-  'leadership',
-  'facility',
   'product-details',
   'product-specs-section',
   'product-showcase-section',
@@ -63,7 +56,6 @@ export function pageAnimations(): Cleanup {
   const context = gsap.context(() => {
     defaultRevealAnimation();
     homeAnimations();
-    aboutAnimations();
     productAnimations();
   });
 

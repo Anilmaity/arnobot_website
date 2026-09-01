@@ -4,7 +4,7 @@ import type { Product, ProductId } from '@/types';
  * Product data definitions from the official "Product data.docx",
  * ported from the $products array in product.php.
  */
-export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
+const PRODUCTS: Readonly<Record<ProductId, Product>> = {
   saibya: {
     id: 'saibya',
     name: 'SAIBYA',
@@ -261,7 +261,7 @@ export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     subtitle: '(Vertical Climbing Robot)',
     heroTitleLines: ['Vertical Climbing ', 'Robotics'],
     heroBg: '/assets/images/hero-bg.png',
-    heroVideo: '/assets/videos/products/altius/Cleaning Attachment.mp4',
+    heroVideo: '/assets/videos/products/altius/cleaning-attachment.mp4',
     /* The front-on pose the spin below opens on, cut from the same turntable at
        the full resolution the render carries — the hero draws it across most of
        the screen, far larger than the turntable ever draws a frame, so it gets a
@@ -321,12 +321,12 @@ export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       {
         title: 'Cleaning Attachment Trial',
         img: '/assets/images/products/altius/altius_field_1.jpg',
-        video: '/assets/videos/products/altius/Cleaning Attachment.mp4',
+        video: '/assets/videos/products/altius/cleaning-attachment.mp4',
       },
       {
         title: 'Payload Capacity Test',
         img: '/assets/images/products/altius/altius_field_10.jpg',
-        video: '/assets/videos/products/altius/Payload Capacity.mp4',
+        video: '/assets/videos/products/altius/payload-capacity.mp4',
       },
       {
         title: 'GroundStation Setup & Control',
@@ -337,9 +337,7 @@ export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
   },
 };
 
-export const DEFAULT_PRODUCT_ID: ProductId = 'saibya';
-
-export const PRODUCT_IDS = Object.keys(PRODUCTS) as readonly ProductId[];
+const DEFAULT_PRODUCT_ID: ProductId = 'saibya';
 
 function isProductId(value: string): value is ProductId {
   return Object.prototype.hasOwnProperty.call(PRODUCTS, value);

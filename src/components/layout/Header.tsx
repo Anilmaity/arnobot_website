@@ -27,14 +27,19 @@ const CINEMATIC_HERO_ROUTES = new Set([
   '/technology',
   '/about',
   '/product',
-  '/industries',
   '/career',
   '/contact',
-  '/blog',
-  '/blog-details',
-  '/press-release',
-  '/media-kit',
+  '/insights',
 ]);
+
+/**
+ * Insight articles live at `/insights/<slug>`, so they cannot be listed above
+ * one by one. They carry the same hero treatment as the index, hence the
+ * prefix test alongside the exact-match set.
+ */
+function hasCinematicHeroFor(pathname: string): boolean {
+  return CINEMATIC_HERO_ROUTES.has(pathname) || pathname.startsWith('/insights/');
+}
 
 /**
  * Routes that dock the solid bar immediately, with no hero to dissolve into.
@@ -64,7 +69,7 @@ export default function Header() {
   // Home and Technology both open on a full-bleed video hero, so the header
   // dissolves into it until the user scrolls off the hero, then docks as a
   // full-width solid bar. Every other route keeps the floating glass panel.
-  const hasCinematicHero = CINEMATIC_HERO_ROUTES.has(pathname);
+  const hasCinematicHero = hasCinematicHeroFor(pathname);
   const overHero = hasCinematicHero && !scrolledPastHero && !mobileOpen;
   const solid = (hasCinematicHero && !overHero) || SOLID_HEADER_ROUTES.has(pathname);
 

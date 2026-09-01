@@ -2,11 +2,9 @@ import { NextResponse } from 'next/server';
 import { sendMail } from '@/lib/email/transport';
 import { careerEmail } from '@/lib/email/messages';
 import { field, fileField, hasAll, isValidEmail } from '@/lib/validation';
+import { MAX_RESUME_BYTES, RESUME_EXTENSIONS } from '@/lib/resume';
 
 export const runtime = 'nodejs';
-
-export const MAX_RESUME_BYTES = 5 * 1024 * 1024;
-export const ALLOWED_RESUME_EXTENSIONS = ['pdf', 'doc', 'docx'] as const;
 
 function back(request: Request, query: string): NextResponse {
   return NextResponse.redirect(new URL(`/career${query}`, request.url), 303);
@@ -44,7 +42,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const resume = fileField(formData, 'resume');
   if (!resume) return back(request, '?error=resume');
   if (resume.size > MAX_RESUME_BYTES) return back(request, '?error=resume_size');
-  if (!ALLOWED_RESUME_EXTENSIONS.includes(extensionOf(resume.name) as (typeof ALLOWED_RESUME_EXTENSIONS)[number])) {
+  if (!RESUME_EXTENSIONS.includes(extensionOf(resume.name) as (typeof RESUME_EXTENSIONS)[number])) {
     return back(request, '?error=resume_type');
   }
 

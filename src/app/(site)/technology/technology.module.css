@@ -37,17 +37,11 @@
    Shared type scale
    -------------------------------------------------------------------------- */
 
-.displayXl,
 .statementTitle,
 .bandTitle {
   font-family: var(--tech-display);
   font-weight: 400; /* Russo One ships a single weight */
   letter-spacing: -0.01em;
-}
-
-.displayXl {
-  font-size: clamp(40px, 8vw, 92px);
-  line-height: 1.02;
 }
 
 .statementTitle,
@@ -66,12 +60,6 @@
   text-transform: uppercase;
   color: var(--tech-accent);
   margin-bottom: 12px;
-}
-
-.lead {
-  font-size: clamp(16px, 1.4vw, 20px);
-  line-height: 1.65;
-  color: var(--tech-muted);
 }
 
 .rule {
@@ -546,10 +534,6 @@
   stroke-dasharray: 3 5;
 }
 
-.stackArrowHead {
-  fill: var(--tech-accent);
-}
-
 .stackName {
   font-family: var(--tech-display);
   font-size: 17px;
@@ -716,121 +700,6 @@
   line-height: 1.65;
   color: var(--tech-muted);
   margin: 0;
-}
-
-/* --------------------------------------------------------------------------
-   Platform comparison table.
-
-   Below 700px every row becomes its own card and each cell is prefixed with
-   the column it came from, carried in `data-label`.
-   -------------------------------------------------------------------------- */
-
-.specs {
-  max-width: 78rem;
-  margin: 0 auto;
-}
-
-.specsTitle {
-  composes: blockTitle;
-  margin-bottom: 28px;
-}
-
-.tableWrap {
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.table th,
-.table td {
-  padding: 18px 20px 18px 0;
-  vertical-align: top;
-}
-
-.table thead tr {
-  border-bottom: 2px solid var(--tech-dark);
-}
-
-.table th {
-  font-family: var(--tech-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--tech-ink);
-  white-space: nowrap;
-}
-
-.table tbody tr {
-  border-bottom: 1px solid var(--tech-line);
-}
-
-.table td {
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--tech-muted);
-}
-
-.rowHead {
-  font-weight: 600;
-  color: var(--tech-ink);
-  white-space: nowrap;
-}
-
-@media (max-width: 700px) {
-  .table,
-  .table thead,
-  .table tbody,
-  .table th,
-  .table td,
-  .table tr {
-    display: block;
-  }
-
-  /* Visually hidden, but the header cells stay in the accessibility tree so
-     the `scope="col"` association still works for screen readers. */
-  .table thead tr {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  .table tbody tr {
-    border: 1px solid var(--tech-line);
-    margin-bottom: 16px;
-    padding: 20px;
-  }
-
-  .table td {
-    position: relative;
-    padding: 0 0 10px 45%;
-  }
-
-  .table td::before {
-    content: attr(data-label);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40%;
-    font-weight: 700;
-    color: var(--tech-ink);
-  }
-
-  .table th.rowHead,
-  .table td.rowHead {
-    padding-left: 0;
-  }
-
-  .rowHead::before {
-    content: none;
-  }
 }
 
 /* --------------------------------------------------------------------------

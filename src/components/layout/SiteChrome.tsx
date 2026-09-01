@@ -24,13 +24,12 @@ export default function SiteChrome({ children }: { readonly children: ReactNode 
   return (
     <>
       {/*
-        style.css is the original, unmodified stylesheet from the PHP build.
-        It is served straight from /public rather than bundled so every rule and
-        every relative url() keeps resolving exactly as it did before.
+        style.css is the stylesheet from the PHP build, pruned of the rules for
+        pages the rebuild dropped. It is served straight from /public rather than
+        bundled so every relative url() keeps resolving exactly as it did before.
       */}
       {/* eslint-disable-next-line @next/next/no-css-tags -- bundling would rewrite the
-          relative url()s and fail on one that points at a missing file; serving the
-          original byte-for-byte keeps the design identical. */}
+          relative url()s; serving it as a static file keeps the design identical. */}
       <link rel="stylesheet" precedence="site" href="/assets/css/style.css" />
 
       <div className="site">

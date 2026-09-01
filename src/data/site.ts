@@ -36,6 +36,7 @@ export interface NavLink {
 export const PRIMARY_NAV: readonly NavLink[] = [
   { href: '/technology', label: 'TECHNOLOGY', mobileLabel: 'Technology' },
   { href: '/about', label: 'COMPANY', mobileLabel: 'Company' },
+  { href: '/insights', label: 'INSIGHTS', mobileLabel: 'Insights' },
 ];
 
 export const SECONDARY_NAV: readonly NavLink[] = [
@@ -48,11 +49,6 @@ export const PRODUCT_NAV: ReadonlyArray<{ readonly href: Route; readonly label: 
   { href: '/product?id=nexus', label: 'NEXUS – Tactical' },
   { href: '/product?id=altius', label: 'ALTIUS – Climbing' },
   { href: '/product?id=atm', label: 'ATM – Any Terrain Machine' },
-];
-
-export const FOOTER_LINKS: readonly NavLink[] = [
-  { href: '/privacy-policy', label: 'Privacy Policy', mobileLabel: 'Privacy Policy' },
-  { href: '/terms-conditions', label: 'Terms and Condition', mobileLabel: 'Terms and Condition' },
 ];
 
 /** The footer's link columns, in render order. */
@@ -75,6 +71,7 @@ export const FOOTER_NAV: ReadonlyArray<{
       { href: '/about', label: 'About' },
       { href: '/technology', label: 'Technology' },
       { href: '/career', label: 'Careers' },
+      { href: '/insights', label: 'Insights' },
     ],
   },
   {

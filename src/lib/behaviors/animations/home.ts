@@ -1,4 +1,4 @@
-import { gsap, ScrollTrigger } from '@/lib/gsap';
+import { gsap } from '@/lib/gsap';
 import { queryAll } from '@/lib/dom';
 
 const PLAY_ONCE = { toggleActions: 'play none none none' } as const;
@@ -93,96 +93,6 @@ function aboutSection(): void {
   });
 }
 
-/** Counts each metric up from zero the first time the strip scrolls into view. */
-function runMetricCountUp(): void {
-  for (const el of queryAll<HTMLElement>('.metric strong')) {
-    const target = el.getAttribute('data-val') ?? el.innerText.trim();
-    if (!el.getAttribute('data-val')) el.setAttribute('data-val', target);
-
-    if (target.includes('+')) {
-      const num = Number.parseInt(target.replace('+', ''), 10);
-      const obj = { val: 0 };
-      gsap.to(obj, {
-        val: num,
-        duration: 1.5,
-        ease: 'power2.out',
-        onUpdate: () => {
-          el.innerText = `${Math.floor(obj.val)}+`;
-        },
-      });
-    } else if (target.includes('%')) {
-      const num = Number.parseInt(target.replace('%', ''), 10);
-      const obj = { val: 0 };
-      gsap.to(obj, {
-        val: num,
-        duration: 1.5,
-        ease: 'power2.out',
-        onUpdate: () => {
-          el.innerText = `${Math.floor(obj.val)}%`;
-        },
-      });
-    } else if (target.includes('-')) {
-      const [rawFrom, rawTo] = target.split('-');
-      const obj = { val1: 0, val2: 0 };
-      gsap.to(obj, {
-        val1: Number.parseInt(rawFrom ?? '0', 10),
-        val2: Number.parseInt(rawTo ?? '0', 10),
-        duration: 1.5,
-        ease: 'power2.out',
-        onUpdate: () => {
-          el.innerText = `${Math.floor(obj.val1)}-${Math.floor(obj.val2)}`;
-        },
-      });
-    } else {
-      const num = Number.parseInt(target, 10);
-      if (Number.isNaN(num)) continue;
-      const obj = { val: 0 };
-      gsap.to(obj, {
-        val: num,
-        duration: 1.5,
-        ease: 'power2.out',
-        onUpdate: () => {
-          el.innerText = `${Math.floor(obj.val)}`;
-        },
-      });
-    }
-  }
-}
-
-function excellenceSection(): void {
-  if (!document.querySelector('.excellence')) return;
-
-  gsap.from('.excellence-title > *', {
-    opacity: 0,
-    y: 30,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: 'power2.out',
-    scrollTrigger: { trigger: '.excellence', start: 'top 80%', ...PLAY_ONCE },
-  });
-
-  // The metrics are a 2x2 grid, so a long travel with a wide stagger leaves one
-  // card landed while its row-mate is still 40px low — which reads as a broken
-  // layout rather than a reveal, especially to anyone scrolling past mid-flight.
-  // A short hop and a tight stagger keep the four visually a group: no card is
-  // ever more than 16px out of line with the row it belongs to.
-  gsap.from('.metric', {
-    opacity: 0,
-    y: 16,
-    duration: 0.5,
-    stagger: 0.06,
-    ease: 'power2.out',
-    scrollTrigger: { trigger: '.excellence', start: 'top 80%', ...PLAY_ONCE },
-  });
-
-  ScrollTrigger.create({
-    trigger: '.excellence',
-    start: 'top 80%',
-    once: true,
-    onEnter: runMetricCountUp,
-  });
-}
-
 function productsSection(): void {
   if (!document.querySelector('.products')) return;
 
@@ -270,7 +180,6 @@ function ctaSection(): void {
 export function homeAnimations(): void {
   heroSection();
   aboutSection();
-  excellenceSection();
   productsSection();
   environmentSection();
   industriesSection();

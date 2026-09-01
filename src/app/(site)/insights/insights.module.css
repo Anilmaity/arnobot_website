@@ -1,0 +1,375 @@
+/* ==========================================================================
+   /insights — article index.
+
+   The layout follows the reference structure (header, category filter,
+   featured lead, paged grid) but is drawn in the site's own language rather
+   than the reference's dark theme: Russo One for display, Outfit for body,
+   --ink / --accent / --footer from public/assets/css/style.css, dark hero band
+   over a light body the way the company and technology pages run. Fallbacks
+   are inlined in case this module ever renders before style.css lands.
+   ========================================================================== */
+
+.page {
+  --in-ink: var(--ink, #070322);
+  --in-accent: var(--accent, #375e9d);
+  --in-muted: var(--muted, #5f626d);
+  --in-dark: var(--footer, #121c2e);
+  --in-line: rgba(7, 3, 34, 0.1);
+  --in-display: "Russo One", "Arial Black", sans-serif;
+
+  --page-margin: clamp(24px, 5vw, 64px);
+  --measure: 1280px;
+
+  background: #fff;
+  color: var(--in-ink);
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding-inline: var(--page-margin);
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+/* Every section on this page is at least one screen tall — the rhythm the rest
+   of the site runs, so the reader meets one idea at a time. It also fixes what
+   the header measures: `data-cinematic-hero` docks the bar at 50% of the hero,
+   and a 250px hero made that 125px here against a half-screen everywhere else.
+
+   `min-height`, never `height`: once "Load more" has run the grid is several
+   screens tall and simply grows instead of clipping. `svh` keeps mobile browser
+   chrome from pushing the title out of view.
+
+   No navbar reserve on the hero — the header is transparent over it and the
+   copy already sits clear of the top, so reserving would only push the headline
+   down the screen. Same exception globals.css makes for every other hero. */
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(96px, 12vw, 150px) 0 clamp(56px, 7vw, 84px);
+  background: var(--in-dark);
+  text-align: center;
+}
+
+/* The shared eyebrow is accent blue, which is too close to the dark band to
+   read; lifted here rather than changed globally. */
+.hero :global(.eyebrow) {
+  color: #8fb0e8;
+}
+
+.heroTitle {
+  font-family: var(--in-display);
+  font-weight: 400; /* Russo One ships a single weight */
+  font-size: clamp(32px, 4.6vw, 58px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.heroLead {
+  max-width: 62ch;
+  margin: 20px auto 0;
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* --------------------------------------------------------------------------
+   Body
+   -------------------------------------------------------------------------- */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* The fixed header consumes no layout space, so a 100svh section hides its
+     first 62px under the docked bar — here, the filter row. Reserve it on the
+     top edge only, added to the section's own rhythm rather than replacing it. */
+  padding: calc(var(--nav-height, 62px) + clamp(24px, 3vh, 48px)) 0 clamp(64px, 8vw, 96px);
+}
+
+@media (max-width: 767px) {
+  /* A full screen per section is a lot of scrolling on a phone, and the grid is
+     already far taller than one there. Let the body size to its content. */
+  .body {
+    min-height: 0;
+    padding-block: clamp(56px, 9vh, 88px);
+  }
+}
+
+/* Filters ---------------------------------------------------------------- */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(12px, 2.4vw, 34px);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--in-line);
+}
+
+.filter {
+  padding: 6px 2px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--in-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter:hover {
+  color: var(--in-accent);
+}
+
+.filterActive {
+  color: var(--in-accent);
+  font-weight: 600;
+  border-bottom-color: var(--in-accent);
+}
+
+.count {
+  margin-top: 16px;
+  font-size: 13.5px;
+  color: var(--in-muted);
+  text-align: center;
+}
+
+/* Shared meta line ------------------------------------------------------- */
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--in-muted);
+}
+
+.category {
+  color: var(--in-accent);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Separated by rule rather than by a character in the markup, so a screen
+   reader is not read a row of bullets. */
+.readTime::before,
+.meta time::before {
+  content: "•";
+  margin-right: 12px;
+  color: var(--in-line);
+}
+
+/* Featured --------------------------------------------------------------- */
+
+.featured {
+  margin-top: clamp(28px, 4vw, 48px);
+  padding: clamp(16px, 2vw, 24px);
+  background: #f7f8fa;
+  border: 1px solid var(--in-line);
+  border-radius: 18px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.featured:hover {
+  border-color: rgba(55, 94, 157, 0.3);
+  background: #f3f5f8;
+}
+
+/* The whole card is one link, so the layout lives on the anchor. */
+.featuredLink {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 3vw, 44px);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .featuredLink {
+    grid-template-columns: 1.05fr 1fr;
+  }
+}
+
+.featuredMedia {
+  display: block;
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 16 / 10;
+  background: #e9ebef;
+}
+
+.featuredMedia img {
+  transition: transform 0.5s ease;
+}
+
+.featured:hover .featuredMedia img {
+  transform: scale(1.03);
+}
+
+.featuredMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featuredBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(4px, 1.5vw, 20px);
+}
+
+.featuredTitle {
+  font-family: var(--in-display);
+  font-weight: 400;
+  font-size: clamp(21px, 2.4vw, 32px);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+
+.featuredExcerpt {
+  font-size: clamp(14.5px, 1.2vw, 16.5px);
+  line-height: 1.7;
+  color: var(--in-muted);
+}
+
+/* Grid ------------------------------------------------------------------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: clamp(24px, 3vw, 40px);
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+.card {
+  display: flex;
+}
+
+/* The whole card is one link, so the layout lives on the anchor. */
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.cardMedia {
+  display: block;
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 4 / 3;
+  background: #e9ebef;
+}
+
+.cardMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .cardMedia img {
+  transform: scale(1.05);
+}
+
+.cardTitle {
+  font-family: var(--in-display);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.32;
+  transition: color 0.2s ease;
+}
+
+.card:hover .cardTitle {
+  color: var(--in-accent);
+}
+
+.cardExcerpt {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--in-muted);
+}
+
+/* The affordance that says a card opens something. */
+.cardRead {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--in-accent);
+}
+
+.card:hover .cardRead span,
+.featured:hover .cardRead span {
+  transform: translateX(3px);
+}
+
+.cardRead span {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+/* Load more -------------------------------------------------------------- */
+
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(36px, 4.5vw, 60px);
+}
+
+.loadMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 30px;
+  border: 1px solid var(--in-line);
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--in-ink);
+  cursor: pointer;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+}
+
+.loadMore:hover {
+  border-color: var(--in-accent);
+  color: var(--in-accent);
+  background: rgba(55, 94, 157, 0.06);
+}
+
+.loadMoreCount {
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--in-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardMedia img,
+  .filter,
+  .loadMore {
+    transition: none;
+  }
+
+  .card:hover .cardMedia img {
+    transform: none;
+  }
+}

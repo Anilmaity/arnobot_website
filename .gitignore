@@ -8,3 +8,6 @@ npm-debug.log*
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Git Bash crash dumps
+*.stackdump

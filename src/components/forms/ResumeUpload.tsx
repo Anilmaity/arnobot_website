@@ -2,13 +2,7 @@
 
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { cn } from '@/lib/dom';
-
-const MAX_BYTES = 5 * 1024 * 1024;
-const ACCEPTED_TYPES = [
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-] as const;
+import { MAX_RESUME_BYTES, RESUME_ACCEPT, RESUME_MIME_TYPES } from '@/lib/resume';
 
 /**
  * Drag-and-drop resume field — port of the upload zone in career.php and its
@@ -30,13 +24,13 @@ export default function ResumeUpload() {
   const accept = (file: File | undefined): boolean => {
     if (!file) return false;
 
-    if (!ACCEPTED_TYPES.includes(file.type as (typeof ACCEPTED_TYPES)[number])) {
+    if (!RESUME_MIME_TYPES.includes(file.type as (typeof RESUME_MIME_TYPES)[number])) {
       setError('Please upload a PDF or Word document (.pdf, .doc, .docx).');
       reset();
       return false;
     }
 
-    if (file.size > MAX_BYTES) {
+    if (file.size > MAX_RESUME_BYTES) {
       setError('File size must be under 5 MB.');
       reset();
       return false;
@@ -86,7 +80,7 @@ export default function ResumeUpload() {
           type="file"
           id="car-resume"
           name="resume"
-          accept=".pdf,.doc,.docx"
+          accept={RESUME_ACCEPT}
           required
           className="career-upload-input"
           ref={inputRef}

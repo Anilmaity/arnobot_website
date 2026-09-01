@@ -38,18 +38,12 @@
    Shared type scale
    -------------------------------------------------------------------------- */
 
-.displayXl,
 .bandTitle,
 .sectionTitle,
 .statNumber {
   font-family: var(--car-display);
   font-weight: 400; /* Russo One ships a single weight */
   letter-spacing: -0.01em;
-}
-
-.displayXl {
-  font-size: clamp(38px, 6.4vw, 82px);
-  line-height: 1.04;
 }
 
 .bandTitle {
@@ -72,12 +66,6 @@
   text-transform: uppercase;
   color: var(--car-accent);
   margin-bottom: 14px;
-}
-
-.lead {
-  font-size: clamp(16px, 1.4vw, 20px);
-  line-height: 1.65;
-  color: var(--car-muted);
 }
 
 .rule {
@@ -117,10 +105,6 @@
 
 .d1 {
   transition-delay: 0.08s;
-}
-
-.d2 {
-  transition-delay: 0.16s;
 }
 
 /* The reduced-motion guard for the whole page lives at the end of this file,
@@ -562,26 +546,6 @@
   }
 }
 
-/* --------------------------------------------------------------------------
-   Card grids — principles, the workshop, the people.
-
-   One 1px-gap grid on a line-coloured background, so the cards read as a single
-   ruled block rather than a row of floating boxes. Same construction as the
-   technology page's step grid.
-   -------------------------------------------------------------------------- */
-
-.grid {
-  display: grid;
-  gap: 1px;
-  background: var(--car-line);
-  border: 1px solid var(--car-line);
-  width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
-}
-
 .grid4 {
   composes: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -644,15 +608,6 @@
 .cardIcon svg {
   width: 20px;
   height: 20px;
-}
-
-.cardIndex {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--car-accent);
-  margin-bottom: 18px;
 }
 
 .cardTitle {

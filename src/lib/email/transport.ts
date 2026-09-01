@@ -14,10 +14,10 @@ const SMTP_PORT = Number(process.env.SMTP_PORT ?? 587);
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 
-export const MAIL_FROM = process.env.MAIL_FROM ?? 'contact@arnobot.in';
-export const MAIL_TO = process.env.MAIL_TO ?? 'contact@arnobot.in';
+const MAIL_FROM = process.env.MAIL_FROM ?? 'contact@arnobot.in';
+const MAIL_TO = process.env.MAIL_TO ?? 'contact@arnobot.in';
 
-export function isMailConfigured(): boolean {
+function isMailConfigured(): boolean {
   return Boolean(SMTP_USER && SMTP_PASS);
 }
 

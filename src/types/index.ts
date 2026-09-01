@@ -137,48 +137,7 @@ export interface Industry {
   readonly title: string;
   readonly desc: string;
   readonly robots: readonly IndustryRobot[];
-  readonly apps: readonly string[];
 }
-
-export type PressCategory = 'Defense & UGVs' | 'Industrial NDT' | 'Corporate & Facility';
-
-export interface PressRelease {
-  readonly id: number;
-  readonly tag: PressCategory;
-  readonly badgeClass: string;
-  readonly date: string;
-  readonly dateline: string;
-  readonly title: string;
-  readonly excerpt: string;
-  readonly image: string;
-  readonly body: readonly string[];
-}
-
-export type BlogArticleId = 1 | 2 | 3;
-
-export interface BlogArticle {
-  readonly id: BlogArticleId;
-  readonly slug: string;
-  readonly category: string;
-  readonly title: string;
-  readonly leadExcerpt: string;
-  /** Shorter summary used on the /blog index cards. */
-  readonly cardExcerpt: string;
-  readonly heroThumb: string;
-  readonly heroImage: string;
-  readonly date: string;
-  readonly readTime: string;
-  readonly author: string;
-  readonly role: string;
-  readonly takeaways: readonly string[];
-  readonly tags: readonly string[];
-  readonly prevId: BlogArticleId;
-  readonly nextId: BlogArticleId;
-  readonly toc: readonly string[];
-}
-
-/** Query-string state shared by the contact and career pages. */
-export type FormErrorCode = 'captcha' | 'required' | 'email' | 'mail' | (string & {});
 
 /** A teardown returned by every imperative behaviour module. */
 export type Cleanup = () => void;

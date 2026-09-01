@@ -4,7 +4,7 @@ import type { Industry, IndustryId } from '@/types';
  * Industry detail copy shown in the home-page modal — ported from the
  * `industryData` object that lived inside assets/js/main.js.
  */
-export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
+const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
   defence: {
     id: 'defence',
     title: 'Defence & Security',
@@ -29,12 +29,6 @@ export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
         specs: ['Tactical UGV', 'LiDAR', 'Thermal Cam', 'Mesh Network'],
       },
     ],
-    apps: [
-      'Autonomous border perimeter patrolling',
-      'Remote hazard, standoff threat & bomb detection',
-      'Tactical cargo & ammunition delivery (up to 200 kg)',
-      'Remote combat weapon & surveillance sensor integrations',
-    ],
   },
 
   maritime: {
@@ -48,12 +42,6 @@ export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
         image: '/assets/images/ALTIUS.png',
         specs: ['Climbing Robot', 'Magnetic', 'IP67 Waterproof', 'NDT Scan'],
       },
-    ],
-    apps: [
-      'Vessel hull automated biofouling cleaning',
-      'Non-Destructive weld testing (NDT) & crack mapping',
-      'Autonomous marine harbor security patrols',
-      'Offshore rig and underwater oil-gas piping inspection',
     ],
   },
 
@@ -75,12 +63,6 @@ export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
         specs: ['UGV', 'Modular Platform', 'Gas Sniffer', 'Thermal Engine'],
       },
     ],
-    apps: [
-      'Thermal substation scanning and hot-spot detection',
-      'Hazardous pipeline gas leakage scanning',
-      'Substation yard structural inspection & monitoring',
-      'Radiation-shielded area drone inspection',
-    ],
   },
 
   industrial: {
@@ -94,12 +76,6 @@ export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
         image: '/assets/images/SAIBYA.png',
         specs: ['UGV', 'Heavy Load', 'IP65 Weatherproof', 'Auto-Charger'],
       },
-    ],
-    apps: [
-      'Industrial heavy raw material automated transit',
-      'High-temperature furnace area inspections',
-      'Autonomous machineries acoustic noise checkups',
-      'Chemical storage safety and leak scanning',
     ],
   },
 
@@ -121,12 +97,6 @@ export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
         specs: ['All-Terrain', 'LiDAR Mapping', 'GPS-Denied Navigation', 'Obstacle Avoidance'],
       },
     ],
-    apps: [
-      'Railway track obstruction scanning & thermal checks',
-      'Deep tunnel wall crack and moisture detection',
-      'Dam wall water leak and concrete integrity checks',
-      'Cellular and remote power line utility monitoring',
-    ],
   },
 
   asset: {
@@ -140,12 +110,6 @@ export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
         image: '/assets/images/NEXUS.png',
         specs: ['Tactical Patrol', 'Thermal Analytics', 'LiDAR Avoidance', 'IP65 Waterproof'],
       },
-    ],
-    apps: [
-      'Autonomous perimeter patrol routes',
-      'Thermal intrusion signature analytics',
-      'Storage tank leak alerts',
-      '24/7 video monitoring over secure radio',
     ],
   },
 
@@ -166,12 +130,6 @@ export const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
         image: '/assets/images/ALTIUS.png',
         specs: ['Lightweight UGV', 'Waterless Cleaning', 'Solar Special', 'Fast Brush'],
       },
-    ],
-    apps: [
-      'Solar panel automated dry cleaning brush system',
-      'Panel thermal micro-crack hotspot mapping',
-      'Structural assembly integrity mapping',
-      'Ground vegetation monitoring',
     ],
   },
 };
