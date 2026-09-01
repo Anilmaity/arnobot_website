@@ -178,6 +178,28 @@
   margin-top: 36px;
 }
 
+/* Square-cornered, high-contrast buttons — the technology page's CTA treatment. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 17px 40px;
+  border: 2px solid transparent;
+  border-radius: 0;
+  font-family: var(--c-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
 .btnPrimary {
   composes: btn;
   background: var(--c-accent);
@@ -204,6 +226,15 @@
   background: #fff;
   border-color: #fff;
   color: var(--c-ink);
+}
+
+.btnArrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.btn:hover .btnArrow {
+  transform: translateX(4px);
 }
 
 /* The facts a visitor scans for before they read anything else. */
@@ -256,6 +287,11 @@
   border-bottom: 1px solid var(--c-line);
 }
 
+.sectionTint {
+  composes: section;
+  background: var(--c-tint);
+}
+
 /* --------------------------------------------------------------------------
    The two sections that outgrew the rhythm.
 
@@ -281,7 +317,8 @@
 @media (max-width: 900px) {
   /* A full screen per section is a lot of scrolling on a phone, and these are
      already tall there. Let them size to their content. */
-  .section {
+  .section,
+  .sectionTint {
     min-height: 0;
     padding-block: clamp(56px, 9vh, 88px);
   }
