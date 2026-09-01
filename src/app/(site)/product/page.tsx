@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Cta from '@/components/sections/Cta';
 import ProductGallery from '@/components/sections/product/ProductGallery';
 import ProductSpinViewer from '@/components/sections/product/ProductSpinViewer';
+import ProductStill from '@/components/sections/product/ProductStill';
 import { ProductIcon } from '@/components/ui/ProductIcons';
 import { resolveProduct } from '@/data/products';
 import type { ProductIconItem } from '@/types';
@@ -116,9 +117,12 @@ export default async function ProductPage({ searchParams }: PageProps) {
 
       <section className="product-details reveal">
         <div className="container product-details-grid">
-          {/* A turntable where one has been rendered, the photo gallery otherwise. */}
+          {/* A turntable where one has been rendered, a single render on the same
+              stage where there is one but no frame set, the photo gallery otherwise. */}
           {product.spin ? (
             <ProductSpinViewer key={product.id} name={product.name} spin={product.spin} />
+          ) : product.stillRender ? (
+            <ProductStill key={product.id} name={product.name} src={product.stillRender} />
           ) : (
             <ProductGallery
               key={product.id}

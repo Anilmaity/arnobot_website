@@ -285,9 +285,11 @@ export default function TechnologyPage() {
       {/* 2 — Statement */}
       <section className={`${styles.section} ${styles.center} reveal`}>
         <div className={`${styles.statementInner} ${styles.fadeUp}`}>
-          <h2 className={styles.statementTitle}>Four specialized robots.</h2>
+          <h2 className={styles.statementTitle}>Specialized robots.</h2>
           <p className={styles.statementLead}>
-           Four purpose-built platforms. From compact wireless robots to heavy-duty and vertical-climbing systems — built for different missions, with the flexibility to operate from RC to semi-autonomous to fully autonomous.
+            Purpose-built robotic platforms for different missions — from compact wireless robots to heavy-duty
+            and vertical-climbing systems. Built with the flexibility to operate from RC to semi-autonomous to
+            fully autonomous.
           </p>
           <Link href="/product" className={styles.btn}>
             See how it works

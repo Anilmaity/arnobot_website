@@ -1,4 +1,4 @@
-const HERO_VIDEO = '/assets/videos/full-arno.mp4';
+const HERO_VIDEO = '/assets/videos/saibya-hero.mp4';
 
 export default function HeroSection() {
   return (

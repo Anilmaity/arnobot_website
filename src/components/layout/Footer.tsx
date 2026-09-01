@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
-import { FOOTER_NAV, SITE, SOCIAL_LINKS } from '@/data/site';
+import { FOOTER_NAV, HQ_ADDRESS_LINES, SITE, SOCIAL_LINKS } from '@/data/site';
 import { MailIcon, PhoneIcon, PinIcon } from '@/components/ui/Icons';
 
 function LinkColumn({ heading, links }: (typeof FOOTER_NAV)[number]) {
@@ -50,7 +50,7 @@ export default function Footer() {
               {/* Broken on its authored lines rather than left to wrap: the
                   column is content-sized, so each line stays whole. */}
               <span className="footer-address">
-                {SITE.addressLines.map((line, index) => (
+                {HQ_ADDRESS_LINES.map((line, index) => (
                   <Fragment key={line}>
                     {index > 0 ? <br /> : null}
                     {line}

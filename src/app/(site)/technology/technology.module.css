@@ -633,9 +633,11 @@
   /* Declared up front so the section does not reflow when metadata lands. */
   aspect-ratio: 16 / 9;
   /* Runs at its native 16:9 so the machine spans the full width of the screen.
-     The cap is only a safety valve for very wide or very short viewports; when
-     it bites, the clip letterboxes invisibly — its ground is the section's. */
-  max-height: 92svh;
+     The cap keeps the section on one screen: at 92svh the clip alone stood
+     740px and took the band 255px past the fold, because the heading above it
+     is not free. What is left after the heading and the padding is the cap, so
+     when it bites the clip letterboxes invisibly — its ground is the section's. */
+  max-height: calc(100svh - 320px);
   object-fit: contain;
 }
 

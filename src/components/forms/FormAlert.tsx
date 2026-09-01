@@ -7,6 +7,12 @@ const ERROR_MESSAGES: Readonly<Record<string, { readonly title: string; readonly
   },
   required: { title: 'Required Fields Missing', body: 'Please fill in all required fields.' },
   email: { title: 'Invalid Email Address', body: 'Please enter a valid email address.' },
+  // Returned by /api/career only — the resume is the one field the browser
+  // cannot fully validate before the POST.
+  resume: { title: 'Resume Missing', body: 'Please attach your resume before submitting.' },
+  resume_size: { title: 'Resume Too Large', body: 'Resume files must be under 5 MB. Please attach a smaller file.' },
+  resume_type: { title: 'Unsupported Resume Format', body: 'Please attach a PDF or Word document (.pdf, .doc, .docx).' },
+  mail: { title: 'Delivery Failed', body: 'We could not send your application. Please try again in a moment.' },
 };
 
 const FALLBACK_ERROR = { title: 'Something went wrong', body: 'Please try again later.' } as const;

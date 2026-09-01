@@ -1,0 +1,281 @@
+/* ==========================================================================
+   Rewards and Recognition — the awards marquee on the home page.
+
+   The card is a square badge tile with its caption underneath, the shape an
+   awards row is conventionally built on: the artwork carries the recognition
+   and the line beneath names it.
+
+   It lands between the dark environment shot and the white industries
+   carousel, so the band takes a light wash rather than white — the three
+   sections then read as three, not as one long white run. Colour, type and
+   radius come from the tokens declared in public/assets/css/style.css, with
+   fallbacks inlined in case this module ever renders before it lands.
+   ========================================================================== */
+
+.band {
+  --rec-ink: var(--ink, #070322);
+  --rec-accent: var(--accent, #375e9d);
+  --rec-muted: var(--muted, #5f626d);
+  --rec-wash: #f5f6f8;
+  --rec-line: rgba(7, 3, 34, 0.09);
+  --rec-display: "Russo One", "Arial Black", sans-serif;
+
+  /* Tile geometry, measured off the reference section: a 250x150 landscape
+     box with the badge fitted inside it, 20px between cards. */
+  --rec-tile-w: 250px;
+  --rec-tile-h: 150px;
+  --rec-gap: 20px;
+  /* Breathing room inside the tile. The badge fits the padded box, so this is
+     the knob that sets how large the artwork reads without resizing the tile
+     or disturbing the row's rhythm. */
+  --rec-tile-pad: 18px 24px;
+
+  padding: 78px 0 84px;
+  background: var(--rec-wash);
+  border-top: 1px solid var(--rec-line);
+  border-bottom: 1px solid var(--rec-line);
+  overflow: hidden;
+}
+
+.head {
+  width: min(100% - 48px, 700px);
+  margin: 0 auto 44px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Marquee
+
+   The track holds two identical groups and travels exactly half its own
+   width, which puts the second copy where the first started — the loop has no
+   visible restart. The mask fades both edges so tiles enter and leave rather
+   than being clipped.
+   -------------------------------------------------------------------------- */
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 0 15px; /* room for the tile's hover shadow */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 clamp(48px, 8vw, 130px),
+    #000 calc(100% - clamp(48px, 8vw, 130px)),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 clamp(48px, 8vw, 130px),
+    #000 calc(100% - clamp(48px, 8vw, 130px)),
+    transparent
+  );
+}
+
+/* The track travels half its width per cycle — two of the four passes, 3780px
+   at the desktop tile size. 50s puts that near 75px/s: clearly in motion at a
+   glance, still slow enough to read a caption as it goes by. */
+.track {
+  display: flex;
+  width: max-content;
+  animation: recognitionScroll 50s linear infinite;
+}
+
+/* Pause long enough to read a badge — pointer or keyboard. */
+.marquee:hover .track,
+.marquee:focus-within .track {
+  animation-play-state: paused;
+}
+
+/* --------------------------------------------------------------------------
+   Grab and drag
+
+   `recognitionMarquee` adds `is-interactive` once it runs, turning the strip
+   into a real scroll container and taking the drift over from the keyframes.
+   The state classes are global because the behaviour sets them from outside
+   this module, where the hashed names are not available.
+
+   Everything above stays the CSS-only fallback: with JS off the keyframes
+   still run, so the strip turns either way.
+   -------------------------------------------------------------------------- */
+
+.marquee:global(.is-interactive) {
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  /* The strip is its own scrollbar; a visible one would cut the tiles. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.marquee:global(.is-interactive)::-webkit-scrollbar {
+  display: none;
+}
+
+.marquee:global(.is-interactive) .track {
+  animation: none;
+}
+
+.marquee:global(.is-dragging) {
+  cursor: grabbing;
+}
+
+/* Without this a drag selects the captions instead of moving the strip. */
+.marquee:global(.is-dragging) .track {
+  user-select: none;
+}
+
+@keyframes recognitionScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.group {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rec-gap);
+  padding-right: var(--rec-gap);
+  flex-shrink: 0;
+}
+
+/* Captions run to different lengths, so the tiles align at the top of the row
+   and the text hangs below rather than the tiles drifting to different
+   heights. */
+
+/* --------------------------------------------------------------------------
+   Badge
+   -------------------------------------------------------------------------- */
+
+/* The reference sets the item to 170px while its tile is 250px, so the tiles
+   there overlap the neighbouring captions. The item is sized to its tile here
+   instead — same geometry, without the overlap. */
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  width: var(--rec-tile-w);
+  margin: 0; /* <figure> */
+  text-align: center;
+}
+
+/* Flex, not grid. The badge below is sized `height: 100%`, and in a grid whose
+   single row is auto-sized that percentage is a cyclic reference: it resolves
+   to the image's intrinsic 800px, so the tile clipped the bottom off every
+   logo. A flex container with a definite height gives the percentage something
+   real to resolve against. */
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rec-tile-w);
+  height: var(--rec-tile-h);
+  padding: var(--rec-tile-pad);
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--rec-line);
+  border-radius: 15px;
+  box-shadow: 0 10px 26px rgba(7, 3, 34, 0.06);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.item:hover .tile {
+  border-color: rgba(55, 94, 157, 0.35);
+  box-shadow: 0 18px 38px rgba(7, 3, 34, 0.12);
+}
+
+/* `contain`, never `cover`: the badges are brand logos drawn on white with
+   generous padding, and cropping to fill a landscape box would cut into the
+   marks. Letterboxed against the white tile the padding is invisible. */
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.35s ease;
+  /* A dragged logo would fight the dragged strip. */
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.item:hover .image {
+  transform: scale(1.08);
+}
+
+/* Stand-in until artwork lands: the awarding body's monogram, set as a seal.
+   Sized off the tile's height, which is its short side. */
+.seal {
+  display: grid;
+  place-items: center;
+  height: 74%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: var(--rec-accent);
+  background: rgba(55, 94, 157, 0.07);
+  border: 1px solid rgba(55, 94, 157, 0.28);
+  box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 6px rgba(55, 94, 157, 0.16);
+  font-family: var(--rec-display);
+  font-weight: 400; /* Russo One ships a single weight */
+  font-size: 22px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.heading {
+  width: 100%;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--rec-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Narrow screens — the tile shrinks rather than the row wrapping, so the
+   marquee stays a single line at every width.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .band {
+    --rec-tile-w: 190px;
+    --rec-tile-h: 114px;
+    --rec-gap: 14px;
+    --rec-tile-pad: 12px 16px;
+
+    padding: 58px 0 62px;
+  }
+
+  .head {
+    margin-bottom: 34px;
+  }
+
+  .seal {
+    font-size: 16px;
+  }
+
+  .heading {
+    margin-top: 11px;
+    font-size: 12.5px;
+  }
+}
+
+/* No sliding when motion is turned down. The duplicate group exists only to
+   close the loop, so it goes with the animation, and the row becomes something
+   the reader scrolls themselves. */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+
+  .marquee {
+    overflow-x: auto;
+  }
+
+  .duplicate {
+    display: none;
+  }
+}

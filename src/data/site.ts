@@ -10,9 +10,21 @@ export const SITE = {
   phone: '+91 9925512860',
   email: 'contact@arnobot.in',
   addressLines: ['G-2, Parul Apartments,', 'Satellite Road,', 'Ahmedabad – 380015, India'],
-  officeHours: 'Mon – Sat, 9 AM – 6 PM IST',
+  officeHours: 'Mon – Sat, 10 AM – 7 PM IST',
+  /** Prefixed onto the address wherever it is displayed - see HQ_ADDRESS_LINES. */
+  addressLabel: 'HQ',
   copyright: '© 2026 ARNOBOT. ALL RIGHTS RESERVED.',
 } as const;
+
+/**
+ * The postal address as every page must display it — labelled HQ so it always
+ * reads as the head office and never as a branch or site address.
+ * `SITE.addressLines` stays the unlabelled address itself.
+ */
+export const HQ_ADDRESS_LINES: readonly [string, ...string[]] = [
+  `${SITE.addressLabel}: ${SITE.addressLines[0]}`,
+  ...SITE.addressLines.slice(1),
+];
 
 export interface NavLink {
   readonly href: Route;

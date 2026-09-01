@@ -167,7 +167,6 @@
 
 .site .about-hero,
 .site .career-hero,
-.site .contact-hero,
 .site .blog-hero,
 .site .press-hero,
 .site .mk-hero,
@@ -189,15 +188,11 @@
 .site .facility,
 .site .product-details,
 .site .product-specs-section,
-.site .product-showcase-section,
 .site .mk-platform,
 .site .mk-industries,
 .site .mk-opp,
 .site .mk-section,
 .site .career-form-section,
-.site .contact-info,
-.site .contact-main,
-.site .contact-map-section,
 .site .blog-grid-section,
 .site .blog-details-body-section,
 .site .press-main-section {
@@ -218,15 +213,11 @@
   .site .facility,
   .site .product-details,
   .site .product-specs-section,
-  .site .product-showcase-section,
   .site .mk-platform,
   .site .mk-industries,
   .site .mk-opp,
   .site .mk-section,
   .site .career-form-section,
-  .site .contact-info,
-  .site .contact-main,
-  .site .contact-map-section,
   .site .blog-grid-section,
   .site .blog-details-body-section,
   .site .press-main-section {
@@ -318,15 +309,85 @@ body main {
   border-color: rgba(55, 94, 157, 0.18);
 }
 
-/* Sized for continuous reading rather than for a dashboard panel. */
+/* --------------------------------------------------------------------------
+   Privacy Policy and Terms & Conditions — set as documents, not as pages.
+
+   Arial, not the site's Outfit/Russo One pairing. These are the two pages a
+   reader may have to work through line by line, print, or produce later, and a
+   plain grotesque is what that asks for — it is also the face that survives
+   being pasted into a contract, an email or a PDF unchanged. Scoped to the
+   legal hero and document, so the header, footer and the rest of the site keep
+   the brand faces.
+
+   Body text is 1rem — 16px, which is 12pt. That clears the 8pt and 10pt floors
+   commonly written into consumer-contract and disclosure rules, and matches the
+   12pt bar those rules tend to set for terms that must be conspicuous. Nothing
+   inside the document is allowed below it: the highlight boxes and the contact
+   card carry substantive terms and the controller's own contact details, so
+   they read at body size too, not as captions.
+
+   Every size here is in rem rather than px, so a reader who raises their
+   browser's default text size takes the whole document up with them — which is
+   the part that actually decides whether small print is readable.
+   -------------------------------------------------------------------------- */
+
+.site .legal-hero,
+.site .legal-section {
+  --legal-face: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+/* `.russo` is a global class, so it is re-pointed here rather than removed from
+   the markup — the same headings keep the brand face on every other page. */
+.site .legal-hero,
+.site .legal-hero .russo,
+.site .legal-section,
+.site .legal-section .russo {
+  font-family: var(--legal-face);
+}
+
+/* Russo One ships a single weight and needs no tracking help; Arial needs the
+   weight put back on anything that was leaning on the display face to carry it,
+   and the letter-spacing taken off, which was cut for Russo One's caps. */
+.site .legal-hero-content h1 {
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.site .legal-block-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.site .legal-toc-title {
+  font-family: var(--legal-face);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* The contents list is navigation rather than contract text, so it sits just
+   under body size — but not so far under that it stops being readable. */
+.site .legal-toc-link {
+  font-size: 0.875rem;
+}
+
+/* 1rem = 16px = 12pt. The floor for everything the reader is agreeing to. */
 .site .legal-text,
-.site .legal-list li {
-  font-size: 16.5px;
-  line-height: 1.8;
+.site .legal-list li,
+.site .legal-highlight-box p,
+.site .legal-contact-item,
+.site .legal-contact-item strong {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.site .legal-contact-title {
+  font-size: 1.0625rem;
 }
 
 .site .legal-text {
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
 }
 
 .site .legal-block {
@@ -343,7 +404,6 @@ body main {
 .site .legal-contact-title {
   color: #0f172a;
   margin: 0 0 10px;
-  font-size: 16px;
 }
 
 /* Below the two-column breakpoint the sidebar unsticks and sits above the
@@ -394,9 +454,11 @@ body main {
   text-align: center;
 }
 
+/* Sized for Arial rather than for Russo One: the same clamp that suited a
+   compact display face reads as shouting in a grotesque at 88px. */
 .site .legal-hero-content h1 {
-  font-size: clamp(40px, 7vw, 88px);
-  line-height: 1.05;
+  font-size: clamp(2rem, 4.6vw, 3.25rem);
+  line-height: 1.1;
   letter-spacing: -0.01em;
 }
 
@@ -466,6 +528,39 @@ body main {
   .site .product-details-grid,
   .site .specs-cards-grid {
     gap: 32px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Product page — the showcase band.
+
+   The band holds one heading and one row of video cards. Held to a full screen
+   it spent well over half its height on empty page — on every product — so it
+   is sized to its content here instead.
+
+   The row is then held narrower than the container it sits in, and the cards
+   take a 3:2 ratio in place of the fixed 230px height — so the proportion holds
+   at every column width instead of flattening as the columns widen. `auto-fit`
+   collapses the track NEXUS's two clips leave empty rather than parking them
+   beside a third-column hole.
+   -------------------------------------------------------------------------- */
+
+.site .showcase-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  max-width: 1080px;
+  margin-inline: auto;
+}
+
+.site .showcase-card {
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+
+/* style.css pins the card to `200px !important` on a phone, which the ratio has
+   to answer in kind or the card keeps a letterbox at full width. */
+@media (max-width: 768px) {
+  .site .showcase-card {
+    height: auto !important;
   }
 }
 
@@ -707,20 +802,6 @@ body main {
 
 
 /* --------------------------------------------------------------------------
-   One section, one screen — the last few that did not fit.
-
-   Measured at a 1440x804 viewport with a CDP probe rather than by eye. Each of
-   these was a section whose content plus padding exceeded 100svh, so it grew
-   and the rhythm broke.
-   -------------------------------------------------------------------------- */
-
-/* The contact form is the tallest block on the site; it was 238px over. Its own
-   padding is what gave way, not the fields. */
-.site .contact-main {
-  padding-block: clamp(32px, 4vh, 56px);
-}
-
-/* --------------------------------------------------------------------------
    One section, one screen — the remaining overruns.
 
    Measured with a CDP probe at 1440x804 rather than by eye. Each of these was
@@ -771,9 +852,6 @@ body main {
 .site .mk-opp,
 .site .mk-section,
 .site .career-form-section,
-.site .contact-info,
-.site .contact-main,
-.site .contact-map-section,
 .site .blog-grid-section,
 .site .blog-details-body-section,
 .site .press-main-section {
@@ -1127,6 +1205,24 @@ body main {
      from floating flat on a page that has no floor under it. */
   filter: drop-shadow(0 22px 26px rgba(15, 23, 42, 0.14));
   pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   The same stage carrying a render that does not turn.
+
+   A product with one render and no frame set shows it here, so the details band
+   is laid out identically whichever a product ships. Everything that says the
+   machine can be turned comes off: there is no grab handle for something that
+   will not move under the pointer, and the stage must not eat a horizontal
+   swipe it has no use for.
+   -------------------------------------------------------------------------- */
+
+.site .product-details-still .spin-stage,
+.site .product-details-still .spin-stage:active {
+  cursor: default;
+  touch-action: auto;
+  user-select: auto;
+  -webkit-user-select: auto;
 }
 
 /* The one mark on the stage. It reads as part of the render rather than as a

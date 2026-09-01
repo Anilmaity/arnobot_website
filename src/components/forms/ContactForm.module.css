@@ -1,0 +1,260 @@
+/* ==========================================================================
+   Contact form.
+
+   Owns only what is inside the form; the card around it belongs to
+   src/app/(site)/contact/contact.module.css. Same tokens as that page, read
+   from the :root block in public/assets/css/style.css with inlined fallbacks.
+   ========================================================================== */
+
+.form {
+  --f-ink: var(--ink, #070322);
+  --f-accent: var(--accent, #375e9d);
+  --f-muted: var(--muted, #5f626d);
+  --f-line: rgba(7, 3, 34, 0.14);
+
+  display: flex;
+  flex-direction: column;
+  /* Seven stacked blocks, so every pixel here is spent six times over. */
+  gap: 14px;
+  font-family: "Outfit", Arial, sans-serif;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* Grid children default to `min-width: auto`, which lets a long value push
+     the two-column row wider than the card. */
+  min-width: 0;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--f-ink);
+}
+
+.required {
+  color: var(--f-accent);
+}
+
+.optional {
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--f-muted);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px 16px;
+  background: #fff;
+  border: 1px solid var(--f-line);
+  border-radius: 0;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--f-ink);
+  outline: none;
+  appearance: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #a9adb8;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--f-accent);
+  box-shadow: 0 0 0 3px rgba(55, 94, 157, 0.14);
+}
+
+.textarea {
+  resize: vertical;
+  /* Four rows, not five. The card is the tallest block on the site and this was
+     the one field spending height it did not need to — the message box still
+     shows a full paragraph before it scrolls. */
+  min-height: 104px;
+}
+
+/* --------------------------------------------------------------------------
+   Inquiry chips.
+
+   The old <select> hid five of the six routes behind a click. As radios they
+   are all visible, they still post the same `purpose` value, and they need no
+   JavaScript — `:checked` does the work.
+   -------------------------------------------------------------------------- */
+
+.purpose {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--f-ink);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  position: relative;
+}
+
+/* Visually hidden, still focusable and still in the accessibility tree. */
+.chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.chipLabel {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border: 1px solid var(--f-line);
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--f-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.chipLabel:hover {
+  border-color: var(--f-accent);
+  color: var(--f-ink);
+}
+
+.chip input:checked + .chipLabel {
+  background: var(--f-ink);
+  border-color: var(--f-ink);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* The input carries the focus, so the ring has to be drawn on its label. */
+.chip input:focus-visible + .chipLabel {
+  outline: 2px solid var(--f-accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Captcha, errors and submit
+   -------------------------------------------------------------------------- */
+
+/* The widget renders a fixed 304px iframe; on a narrow card it would otherwise
+   push the form wider than its container. */
+.captcha {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.captchaError {
+  margin: -8px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d93636;
+}
+
+.captchaError:empty {
+  display: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  margin-top: 2px;
+  padding-top: 12px;
+  border-top: 1px solid var(--f-line);
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 17px 40px;
+  border: 2px solid var(--f-ink);
+  border-radius: 0;
+  background: var(--f-ink);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.submit:hover:not(:disabled),
+.submit:focus-visible:not(:disabled) {
+  background: var(--f-accent);
+  border-color: var(--f-accent);
+}
+
+.submit:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.submit:hover:not(:disabled) .arrow {
+  transform: translateX(4px);
+}
+
+.note {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--f-muted);
+}

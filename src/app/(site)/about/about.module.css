@@ -1,0 +1,830 @@
+/* ==========================================================================
+   Company page — editorial layout, built on the same system as the Technology
+   page so the two read as one site rather than two designs.
+
+   The rhythm is a full-bleed media band, then light sections that carry the
+   copy, each opened by a chapter label. Everything is expressed
+   through the site's own tokens, declared in public/assets/css/style.css
+   (:root) — Russo One for display, Outfit for body, --ink / --accent /
+   --footer for colour. Fallbacks are inlined in case this module ever renders
+   before style.css lands.
+
+   Tuned for the desktop layout. The breakpoint at the foot of the file is a
+   safety net that collapses every grid to one column rather than a designed
+   phone layout.
+   ========================================================================== */
+
+.page {
+  --ab-dark: var(--footer, #121c2e);
+  --ab-ink: var(--ink, #070322);
+  --ab-accent: var(--accent, #375e9d);
+  --ab-muted: var(--muted, #5f626d);
+  --ab-line: rgba(7, 3, 34, 0.12);
+  --ab-wash: #f7f8fa;
+
+  --ab-display: "Russo One", "Arial Black", sans-serif;
+  --ab-body: "Outfit", Arial, sans-serif;
+
+  --page-margin: clamp(24px, 5vw, 64px);
+  --measure: 78rem;
+
+  background: #fff;
+  font-family: var(--ab-body);
+  color: var(--ab-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Shared type
+   -------------------------------------------------------------------------- */
+
+.heroTitle,
+.sectionTitle,
+.bandTitle,
+.blockTitle,
+.cardTitle,
+.statValue {
+  font-family: var(--ab-display);
+  font-weight: 400; /* Russo One ships a single weight */
+  letter-spacing: -0.01em;
+}
+
+.heroTitle {
+  font-size: clamp(40px, 5.6vw, 84px);
+  line-height: 1.04;
+  color: #fff;
+}
+
+.sectionTitle {
+  font-size: clamp(30px, 3.6vw, 54px);
+  line-height: 1.1;
+}
+
+.bandTitle {
+  font-size: clamp(30px, 4vw, 62px);
+  line-height: 1.08;
+  color: #fff;
+}
+
+/* The chapter marker — the one word that names the section, above its title.
+   It carried a count and a rule before the number came off; the accent moves
+   onto the name so the marker still registers as one rather than reading as a
+   stray line of grey caps. */
+.chapter {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ab-accent);
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ab-accent);
+  margin-bottom: 14px;
+}
+
+.lead {
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.7;
+  color: var(--ab-muted);
+}
+
+.rule {
+  width: 96px;
+  height: 2px;
+  margin: 24px 0;
+  background: var(--ab-accent);
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal.
+
+   Piggybacks on the site-wide IntersectionObserver in
+   src/lib/behaviors/revealOnScroll.ts, which adds `.visible` to any `.reveal`
+   element. No second observer and no client component needed.
+   -------------------------------------------------------------------------- */
+
+.fadeUp {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+
+:global(.visible) .fadeUp,
+.fadeUp:global(.visible) {
+  opacity: 1;
+  transform: none;
+}
+
+.d1 {
+  transition-delay: 0.08s;
+}
+
+.d2 {
+  transition-delay: 0.16s;
+}
+
+/* --------------------------------------------------------------------------
+   Media bands — the hero and the one chapter marker mid-page
+   -------------------------------------------------------------------------- */
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--ab-dark);
+}
+
+.media video,
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  /* A slow drift keeps a short loop from reading as a still frame. */
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+/* Keeps display type legible over whatever frame the loop happens to be on.
+   Weighted to the left where the words sit and clear on the right, so the
+   footage reads as footage rather than a dark texture behind a panel. The
+   second, shallow pass darkens only the top edge, where the header docks. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(18, 28, 46, 0.88) 0%,
+      rgba(18, 28, 46, 0.62) 34%,
+      rgba(18, 28, 46, 0.16) 64%,
+      rgba(18, 28, 46, 0) 100%
+    ),
+    linear-gradient(180deg, rgba(18, 28, 46, 0.34) 0%, rgba(18, 28, 46, 0) 28%);
+}
+
+/* The mid-page marker runs over daylight footage, which is far brighter than
+   the hero's. It takes the same left weighting over a heavier floor, so the
+   standfirst holds against a sunlit trunk rather than half-dissolving into it. */
+.band .scrim {
+  background: linear-gradient(
+    90deg,
+    rgba(18, 28, 46, 0.92) 0%,
+    rgba(18, 28, 46, 0.78) 38%,
+    rgba(18, 28, 46, 0.46) 72%,
+    rgba(18, 28, 46, 0.28) 100%
+  );
+}
+
+.hero,
+.band {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  /* The fixed header takes no layout space, so reserve its height on the top
+     edge or the eyebrow sits under the docked bar. */
+  padding: calc(var(--nav-height, 62px) + clamp(32px, 6vh, 72px)) var(--page-margin) clamp(56px, 8vh, 96px);
+}
+
+.band {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(72px, 11vh, 132px) var(--page-margin);
+}
+
+.heroInner,
+.bandInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+.heroInner .eyebrow {
+  color: #9fb6dc;
+}
+
+.heroLead,
+.bandBody {
+  max-width: 42rem;
+  font-size: clamp(16px, 1.3vw, 19px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+/* The band's label sits on a rule rather than in a box — a chapter marker over
+   footage, not a card floating on it. */
+.bandLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9fb6dc;
+  margin-bottom: 14px;
+}
+
+.bandRule {
+  width: 72px;
+  height: 2px;
+  margin: 0 0 26px;
+  background: var(--ab-accent);
+  border: 0;
+}
+
+.bandBody {
+  margin-top: 22px;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 17px 42px;
+  border-radius: 0;
+  font-family: var(--ab-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn {
+  border: 2px solid #fff;
+  background: #fff;
+  color: var(--ab-ink);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background: var(--ab-accent);
+  border-color: var(--ab-accent);
+  color: #fff;
+}
+
+.btnGhost {
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: transparent;
+  color: #fff;
+}
+
+.btnGhost:hover,
+.btnGhost:focus-visible {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   Light content sections
+   -------------------------------------------------------------------------- */
+
+.section {
+  /* One section, one screen — the rhythm every other page keeps. Content is
+     centred in the band, so a short section holds the screen rather than
+     leaving the next one half-risen into it. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  /* The fixed header consumes no layout space, so a 100svh section hides its
+     first 62px under the docked bar. Reserve it on the top edge only. */
+  padding: calc(var(--nav-height, 62px) + clamp(20px, 2.5vh, 40px)) var(--page-margin) clamp(48px, 6vh, 88px);
+  border-bottom: 1px solid var(--ab-line);
+  background: #fff;
+}
+
+.sectionWash {
+  composes: section;
+  background: var(--ab-wash);
+}
+
+.inner {
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+.sectionHead {
+  max-width: 46rem;
+  margin-bottom: clamp(40px, 5vh, 64px);
+}
+
+.sectionHead .lead {
+  margin-top: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Origin. Copy on the left, one photograph on the right under a mono
+   caption strip, which is what stops a press photo reading as decoration.
+   -------------------------------------------------------------------------- */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 5vw, 80px);
+  align-items: center;
+}
+
+.splitCopy p + p {
+  margin-top: 20px;
+}
+
+.splitCopy .lead {
+  margin-top: 24px;
+}
+
+.figure {
+  position: relative;
+  margin: 0;
+  border: 1px solid var(--ab-line);
+  background: var(--ab-wash);
+  overflow: hidden;
+}
+
+.figure img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+}
+
+.figureCaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 14px 18px;
+  background: linear-gradient(to top, rgba(7, 3, 34, 0.86) 0%, rgba(7, 3, 34, 0) 100%);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Record — the numbers, in a hairline grid.
+
+   One border around the set and a 1px gap between cells, so the rules are
+   shared rather than doubled where two cells meet.
+   -------------------------------------------------------------------------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--ab-line);
+  border: 1px solid var(--ab-line);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.stat {
+  background: #fff;
+  padding: clamp(28px, 3vw, 44px);
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.55s ease-out,
+    transform 0.55s ease-out;
+}
+
+/* Staggered so the four read across as a set rather than landing as one block. */
+:global(.visible) .stat {
+  opacity: 1;
+  transform: none;
+}
+
+:global(.visible) .stat:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+:global(.visible) .stat:nth-child(3) {
+  transition-delay: 0.2s;
+}
+
+:global(.visible) .stat:nth-child(4) {
+  transition-delay: 0.3s;
+}
+
+.statValue {
+  display: block;
+  font-size: clamp(38px, 4.4vw, 62px);
+  line-height: 1;
+  color: var(--ab-accent);
+  margin-bottom: 14px;
+}
+
+.statLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.statNote {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ab-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Principles, and the facility gallery. Both are hairline grids of
+   cards; the card itself is shared and only the contents differ.
+   -------------------------------------------------------------------------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--ab-line);
+  border: 1px solid var(--ab-line);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: clamp(28px, 2.6vw, 40px);
+  transition: background-color 0.25s ease;
+}
+
+.card:hover {
+  background: var(--ab-wash);
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 26px;
+  border: 1px solid var(--ab-line);
+  color: var(--ab-accent);
+}
+
+/* The principles carry raster badges rather than line icons — they already have
+   a disc of their own, so they take no frame and stand at their own size. */
+.cardBadge {
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 24px;
+  object-fit: contain;
+}
+
+.cardTitle {
+  font-size: 19px;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.cardBody {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ab-muted);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Vision, mission and values. Three tall cards on the washed section, so
+   the trio reads as one statement of direction rather than three tips.
+   -------------------------------------------------------------------------- */
+
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--ab-line);
+  border: 1px solid var(--ab-line);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pillar {
+  background: #fff;
+  padding: clamp(32px, 3vw, 48px);
+}
+
+/* The values card carries a list where the other two carry a sentence; the
+   marker is a short accent rule so it sits in the same family as the chapter
+   labels rather than importing a bullet glyph. */
+.pillarList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pillarList li {
+  position: relative;
+  padding-left: 26px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ab-muted);
+}
+
+.pillarList li + li {
+  margin-top: 12px;
+}
+
+.pillarList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 14px;
+  height: 2px;
+  background: var(--ab-accent);
+}
+
+/* --------------------------------------------------------------------------
+   The founder's letter. The portrait column is narrower than the letter,
+   because the letter is the subject and the photograph is the attribution.
+   -------------------------------------------------------------------------- */
+
+.letter {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(40px, 5vw, 80px);
+  align-items: center;
+}
+
+.letterBody {
+  border-left: 2px solid var(--ab-accent);
+  padding-left: clamp(24px, 3vw, 44px);
+}
+
+.letterBody p {
+  font-size: clamp(16px, 1.25vw, 18px);
+  line-height: 1.75;
+  color: var(--ab-muted);
+}
+
+.letterBody p + p {
+  margin-top: 22px;
+}
+
+/* The closing line is the one the letter is written to land on, so it takes
+   the ink weight the paragraphs above it give up. */
+.letterClosing {
+  color: var(--ab-ink) !important;
+  font-weight: 500;
+}
+
+.letterBody a {
+  color: var(--ab-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.signatory {
+  border: 1px solid var(--ab-line);
+  background: #fff;
+}
+
+/* The source frame is landscape; a portrait crop of it threw away the desk and
+   the arm and upscaled what was left. This keeps nearly the whole frame. */
+.signatory img.portrait {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 26%;
+  display: block;
+  border-bottom: 1px solid var(--ab-line);
+}
+
+.signatoryMeta {
+  padding: 26px clamp(20px, 2vw, 30px) 30px;
+}
+
+.signature {
+  width: 150px;
+  height: auto;
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+
+.signatoryName {
+  font-family: var(--ab-display);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.signatoryRole {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ab-accent);
+}
+
+/* --------------------------------------------------------------------------
+   The facility. Photographs in the same hairline grid as the cards, each
+   under the name of the room it shows.
+   -------------------------------------------------------------------------- */
+
+.rooms {
+  display: grid;
+  /* One tile per room, on one row: at two columns the gallery alone stood 833px
+     tall and took the section 505px past one screen. */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--ab-line);
+  border: 1px solid var(--ab-line);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.room {
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+}
+
+.room img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+  /* Resting desaturation holds the four together as one facility; hovering one
+     returns it to full colour so the room can actually be looked at. */
+  filter: grayscale(0.55);
+  transform: scale(1);
+  transition:
+    filter 0.4s ease,
+    transform 0.6s ease;
+}
+
+.room:hover img {
+  filter: grayscale(0);
+  transform: scale(1.04);
+}
+
+.roomLabel {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 46px 28px 24px;
+  background: linear-gradient(to top, rgba(7, 3, 34, 0.9) 0%, rgba(7, 3, 34, 0) 100%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* One line under the gallery that says what the four rooms add up to. */
+.roomsNote {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding: 22px 26px;
+  border: 1px solid var(--ab-line);
+  background: #fff;
+}
+
+.roomsNote img {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  object-fit: contain;
+}
+
+.roomsNote p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ab-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Narrow-viewport safety net.
+
+   Not a designed phone layout — it collapses every grid to a single column so
+   nothing overflows while the desktop layout is the one being tuned.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .split,
+  .letter {
+    grid-template-columns: 1fr;
+  }
+
+  .stats,
+  .cards,
+  .rooms {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .letterBody {
+    border-left: 0;
+    border-top: 2px solid var(--ab-accent);
+    padding-left: 0;
+    padding-top: 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .stats,
+  .cards,
+  .rooms {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Motion guard.
+
+   Last in the file on purpose: every rule it cancels is defined above it, and
+   at equal specificity the later rule wins.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeUp,
+  .stat {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0s;
+  }
+
+  .media video,
+  .media img {
+    animation: none;
+    transform: none;
+  }
+
+  .room img {
+    transition: none;
+  }
+
+  .room:hover img {
+    transform: none;
+  }
+}

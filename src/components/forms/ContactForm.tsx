@@ -2,6 +2,7 @@
 
 import Script from 'next/script';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import styles from './ContactForm.module.css';
 
 /**
  * The production key is registered against arnobot.in only, so on localhost the
@@ -46,10 +47,13 @@ declare global {
 }
 
 /**
- * Contact form — port of the form in contact.php plus its inline reCAPTCHA guard.
+ * Contact form — the fields of the form in contact.php plus its inline
+ * reCAPTCHA guard, restyled with the contact page's design language.
  *
  * It still performs a real POST (now to /api/contact) which redirects back to
- * /contact?success=1 or ?error=…, so it keeps working without JavaScript.
+ * /contact?success=1 or ?error=…, so it keeps working without JavaScript. The
+ * inquiry router is a radio group rather than a <select> for the same reason:
+ * every route is visible, and `:checked` needs no script.
  */
 export default function ContactForm() {
   const captchaRef = useRef<HTMLDivElement>(null);
@@ -103,92 +107,154 @@ export default function ContactForm() {
 
   return (
     <>
-      <form className="contact-form" id="contact-form" action="/api/contact" method="POST" onSubmit={onSubmit}>
-        <div className="contact-form-row">
-          <div className="contact-field">
-            <label htmlFor="cf-fname">
-              First Name <span className="required">*</span>
+      <form className={styles.form} id="contact-form" action="/api/contact" method="POST" onSubmit={onSubmit}>
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="cf-fname">
+              First Name <span className={styles.required}>*</span>
             </label>
-            <input type="text" id="cf-fname" name="fname" autoComplete="given-name" required />
+            <input
+              className={styles.input}
+              type="text"
+              id="cf-fname"
+              name="fname"
+              autoComplete="given-name"
+              placeholder="Ananya"
+              required
+            />
           </div>
-          <div className="contact-field">
-            <label htmlFor="cf-lname">
-              Last Name <span className="required">*</span>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="cf-lname">
+              Last Name <span className={styles.required}>*</span>
             </label>
-            <input type="text" id="cf-lname" name="lname" autoComplete="family-name" required />
+            <input
+              className={styles.input}
+              type="text"
+              id="cf-lname"
+              name="lname"
+              autoComplete="family-name"
+              placeholder="Sharma"
+              required
+            />
           </div>
         </div>
 
-        <div className="contact-form-row">
-          <div className="contact-field">
-            <label htmlFor="cf-email">
-              Email Address <span className="required">*</span>
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="cf-email">
+              Email Address <span className={styles.required}>*</span>
             </label>
-            <input type="email" id="cf-email" name="email" autoComplete="email" required />
+            <input
+              className={styles.input}
+              type="email"
+              id="cf-email"
+              name="email"
+              autoComplete="email"
+              placeholder="you@company.com"
+              required
+            />
           </div>
-          <div className="contact-field">
-            <label htmlFor="cf-phone">Phone Number</label>
-            <input type="tel" id="cf-phone" name="phone" autoComplete="tel" />
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="cf-phone">
+              Phone Number <span className={styles.optional}>(optional)</span>
+            </label>
+            <input
+              className={styles.input}
+              type="tel"
+              id="cf-phone"
+              name="phone"
+              autoComplete="tel"
+              placeholder="+91 00000 00000"
+            />
           </div>
         </div>
 
-        <div className="contact-form-row">
-          <div className="contact-field">
-            <label htmlFor="cf-job">
-              Designation <span className="required">*</span>
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="cf-job">
+              Designation <span className={styles.required}>*</span>
             </label>
-            <input type="text" id="cf-job" name="job" autoComplete="organization-title" required />
+            <input
+              className={styles.input}
+              type="text"
+              id="cf-job"
+              name="job"
+              autoComplete="organization-title"
+              placeholder="Head of Operations, Acme Energy"
+              required
+            />
           </div>
-          <div className="contact-field">
-            <label htmlFor="cf-country">Country</label>
-            <input type="text" id="cf-country" name="country" autoComplete="country-name" />
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="cf-country">
+              Country <span className={styles.optional}>(optional)</span>
+            </label>
+            <input
+              className={styles.input}
+              type="text"
+              id="cf-country"
+              name="country"
+              autoComplete="country-name"
+              placeholder="India"
+            />
           </div>
         </div>
 
-        <div className="contact-field">
-          <label htmlFor="cf-purpose">Inquiry</label>
-          <select id="cf-purpose" name="purpose" required defaultValue={INQUIRY_OPTIONS[0]}>
-            {INQUIRY_OPTIONS.map((option) => (
-              <option value={option} key={option}>
-                {option}
-              </option>
+        <fieldset className={styles.purpose}>
+          <legend className={styles.legend}>What is this about?</legend>
+          <div className={styles.chips}>
+            {INQUIRY_OPTIONS.map((option, index) => (
+              <span className={styles.chip} key={option}>
+                <input
+                  type="radio"
+                  id={`cf-purpose-${index}`}
+                  name="purpose"
+                  value={option}
+                  defaultChecked={index === 0}
+                  required
+                />
+                <label className={styles.chipLabel} htmlFor={`cf-purpose-${index}`}>
+                  {option}
+                </label>
+              </span>
             ))}
-          </select>
-        </div>
+          </div>
+        </fieldset>
 
-        <div className="contact-field">
-          <label htmlFor="cf-message">
-            Message <span className="required">*</span>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="cf-message">
+            Message <span className={styles.required}>*</span>
           </label>
-          <textarea id="cf-message" name="message" rows={5} required />
+          <textarea
+            className={styles.textarea}
+            id="cf-message"
+            name="message"
+            rows={4}
+            placeholder="Where the robot would work, what it would do, and the timeline you have in mind."
+            required
+          />
         </div>
 
-        <div className="contact-field">
+        <div className={styles.captcha}>
           <div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} ref={captchaRef} suppressHydrationWarning />
         </div>
 
-        <div id="captcha-error" className="captcha-error" style={{ color: 'red' }} role="alert" aria-live="assertive">
+        <p id="captcha-error" className={styles.captchaError} role="alert" aria-live="assertive">
           {captchaError}
+        </p>
+
+        <div className={styles.actions}>
+          <button type="submit" className={styles.submit} id="contact-submit-btn" disabled={submitting} aria-busy={submitting}>
+            {submitting ? (
+              'Sending…'
+            ) : (
+              <>
+                Send Message <span className={styles.arrow}>&rarr;</span>
+              </>
+            )}
+          </button>
+
+          <p className={styles.note}>We respect your privacy. Your information is never shared.</p>
         </div>
-
-        <button
-          type="submit"
-          className="btn contact-submit-btn"
-          id="contact-submit-btn"
-          disabled={submitting}
-          aria-busy={submitting}
-          style={submitting ? { opacity: 0.65, cursor: 'progress' } : undefined}
-        >
-          {submitting ? (
-            'Sending…'
-          ) : (
-            <>
-              Send Message <span className="btn-arrow">→</span>
-            </>
-          )}
-        </button>
-
-        <p className="contact-form-note">We respect your privacy. Your information is never shared.</p>
       </form>
 
       <Script src="https://www.google.com/recaptcha/api.js" strategy="afterInteractive" />

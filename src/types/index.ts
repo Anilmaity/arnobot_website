@@ -108,6 +108,12 @@ export interface Product {
    * more about the geometry than a strip of photographs of it.
    */
   readonly spin?: ProductSpin;
+  /**
+   * One keyed render, shown on the same stage as `spin` but with nothing to
+   * drag — for a machine that has a render but no turntable frame set. Like
+   * `spin` it replaces `mainImage` and `gallery`; `spin` wins where both are set.
+   */
+  readonly stillRender?: string;
 }
 
 export type IndustryId =

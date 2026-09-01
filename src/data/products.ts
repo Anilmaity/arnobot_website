@@ -104,23 +104,19 @@ export const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     heroTitleLines: ['Any Terrain ', 'Machine'],
     heroBg: '/assets/images/hero-bg.png',
     heroVideo: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
-    mainImage: '/assets/images/products/atm/atm_main.png',
+    // The loaded render is the hero, as on the other three products. The demo
+    // clip above is no longer played here — it stays reachable from the Heavy
+    // Load Transport card in Product Showcase & Operations below.
+    heroImage: '/assets/renders/atm-hero.webp',
+    // The same render carries the details band, on the turntable's own stage.
+    // ATM has no 360 frame set, so `stillRender` shows the one render rather
+    // than a strip of photographs of it. The field photographs are still in
+    // public/assets/images/products/atm/ if the gallery is ever wanted back.
+    stillRender: '/assets/renders/atm-hero.webp',
+    mainImage: '/assets/renders/atm-hero.webp',
     // TODO: no PDF yet — the page falls back to "Request Brochure".
     brochure: '/assets/brochures/ATM_Brochure.pdf',
-    gallery: [
-      '/assets/images/products/atm/atm_main.png',
-      '/assets/images/products/atm/atm_rover_full.png',
-      '/assets/images/products/atm/atm_field_1.jpg',
-      '/assets/images/products/atm/atm_field_2.jpg',
-      '/assets/images/products/atm/atm_field_3.jpg',
-      '/assets/images/products/atm/atm_field_4.jpg',
-      '/assets/images/products/atm/atm_field_7.jpg',
-      '/assets/images/products/atm/atm_field_8.jpg',
-      '/assets/images/products/atm/atm_field_10.jpg',
-      '/assets/images/products/atm/atm_wheel.png',
-      '/assets/images/products/atm/field_trial_5.jpg',
-      '/assets/images/products/atm/field_trial_6.jpg',
-    ],
+    gallery: [],
     overview:
       "ATM is Arnobot's highest-capacity unmanned ground vehicle, built to move heavy loads across worksite and field terrain with stability where lighter platforms cannot operate.",
     specs: [

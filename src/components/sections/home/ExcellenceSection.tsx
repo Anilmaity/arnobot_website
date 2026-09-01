@@ -1,6 +1,6 @@
 const METRICS: ReadonlyArray<{ readonly icon: string; readonly value?: string; readonly label: string }> = [
-  { icon: '/assets/icons/icon1.png', value: '4', label: 'Awards' },
-  { icon: '/assets/icons/icon2.png', value: '2', label: 'IPs' },
+  { icon: '/assets/icons/icon1.png', value: '2', label: 'Awards' },
+  { icon: '/assets/icons/icon2.png', value: '4', label: 'IPs' },
   { icon: '/assets/icons/icon3.png', value: '1', label: 'Publication' },
   { icon: '/assets/icons/icon4.png', label: 'Made in India' },
 ];
