@@ -21,9 +21,7 @@ const SECTIONS_WITH_CUSTOM_ANIMATION = [
 ] as const;
 
 function defaultRevealAnimation(): void {
-  // GSAP drives the reveals, so neutralise the CSS transition baked into `.reveal`.
-  gsap.set('.reveal', { opacity: 1, y: 0, transition: 'none' });
-
+  // `.reveal` is a JS hook, not a style: GSAP owns the entrance entirely.
   for (const section of queryAll('.reveal')) {
     const hasCustom = SECTIONS_WITH_CUSTOM_ANIMATION.some((name) => section.classList.contains(name));
     if (hasCustom) continue;

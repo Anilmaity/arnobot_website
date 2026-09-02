@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import Cta from '@/components/sections/Cta';
-import { RocketIcon, ShieldCheckIcon, TargetIcon } from '@/components/ui/Icons';
+import { RocketIcon, TargetIcon } from '@/components/ui/Icons';
+import TypingAnimation from '@/components/ui/TypingAnimation';
+import WordRotate from '@/components/ui/WordRotate';
+import { cn } from '@/lib/dom';
 import styles from './about.module.css';
 
 export const metadata: Metadata = {
@@ -36,82 +39,50 @@ const RECORD: ReadonlyArray<{
 ];
 
 /**
- * Why the company is chosen, on the four icons the page has always used. The
- * supporting line under each says what the label means in practice, which is
- * the difference between a claim and a reason.
+ * The stagger the four figures land on, so the band reads across as a set
+ * rather than arriving as one block. `fade-up` and `d1`–`d3` are global.
  */
-const PRINCIPLES: ReadonlyArray<{
-  readonly icon: string;
+const STAT_DELAY: readonly string[] = ['', 'd1', 'd2', 'd3'];
+
+/** The mission and the vision: one statement per screen, each typed out as
+    it comes into view. */
+const STATEMENTS: ReadonlyArray<{
+  readonly id: string;
+  readonly icon: ReactNode;
   readonly title: string;
   readonly body: string;
 }> = [
   {
-    icon: '/assets/icons/mission.png',
-    title: 'Mission-critical reliability',
-    body: 'Built for the shift where failure is not an option — sealed drivetrains, redundant control, and a safe state the vehicle can always fall back to.',
+    id: 'mission',
+    icon: <RocketIcon size={30} />,
+    title: 'Our Mission',
+    body: 'To make industrial maintenance safer, smarter, and more efficient through intelligent robotics.',
   },
   {
-    icon: '/assets/icons/endtoend.png',
-    title: 'End-to-end development',
-    body: 'Chassis, electronics, firmware and ground control are designed under one roof, so a change to the machine is not a change to four suppliers.',
-  },
-  {
-    icon: '/assets/icons/innovation.png',
-    title: 'Innovation-driven engineering',
-    body: 'AI, robotics and autonomy applied to problems that are still done by hand today — at height, underground, and inside live industrial plant.',
-  },
-  {
-    icon: '/assets/icons/icon4.png',
-    title: 'Proudly made in India',
-    body: 'Designed, manufactured and supported locally, which keeps lead times short and the engineers who built a robot reachable by the crew running it.',
-  },
-];
-
-/** Vision, mission and the values under them — the page's statement of direction. */
-const PILLARS: ReadonlyArray<{
-  readonly icon: ReactNode;
-  readonly title: string;
-  readonly body?: string;
-  readonly items?: readonly string[];
-}> = [
-  {
+    id: 'vision',
     icon: <TargetIcon size={30} />,
     title: 'Our Vision',
     body: 'To become a global leader in robotics-driven asset lifecycle management.',
   },
-  {
-    icon: <RocketIcon size={30} />,
-    title: 'Our Mission',
-    body: 'To make industrial maintenance safer, smarter and more efficient through intelligent robotics.',
-  },
-  {
-    icon: <ShieldCheckIcon size={30} />,
-    title: 'Our Values',
-    items: [
-      'Engineering excellence',
-      'Safety first',
-      'Client-centric innovation',
-      'Data-driven decisions',
-      'Made in India',
-    ],
-  },
 ];
 
-const ROOMS: ReadonlyArray<{ readonly image: string; readonly label: string }> = [
-  { image: '/assets/images/designassmbly1.jpg', label: 'Design & Assembly' },
-  { image: '/assets/images/lab1.jpg', label: 'Electronics Lab' },
-  { image: '/assets/images/proto.jpg', label: 'Prototyping Lab' },
-  { image: '/assets/images/soft.jpg', label: 'Software Development' },
-];
+/** The values, on a band of their own, one at a time at display scale. */
+const VALUES = [
+  'Engineering Excellence',
+  'Safety First',
+  'Client-Centric Innovation',
+  'Data-Driven Decisions',
+  'Made in India',
+] as const;
 
 /* ---------------------------------------------------------------------------
    Building blocks
    -------------------------------------------------------------------------- */
 
 /**
- * Decorative looping background behind a media band. `preload="metadata"` on
- * the mid-page marker keeps it from pulling its full payload before the
- * visitor has scrolled anywhere near it.
+ * Decorative looping background behind the hero. The hero is on screen at
+ * load, so it preloads in full; a band further down the page would pass
+ * `metadata` to keep it from pulling its payload before it is scrolled to.
  */
 function BandMedia({ src, preload = 'metadata' }: { readonly src: string; readonly preload?: 'metadata' | 'auto' }) {
   return (
@@ -124,11 +95,6 @@ function BandMedia({ src, preload = 'metadata' }: { readonly src: string; readon
   );
 }
 
-/** The marker that opens each light section. */
-function Chapter({ name }: { readonly name: string }) {
-  return <span className={styles.chapter}>{name}</span>;
-}
-
 /* ---------------------------------------------------------------------------
    Page
    -------------------------------------------------------------------------- */
@@ -138,27 +104,31 @@ export default function AboutPage() {
   return (
     <main className={styles.page}>
       {/* Hero */}
-      <section className={`${styles.hero} reveal`} id="about-hero" data-cinematic-hero>
+      <section
+        className={cn('on-dark', styles.hero, 'reveal')}
+        id="about-hero"
+        data-cinematic-hero
+        data-header-theme="dark"
+      >
         <BandMedia src="/assets/videos/Arnobot2.mp4" preload="auto" />
         <div className={styles.heroInner}>
-          <div className={styles.fadeUp}>
-            <span className={styles.eyebrow}>About ARNOBOT</span>
-            <h1 className={styles.heroTitle}>
+          <div className="fade-up">
+            <span className="eyebrow">About ARNOBOT</span>
+            <h1 className="hero-title">
               Where innovation
               <br />
               meets automation
             </h1>
-            <hr className={styles.rule} />
-            <p className={styles.heroLead}>
+            <p className="hero-lead">
               An Indian robotics company building intelligent unmanned ground vehicles for defence, industrial,
               maritime and critical infrastructure work — the jobs that are still done by hand, in the places people
               should not have to go.
             </p>
             <div className={styles.heroActions}>
-              <Link href="/product" className={styles.btn}>
+              <Link href="/product" className="btn btn-light">
                 See the platforms
               </Link>
-              <Link href="/contact" className={styles.btnGhost}>
+              <Link href="/contact" className="btn btn-outline">
                 Talk to us
               </Link>
             </div>
@@ -167,132 +137,72 @@ export default function AboutPage() {
       </section>
 
       {/* Origin */}
-      <section className={`${styles.section} reveal`} id="about-story">
+      <section className="section-screen reveal" id="about-story">
         <div className={styles.inner}>
           <div className={styles.split}>
-            <div className={`${styles.splitCopy} ${styles.fadeUp}`}>
-              <Chapter name="Origin" />
-              <h2 className={styles.sectionTitle}>From ideas to impact</h2>
-              <hr className={styles.rule} />
-              <p className={styles.lead}>
+            <div className={cn(styles.splitCopy, 'fade-up')}>
+              <span className="eyebrow">Origin</span>
+              <h2 className="section-title is-editorial">From ideas to impact</h2>
+              <p className="section-lead">
                 ARNOBOT is an emerging Indian robotics startup building intelligent unmanned ground vehicles (UGVs) for
                 defence, industrial, maritime and critical infrastructure applications. By combining AI, robotics and
                 autonomous technologies, we are shaping the future of unmanned mobility with safer, smarter and more
                 efficient robotic solutions.
               </p>
-              <p className={styles.lead}>
+              <p className="section-lead">
                 We did not start in a lab. We started on the ground our machines are meant to protect — on plant floors,
                 at height, and on the steel our robots now climb — and that is still where every platform is proven
                 before it ships.
               </p>
             </div>
 
-            <figure className={`${styles.figure} ${styles.fadeUp} ${styles.d1}`}>
+            <figure className={cn(styles.figure, 'fade-up', 'd1')}>
               {/* The caption beneath names the photograph, so a matching alt
                   would have it announced twice. */}
               <img src="/assets/images/abt-full.jpg" alt="" />
-              <figcaption className={styles.figureCaption}>The team, mid-build</figcaption>
+              <figcaption className={cn('micro-label', styles.figureCaption)}>The team, mid-build</figcaption>
             </figure>
           </div>
         </div>
       </section>
 
-      {/* Record */}
-      <section className={`${styles.sectionWash} reveal`} id="about-record">
-        <div className={styles.inner}>
-          <div className={`${styles.sectionHead} ${styles.fadeUp}`}>
-            <Chapter name="Record" />
-            <h2 className={styles.sectionTitle}>What we have built so far</h2>
+      {/* Mission, then vision: one statement per screen, the wash alternating. */}
+      {STATEMENTS.map((statement, index) => (
+        <section
+          className={cn('section-screen', index % 2 === 0 && 'is-wash', 'reveal')}
+          id={statement.id}
+          key={statement.id}
+        >
+          <div className={cn(styles.statement, 'fade-up')}>
+            <span className={cn('card-icon', styles.statementIcon)}>{statement.icon}</span>
+            <span className="eyebrow">{statement.title}</span>
+            <h2 className="section-title is-editorial">
+              <TypingAnimation text={statement.body} />
+            </h2>
           </div>
+        </section>
+      ))}
 
-          <ul className={styles.stats}>
-            {RECORD.map((entry) => (
-              <li className={styles.stat} key={entry.label}>
-                <strong className={styles.statValue}>{entry.value}</strong>
-                <span className={styles.statLabel}>{entry.label}</span>
-                <span className={styles.statNote}>{entry.note}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Chapter marker */}
-      <section className={`${styles.band} reveal`}>
-        <BandMedia src="/assets/videos/techv.mp4" />
-        <div className={styles.bandInner}>
-          <div className={styles.fadeUp}>
-            <span className={styles.bandLabel}>Engineered for reliability</span>
-            <hr className={styles.bandRule} />
-            <h2 className={styles.bandTitle}>Built for impact</h2>
-            <p className={styles.bandBody}>
-              At ARNOBOT we build autonomous systems that enhance safety and efficiency — machines that go where the
-              risk is so that people do not have to.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Principles */}
-      <section className={`${styles.section} reveal`} id="why-choose-us">
-        <div className={styles.inner}>
-          <div className={`${styles.sectionHead} ${styles.fadeUp}`}>
-            <Chapter name="Principles" />
-            <h2 className={styles.sectionTitle}>How we work</h2>
-            <p className={styles.lead}>
-              Four commitments that decide what we build, and what we refuse to ship.
-            </p>
-          </div>
-
-          <ul className={`${styles.cards} ${styles.fadeUp} ${styles.d1}`}>
-            {PRINCIPLES.map((item) => (
-              <li className={styles.card} key={item.title}>
-                <img className={styles.cardBadge} src={item.icon} alt="" />
-                <h3 className={styles.cardTitle}>{item.title}</h3>
-                <p className={styles.cardBody}>{item.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Direction */}
-      <section className={`${styles.sectionWash} reveal`} id="vision-mission">
-        <div className={styles.inner}>
-          <div className={`${styles.sectionHead} ${styles.fadeUp}`}>
-            <Chapter name="Direction" />
-            <h2 className={styles.sectionTitle}>Where we are going</h2>
-          </div>
-
-          <ul className={`${styles.pillars} ${styles.fadeUp} ${styles.d1}`}>
-            {PILLARS.map((pillar) => (
-              <li className={styles.pillar} key={pillar.title}>
-                <span className={styles.cardIcon}>{pillar.icon}</span>
-                <h3 className={styles.cardTitle}>{pillar.title}</h3>
-                {pillar.body ? <p className={styles.cardBody}>{pillar.body}</p> : null}
-                {pillar.items ? (
-                  <ul className={styles.pillarList}>
-                    {pillar.items.map((value) => (
-                      <li key={value}>{value}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            ))}
-          </ul>
+      {/* Values */}
+      <section className={cn('on-dark', 'section-screen', styles.valuesSection, 'reveal')} id="values" data-header-theme="dark">
+        <div className={cn(styles.values, 'fade-up')}>
+          <span className="eyebrow">Our Values</span>
+          <p className="value-current is-display">
+            <WordRotate words={VALUES} />
+          </p>
         </div>
       </section>
 
       {/* Leadership */}
-      <section className={`${styles.section} reveal`} id="leadership">
+      <section className="section-screen reveal" id="leadership">
         <div className={styles.inner}>
-          <div className={`${styles.sectionHead} ${styles.fadeUp}`}>
-            <Chapter name="Leadership" />
-            <h2 className={styles.sectionTitle}>A letter from the founder</h2>
+          <div className={cn('section-head', styles.sectionHead, 'fade-up')}>
+            <span className="eyebrow">Leadership</span>
+            <h2 className="section-title is-editorial">A letter from the founder</h2>
           </div>
 
           <div className={styles.letter}>
-            <div className={`${styles.letterBody} ${styles.fadeUp}`}>
+            <div className={cn(styles.letterBody, 'fade-up')}>
               <p>
                 I am hopeful that our mission will instill the importance of our vision to our current team, as well as
                 attract new engineers and partners with shared ambition. Arnobot is a mission-focused robotics company,
@@ -308,46 +218,35 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className={`${styles.signatory} ${styles.fadeUp} ${styles.d1}`}>
+            <div className={cn(styles.signatory, 'fade-up', 'd1')}>
               <img className={styles.portrait} src="/assets/images/ceo.jpg" alt="Anmol Shah" />
               <div className={styles.signatoryMeta}>
                 <img className={styles.signature} src="/assets/images/sign1.png" alt="Anmol Shah signature" />
                 <h3 className={styles.signatoryName}>Anmol Shah</h3>
-                <span className={styles.signatoryRole}>Founder &amp; CEO</span>
+                <span className={cn('micro-label', styles.signatoryRole)}>Founder &amp; CEO</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Facility */}
-      <section className={`${styles.sectionWash} reveal`} id="facility">
+      {/* Record */}
+      <section className="section-screen is-wash reveal" id="about-record">
         <div className={styles.inner}>
-          <div className={`${styles.sectionHead} ${styles.fadeUp}`}>
-            <Chapter name="Facility" />
-            <h2 className={styles.sectionTitle}>Built in-house</h2>
-            <p className={styles.lead}>
-              Four rooms, one building. A design change reaches a running prototype the same week.
-            </p>
+          <div className={cn('section-head', 'is-centered', styles.sectionHead, 'fade-up')}>
+            <span className="eyebrow">Record</span>
+            <h2 className="section-title is-editorial">What we have built so far</h2>
           </div>
 
-          <ul className={`${styles.rooms} ${styles.fadeUp} ${styles.d1}`}>
-            {ROOMS.map((room) => (
-              <li className={styles.room} key={room.label}>
-                {/* The visible label names the photo it sits on, so a matching
-                    alt would have every tile announced twice. */}
-                <img src={room.image} alt="" />
-                <span className={styles.roomLabel}>{room.label}</span>
+          <ul className={cn('card-grid', styles.stats)}>
+            {RECORD.map((entry, index) => (
+              <li className={cn(styles.stat, 'fade-up', STAT_DELAY[index])} key={entry.label}>
+                <strong className="stat-value">{entry.value}</strong>
+                <span className={cn('micro-label', styles.statLabel)}>{entry.label}</span>
+                <span className={styles.statNote}>{entry.note}</span>
               </li>
             ))}
           </ul>
-
-          <div className={`${styles.roomsNote} ${styles.fadeUp} ${styles.d2}`}>
-            <img src="/assets/icons/check.png" alt="" />
-            <p>
-              Design, manufacturing, electronics, software development and rapid prototyping under one roof.
-            </p>
-          </div>
         </div>
       </section>
 

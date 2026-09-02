@@ -3,94 +3,41 @@
 
    Same editorial rhythm as the technology page: full-bleed dark media bands
    (hero, chapter marker, hiring process) alternating with light sections that
-   carry the copy, one idea per screen.
+   carry the copy, one idea per screen. The facility gallery sits between the
+   people and the open roles, so the reader sees the floor before the list of
+   jobs based on it.
 
-   Everything is expressed through the site's own tokens, declared in
-   public/assets/css/style.css (:root) — Russo One for display, Outfit for body,
-   --ink / --accent / --footer for colour — so the page reads as part of the
-   site rather than a transplant. Fallbacks are inlined in case this module ever
-   renders before style.css lands.
+   Everything here consumes the design tokens in public/assets/css/theme.css and
+   reuses the shared components in style.css — `btn`, `eyebrow`, `tag`,
+   `link-arrow`, `on-dark`, and the whole of the careers form (`.career-*`).
+   What is left in this file is only what is specific to this page's layout.
    ========================================================================== */
 
 .page {
-  --car-dark: var(--footer, #121c2e);
-  --car-ink: var(--ink, #070322);
-  --car-accent: var(--accent, #375e9d);
-  --car-muted: var(--muted, #5f626d);
-  --car-line: rgba(7, 3, 34, 0.12);
-  --car-tint: #f5f6f9;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
 
-  --car-display: "Russo One", "Arial Black", sans-serif;
-  --car-body: "Outfit", Arial, sans-serif;
-
-  /* Sections are viewport-height, so the padding only has to keep content off
-     the edges — the screen itself supplies the vertical rhythm. */
-  --pad-standard: clamp(72px, 10vw, 128px);
-  --page-margin: clamp(24px, 5vw, 64px);
-  --gutter: clamp(24px, 3vw, 32px);
-
-  background: #fff;
-  font-family: var(--car-body);
-  color: var(--car-ink);
+/* One measure, one centring rule, shared by every content block below. */
+.inner {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
 }
 
 /* --------------------------------------------------------------------------
    Shared type scale
+
+   The specs themselves are style.css's: `hero-title` for the two display
+   lines, `section-title is-editorial` for the headings, `section-lead` for the
+   leads, `micro-label` for every uppercase label and `rule` for the accent
+   bar under the hero. All that is left here is the
+   margin each one carries on this page.
    -------------------------------------------------------------------------- */
 
-.displayXl,
-.bandTitle,
-.sectionTitle,
-.statNumber {
-  font-family: var(--car-display);
-  font-weight: 400; /* Russo One ships a single weight */
-  letter-spacing: -0.01em;
-}
-
-.displayXl {
-  font-size: clamp(38px, 6.4vw, 82px);
-  line-height: 1.04;
-}
-
-.bandTitle {
-  font-size: clamp(32px, 5.6vw, 76px);
-  line-height: 1.08;
-}
-
-.sectionTitle {
-  font-size: clamp(28px, 4vw, 54px);
-  line-height: 1.1;
-}
-
-.eyebrow {
-  display: block;
-  font-family: var(--car-body);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--car-accent);
-  margin-bottom: 14px;
-}
-
-.lead {
-  font-size: clamp(16px, 1.4vw, 20px);
-  line-height: 1.65;
-  color: var(--car-muted);
-}
-
-.rule {
-  width: 96px;
-  height: 2px;
-  background: var(--car-accent);
-  border: 0;
-  margin: 0;
-}
-
-.ruleCenter {
-  composes: rule;
-  margin-inline: auto;
+.heroTitle {
+  margin-bottom: 28px;
 }
 
 /* --------------------------------------------------------------------------
@@ -99,39 +46,35 @@
    Piggybacks on the site-wide IntersectionObserver in
    src/lib/behaviors/revealOnScroll.ts, which adds `.visible` to any `.reveal`
    element. No second observer and no client component needed.
+
+   The reveal itself is style.css's `fade-up`, staggered with `d1`/`d2`/`d3`.
+   Only the card grids keep one of their own, below, because `.card-cell`
+   already owns the transition property and would drop the fade.
+
+   The reduced-motion guard for that one lives at the end of this file, so it
+   wins on source order against the rule above it.
    -------------------------------------------------------------------------- */
-
-.fadeUp {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 0.5s ease-out,
-    transform 0.5s ease-out;
-}
-
-:global(.visible) .fadeUp,
-.fadeUp:global(.visible) {
-  opacity: 1;
-  transform: none;
-}
-
-.d1 {
-  transition-delay: 0.08s;
-}
-
-/* The reduced-motion guard for the whole page lives at the end of this file,
-   so it wins on source order against every animated rule below. */
 
 /* --------------------------------------------------------------------------
    Media bands (hero + chapter marker)
    -------------------------------------------------------------------------- */
+
+/* Both bands are full-screen `section-screen`s that opt out of its white
+   ground and its closing hairline. The extra step of specificity is
+   deliberate: a CSS module can land before style.css, so a bare class would
+   not reliably win. */
+.hero:global(.section-screen),
+.band:global(.section-screen) {
+  background: var(--footer);
+  border-bottom: 0;
+}
 
 .media {
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: var(--car-dark);
+  background: var(--footer);
 }
 
 .media video,
@@ -164,12 +107,12 @@
   background:
     linear-gradient(
       90deg,
-      rgba(18, 28, 46, 0.86) 0%,
-      rgba(18, 28, 46, 0.6) 32%,
-      rgba(18, 28, 46, 0.14) 62%,
-      rgba(18, 28, 46, 0) 100%
+      rgba(var(--footer-rgb), 0.86) 0%,
+      rgba(var(--footer-rgb), 0.6) 32%,
+      rgba(var(--footer-rgb), 0.14) 62%,
+      rgba(var(--footer-rgb), 0) 100%
     ),
-    linear-gradient(180deg, rgba(18, 28, 46, 0.3) 0%, rgba(18, 28, 46, 0) 30%);
+    linear-gradient(180deg, rgba(var(--footer-rgb), 0.3) 0%, rgba(var(--footer-rgb), 0) 30%);
 }
 
 @media (max-width: 900px) {
@@ -178,9 +121,9 @@
   .scrim {
     background: linear-gradient(
       180deg,
-      rgba(18, 28, 46, 0.8) 0%,
-      rgba(18, 28, 46, 0.58) 55%,
-      rgba(18, 28, 46, 0.44) 100%
+      rgba(var(--footer-rgb), 0.8) 0%,
+      rgba(var(--footer-rgb), 0.58) 55%,
+      rgba(var(--footer-rgb), 0.44) 100%
     );
   }
 }
@@ -191,12 +134,6 @@
 
 .hero {
   position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: var(--pad-standard) var(--page-margin);
-  background: var(--car-dark);
   overflow: hidden;
 }
 
@@ -207,20 +144,15 @@
 .heroInner {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: 58rem;
 }
 
-.heroTitle {
-  composes: displayXl;
-  color: #fff;
-  margin: 0 0 28px;
-}
-
-.heroLead {
-  composes: lead;
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 42rem;
-  margin: 28px 0 0;
+/* The global `hero-lead` opens with 28px of its own; here the title's own
+   28px below already carries the gap. */
+.hero .heroLead {
+  margin-top: 0;
+  text-shadow: var(--shadow-hero-text-soft);
 }
 
 .heroActions {
@@ -230,211 +162,27 @@
   margin-top: 40px;
 }
 
-/* White type carries its own contrast rather than relying on the scrim: a tight
-   shadow for the edge and a wide, soft one that lifts the letterforms off a
-   pale frame. Costs nothing on a dark frame, and lets the video stay visible on
-   every frame of the loop. */
-.heroTitle,
-.bandTitle {
-  text-shadow:
-    0 1px 2px rgba(7, 3, 34, 0.4),
-    0 8px 40px rgba(7, 3, 34, 0.5);
-}
-
-.heroLead,
-.bandBody,
-.bandLabel,
-.hero .eyebrow {
-  text-shadow: 0 1px 14px rgba(7, 3, 34, 0.55);
-}
-
-.hero .eyebrow {
-  color: #fff;
-  opacity: 0.92;
-}
-
-/* --------------------------------------------------------------------------
-   Buttons — square-cornered, matching the technology page's CTA treatment.
-   -------------------------------------------------------------------------- */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 18px 40px;
-  border: 2px solid var(--car-dark);
-  border-radius: 0;
-  background: var(--car-dark);
-  color: #fff;
-  font-family: var(--car-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.btn:hover,
-.btn:focus-visible {
-  background: var(--car-accent);
-  border-color: var(--car-accent);
-  color: #fff;
-}
-
-/* On the hero a dark button would sink into the footage, so the primary is
-   inverted there and the secondary is an outline. */
-.btnLight {
-  composes: btn;
-  background: #fff;
-  border-color: #fff;
-  color: var(--car-ink);
-}
-
-.btnOutline {
-  composes: btn;
-  background: transparent;
-  border-color: rgba(255, 255, 255, 0.55);
-  color: #fff;
-}
-
-.btnOutline:hover,
-.btnOutline:focus-visible {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: #fff;
-  color: #fff;
-}
-
-/* --------------------------------------------------------------------------
-   Numbers strip — the one band that is deliberately short, so it reads as a
-   caption under the hero rather than a section of its own.
-   -------------------------------------------------------------------------- */
-
-.statsBand {
-  padding-inline: var(--page-margin);
-  border-bottom: 1px solid var(--car-line);
-  background: #fff;
-}
-
-/* The 1px gap on a line-coloured ground is what draws the dividers, so the
-   strip needs no borders of its own. */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
-  padding: 0;
-  background: var(--car-line);
-  list-style: none;
-}
-
-.stat {
-  background: #fff;
-  padding: clamp(28px, 4vw, 48px) clamp(20px, 3vw, 40px);
-}
-
-/* The outer cells lose their inner padding so the first number and the last
-   label line up with the section copy below rather than sitting inside it. */
-.stat:first-child {
-  padding-left: 0;
-}
-
-.stat:last-child {
-  padding-right: 0;
-}
-
-.statNumber {
-  display: block;
-  font-size: clamp(36px, 4.4vw, 60px);
-  line-height: 1;
-  color: var(--car-ink);
-  margin-bottom: 12px;
-}
-
-.statLabel {
-  display: block;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--car-muted);
-}
-
-@media (max-width: 900px) {
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Two columns means the right-hand cell of row one is no longer the last
-     child, so the edge rules are re-keyed to the column instead. */
-  .stat:nth-child(odd) {
-    padding-left: 0;
-  }
-
-  .stat:nth-child(even) {
-    padding-right: 0;
-  }
+/* The global eyebrow, over footage. */
+.hero :global(.eyebrow) {
+  text-shadow: var(--shadow-hero-text-soft);
 }
 
 /* --------------------------------------------------------------------------
    Light content sections
    -------------------------------------------------------------------------- */
 
-.section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  /* The fixed header consumes no layout space, so a 100svh section hides its
-     first 62px under the docked bar. Reserve it on the top edge only. */
-  padding: calc(var(--nav-height, 62px) + clamp(20px, 2.5vh, 40px)) var(--page-margin) clamp(48px, 6vh, 88px);
-  border-bottom: 1px solid var(--car-line);
-  background: #fff;
-}
+/* The sections themselves are style.css's `section-screen` — `is-wash` for the
+   tinted one, `is-auto` where a long list should size the section rather than
+   the screen.
 
-/* Tinted, to separate two light sections that would otherwise run together. */
-.sectionTint {
-  composes: section;
-  background: var(--car-tint);
-}
-
-/* Sections whose content is a long list size to that list instead of to the
-   screen, so nothing is pushed under the fold. */
-.sectionAuto {
-  composes: section;
-  min-height: 0;
-  padding-block: clamp(72px, 10vh, 128px);
-}
-
-.center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
+   Every head on the page is the same three parts in the same order:
+   eyebrow → heading → lead. No rules, no variants. `section-head is-centered`
+   carries the centring and the gap to the content; the measure is this page's.
+   `width` stays because an auto inline margin inside a flex column would
+   otherwise shrink the head to its own content. */
 .sectionHead {
   width: 100%;
-  max-width: 62rem;
-  margin: 0 auto clamp(32px, 4.5vh, 56px);
-}
-
-.sectionHead .ruleCenter {
-  margin-bottom: 24px;
-}
-
-.sectionLead {
-  max-width: 46rem;
-  margin: 20px auto 0;
-  font-size: 17px;
-  line-height: 1.65;
-  color: var(--car-muted);
+  max-width: var(--measure-narrow);
 }
 
 /* --------------------------------------------------------------------------
@@ -443,61 +191,28 @@
 
 .band {
   position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: var(--pad-standard) var(--page-margin);
-  background: var(--car-dark);
   overflow: hidden;
 }
 
-/* Capped well short of the full width: the open right-hand third is what makes
-   the video behind the band readable as video. */
+/* The same column and composition as the hero above — eyebrow, title, rule,
+   lead — capped at 58rem and held to the left so the footage behind the band
+   stays readable as footage. */
 .bandInner {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--gutter);
-  align-items: start;
   width: 100%;
-  max-width: 62rem;
+  max-width: 58rem;
   margin-right: auto;
 }
 
 .bandLabel {
-  composes: eyebrow;
-  color: #fff;
-  opacity: 0.92;
+  text-shadow: var(--shadow-hero-text-soft);
 }
 
-.bandRule {
-  width: 100%;
-  height: 2px;
-  background: var(--car-accent);
-  border: 0;
-  margin: 0;
-}
-
-.bandTitle {
-  color: #fff;
-  margin: 0;
-}
-
+/* Type and measure come from the global `hero-lead`; only the soft shadow over
+   footage is the band's own. */
 .bandBody {
-  max-width: 34rem;
-  margin: 24px 0 0;
-  font-size: clamp(15px, 1.3vw, 18px);
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.82);
-}
-
-@media (max-width: 900px) {
-  .bandInner {
-    grid-template-columns: 1fr;
-    max-width: none;
-  }
+  text-shadow: var(--shadow-hero-text-soft);
 }
 
 /* --------------------------------------------------------------------------
@@ -505,99 +220,86 @@
    -------------------------------------------------------------------------- */
 
 .split {
+  composes: inner;
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(32px, 5vw, 80px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: var(--gap-grid);
   align-items: center;
-  width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
 }
 
 .splitBody {
-  composes: lead;
-  margin: 24px 0 0;
-  max-width: 34rem;
+  margin: 20px 0 0;
 }
 
 .pullStat {
-  border: 1px solid var(--car-line);
-  border-top: 3px solid var(--car-accent);
-  background: #fff;
-  padding: clamp(32px, 4vw, 52px);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  background: var(--white);
+  padding: clamp(32px, 3vw, 48px);
 }
 
 .pullStatNumber {
   display: block;
-  font-family: var(--car-display);
-  font-weight: 400;
-  font-size: clamp(72px, 11vw, 148px);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: clamp(56px, 11vw, 148px);
   line-height: 0.9;
   letter-spacing: -0.03em;
-  color: var(--car-ink);
+  color: var(--ink);
   margin-bottom: 20px;
 }
 
 .pullStatBody {
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--car-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
   margin: 0;
 }
 
 .pullStatBody strong {
   display: block;
-  color: var(--car-ink);
-  font-weight: 600;
+  color: var(--ink);
+  font-weight: var(--fw-semibold);
   margin-bottom: 6px;
 }
 
-@media (max-width: 900px) {
-  .split {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* --------------------------------------------------------------------------
-   Card grids — principles, the workshop, the people.
+   Card grids — principles and the people.
 
    One 1px-gap grid on a line-coloured background, so the cards read as a single
    ruled block rather than a row of floating boxes. Same construction as the
    technology page's step grid.
    -------------------------------------------------------------------------- */
 
-.grid {
-  display: grid;
-  gap: 1px;
-  background: var(--car-line);
-  border: 1px solid var(--car-line);
+/* The grid is style.css's `card-grid`; the measure and the centring are this
+   page's, one step above the global's `margin: 0`. */
+.grid3:global(.card-grid),
+.grid4:global(.card-grid) {
   width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
+  max-width: var(--measure);
+  margin-inline: auto;
 }
 
 .grid4 {
-  composes: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
 }
 
 .grid3 {
-  composes: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
 }
 
-.card {
+/* The cells are `card-cell` — ground, padding, hover wash, and the h3 and p
+   inside them. What is left is the reveal, which has to carry `card-cell`'s
+   own background-color transition with it or the hover would lose its fade. */
+.card:global(.card-cell) {
   display: flex;
   flex-direction: column;
-  background: #fff;
-  padding: clamp(28px, 2.6vw, 40px) clamp(24px, 2.4vw, 34px);
   opacity: 0;
   transform: translateY(18px);
   transition:
-    opacity 0.55s ease-out,
-    transform 0.55s ease-out;
+    opacity var(--t-slowest) var(--ease-lift),
+    transform var(--t-slowest) var(--ease-lift),
+    background-color var(--t-base) var(--ease-menu);
 }
 
 /* Staggered so a row reads left to right as a sequence, not as one block. */
@@ -607,73 +309,39 @@
 }
 
 :global(.visible) .card:nth-child(2) {
-  transition-delay: 0.1s;
+  transition-delay: 0.08s;
 }
 
 :global(.visible) .card:nth-child(3) {
-  transition-delay: 0.2s;
+  transition-delay: 0.16s;
 }
 
 :global(.visible) .card:nth-child(4) {
-  transition-delay: 0.3s;
+  transition-delay: 0.24s;
 }
 
 :global(.visible) .card:nth-child(5) {
-  transition-delay: 0.36s;
+  transition-delay: 0.32s;
 }
 
 :global(.visible) .card:nth-child(6) {
-  transition-delay: 0.42s;
-}
-
-.cardIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 20px;
-  border: 1px solid var(--car-line);
-  color: var(--car-accent);
-}
-
-.cardIcon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.cardTitle {
-  font-family: var(--car-display);
-  font-weight: 400;
-  font-size: clamp(18px, 1.6vw, 22px);
-  line-height: 1.25;
-  margin: 0 0 12px;
-}
-
-.cardBody {
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--car-muted);
-  margin: 0;
+  transition-delay: 0.4s;
 }
 
 /* --------------------------------------------------------------------------
    The people — the same card, plus a footed note about what they last shipped.
    -------------------------------------------------------------------------- */
 
-.personName {
-  composes: cardTitle;
+/* Both sit against a global — `card-cell`'s own h3 rule, and `micro-label`'s
+   muted ink — so they are keyed through the cell class rather than left to
+   source order. */
+.card .personName {
   margin-bottom: 6px;
 }
 
-.personRole {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--car-accent);
+.card .personRole {
   margin-bottom: 24px;
+  color: var(--accent);
 }
 
 /* Sits directly under the role rather than being pushed to the foot of the
@@ -681,24 +349,71 @@
    not, and the rule is the thing the eye tracks across the row. */
 .personShip {
   padding-top: 20px;
-  border-top: 1px solid var(--car-line);
+  border-top: 1px solid var(--line);
 }
 
 .personShipLabel {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--car-muted);
   margin-bottom: 10px;
 }
 
-.personShipBody {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--car-ink);
-  margin: 0;
+/* Ink rather than `card-cell p`'s muted: this line is what the card is for. */
+.card .personShipBody {
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   The facility. Photographs in the same hairline grid as the cards, each
+   under the name of the room it shows. Eyebrow and title above, nothing
+   below: the four labelled rooms are the whole statement.
+   -------------------------------------------------------------------------- */
+
+/* The grid is `card-grid`; the measure and the centring are this page's, the
+   same step above the global's `margin: 0` as the card grids above. */
+.rooms:global(.card-grid) {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.rooms {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.room {
+  position: relative;
+  background: var(--white);
+  overflow: hidden;
+}
+
+.room img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+  /* Resting desaturation holds the four together as one facility; hovering one
+     returns it to full colour so the room can actually be looked at. */
+  filter: grayscale(0.55);
+  transform: scale(1);
+  transition:
+    filter var(--t-slower) var(--ease-lift),
+    transform var(--t-slowest) var(--ease-lift);
+}
+
+.room:hover img {
+  filter: grayscale(0);
+  transform: scale(1.04);
+}
+
+/* A `micro-label` over the foot of the photograph, in white rather than the
+   global muted. */
+.roomLabel {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 46px 28px 24px;
+  background: linear-gradient(to top, rgba(var(--ink-rgb), 0.9) 0%, rgba(var(--ink-rgb), 0) 100%);
+  color: var(--white);
 }
 
 /* --------------------------------------------------------------------------
@@ -709,45 +424,36 @@
    -------------------------------------------------------------------------- */
 
 .roles {
-  width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
+  composes: inner;
 }
 
+/* The same step the contact page's ruled steps open with. */
 .roleGroup + .roleGroup {
-  margin-top: clamp(40px, 5vh, 64px);
+  margin-top: clamp(28px, 4vh, 40px);
 }
 
 .roleGroupHead {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-.roleGroupName {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--car-ink);
+.roleGroupHead .roleGroupName {
+  color: var(--ink);
   white-space: nowrap;
 }
 
 .roleGroupLine {
   flex: 1;
   height: 1px;
-  background: var(--car-line);
+  background: var(--line);
   border: 0;
   margin: 0;
 }
 
 .roleGroupCount {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--car-muted);
+  white-space: nowrap;
 }
 
 .roleList {
@@ -757,94 +463,74 @@
 }
 
 .role {
-  border-bottom: 1px solid var(--car-line);
+  border-bottom: 1px solid var(--line);
 }
 
+/* Rows sit at the contact page's 22px, flush with the discipline label above
+   them. The inline padding is cancelled by a matching negative margin, so the
+   text lines up with the label and only the hover wash bleeds past it. */
 .roleLink {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(20px, 3vw, 48px);
-  padding: clamp(24px, 2.4vw, 32px) clamp(12px, 1.5vw, 24px);
+  gap: clamp(16px, 2vw, 32px);
+  margin-inline: -16px;
+  padding: 22px 16px;
   text-decoration: none;
   color: inherit;
   transition:
-    background-color 0.2s ease,
-    padding-left 0.2s ease;
+    background-color var(--t-fast) var(--ease-menu),
+    padding-left var(--t-fast) var(--ease-menu);
 }
 
 .roleLink:hover,
 .roleLink:focus-visible {
-  background: var(--car-tint);
-  padding-left: clamp(20px, 2.4vw, 36px);
+  background: var(--wash);
+  padding-left: 24px;
 }
 
 .roleTitle {
-  margin: 0 0 8px;
-  font-family: var(--car-display);
-  font-weight: 400;
-  font-size: clamp(19px, 1.8vw, 25px);
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h3);
   line-height: 1.25;
-  transition: color 0.2s ease;
+  letter-spacing: var(--ls-display);
+  transition: color var(--t-fast) var(--ease-menu);
 }
 
 .roleLink:hover .roleTitle,
 .roleLink:focus-visible .roleTitle {
-  color: var(--car-accent);
+  color: var(--accent);
 }
 
 .roleBody {
-  margin: 0 0 14px;
-  max-width: 46rem;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--car-muted);
+  margin: 0 0 12px;
+  max-width: var(--measure-text);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
 .roleMeta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-}
-
-.roleTag {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--car-line);
-  padding: 5px 12px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--car-muted);
-}
-
-.roleAction {
-  display: inline-flex;
-  align-items: center;
   gap: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--car-accent);
+}
+
+/* The "Apply →" is the global `link-arrow`; only the wrap is page business. */
+.roleAction {
   white-space: nowrap;
 }
 
-.roleArrow {
-  transition: transform 0.2s ease;
+.roleLink:hover .roleAction,
+.roleLink:focus-visible .roleAction {
+  color: var(--accent-deep);
 }
 
-.roleLink:hover .roleArrow,
-.roleLink:focus-visible .roleArrow {
+.roleLink:hover :global(.btn-arrow),
+.roleLink:focus-visible :global(.btn-arrow) {
   transform: translateX(4px);
-}
-
-@media (max-width: 700px) {
-  .roleLink {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
 }
 
 /* The closing line under the list, for anyone the list did not fit. */
@@ -854,26 +540,27 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-top: clamp(32px, 4vh, 48px);
-  padding: clamp(24px, 3vw, 36px);
-  border: 1px solid var(--car-line);
-  background: var(--car-tint);
+  margin-top: clamp(28px, 4vh, 40px);
+  padding: clamp(20px, 2.4vw, 28px) clamp(20px, 2.6vw, 32px);
+  border: 1px solid var(--line);
+  background: var(--wash);
 }
 
 .rolesFootText {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--car-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
 .rolesFootText strong {
   display: block;
-  margin-bottom: 6px;
-  font-family: var(--car-display);
-  font-weight: 400;
-  font-size: clamp(18px, 1.6vw, 22px);
-  color: var(--car-ink);
+  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h3);
+  letter-spacing: var(--ls-display);
+  color: var(--ink);
 }
 
 /* --------------------------------------------------------------------------
@@ -881,59 +568,35 @@
    lands with the same weight as the hero.
    -------------------------------------------------------------------------- */
 
-.processSection {
-  composes: section;
-  background: var(--car-ink);
+/* One step above `.section-screen`, which paints white and closes with a
+   hairline. `on-dark` in the markup carries the white type down the band. */
+.processSection:global(.section-screen) {
+  background: var(--ink);
   border-bottom: 0;
-  color: #fff;
 }
 
-.processSection .sectionTitle,
-.processSection .processName {
-  color: #fff;
+/* The global section head is inked for light grounds. */
+.processSection :global(.section-title) {
+  color: var(--white);
 }
 
-.processSection .sectionLead,
-.processSection .eyebrow {
-  color: rgba(255, 255, 255, 0.62);
+.processSection :global(.section-lead) {
+  color: rgba(var(--white-rgb), 0.8);
 }
 
 .process {
+  composes: inner;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(20px, 2.5vw, 36px);
-  width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
   padding: 0;
   list-style: none;
 }
 
+/* The reveal is `fade-up` with the `d1`/`d2`/`d3` delays from style.css. */
 .processStep {
   position: relative;
   padding-top: 40px;
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 0.55s ease-out,
-    transform 0.55s ease-out;
-}
-
-:global(.visible) .processStep {
-  opacity: 1;
-  transform: none;
-}
-
-:global(.visible) .processStep:nth-child(2) {
-  transition-delay: 0.1s;
-}
-
-:global(.visible) .processStep:nth-child(3) {
-  transition-delay: 0.2s;
-}
-
-:global(.visible) .processStep:nth-child(4) {
-  transition-delay: 0.3s;
 }
 
 /* The rail runs along the top of the row and the node sits on it, so the four
@@ -945,7 +608,7 @@
   left: 0;
   right: calc(clamp(20px, 2.5vw, 36px) * -1);
   height: 1px;
-  background: rgba(255, 255, 255, 0.16);
+  background: var(--line-on-dark);
 }
 
 .processStep:last-child::before {
@@ -959,39 +622,152 @@
   left: 0;
   width: 11px;
   height: 11px;
-  border-radius: 50%;
-  background: var(--car-accent);
-  box-shadow: 0 0 0 4px rgba(55, 94, 157, 0.25);
+  border-radius: var(--radius-round);
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.25);
 }
 
 .processNum {
-  display: block;
   margin-bottom: 14px;
-  font-family: var(--car-display);
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.16em;
-  color: var(--car-accent);
+}
+
+/* `.on-dark .micro-label` would take the number to white .55; this is the step
+   that keeps it on the light accent. */
+.processSection .processNum:global(.micro-label) {
+  color: var(--accent-light);
 }
 
 .processName {
   margin: 0 0 10px;
-  font-family: var(--car-display);
-  font-weight: 400;
-  font-size: clamp(18px, 1.6vw, 22px);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h3);
   line-height: 1.25;
+  letter-spacing: var(--ls-display);
 }
 
 .processBody {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: rgba(var(--white-rgb), 0.7);
+}
+
+/* --------------------------------------------------------------------------
+   Apply — the form section.
+
+   The form components carry the global form classes style.css already styles
+   (`.career-apply-form`, `.career-field`, `.career-upload-*`, `.btn`), so
+   nothing here re-skins them; this block is the two-column layout around them.
+   -------------------------------------------------------------------------- */
+
+.applyGrid {
+  composes: inner;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: clamp(40px, 5vw, 80px);
+  align-items: start;
+}
+
+.applyAside {
+  position: sticky;
+  top: calc(var(--nav-height) + 32px);
+}
+
+.applyTitle {
+  margin: 0 0 20px;
+}
+
+.applyBody {
+  margin: 0 0 36px;
+}
+
+.applyInfo {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.applyInfoItem {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+
+.applyInfoItem svg {
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+/* The grid cell the form (or its receipt) sits in. */
+.formShell {
+  min-width: 0;
+}
+
+/* The panel that replaces the form once an application is in. */
+.successPanel {
+  padding: clamp(32px, 4vw, 56px);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  background: var(--white);
+  text-align: center;
+}
+
+.successIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 24px;
+  color: var(--accent);
+}
+
+.successTitle {
+  margin: 0 0 16px;
+}
+
+.successBody {
+  margin: 0 auto 32px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+/* Sticky rails release before the two-column splits do. */
+@media (max-width: 1023px) {
+  .applyAside {
+    position: static;
+  }
 }
 
 @media (max-width: 900px) {
+  /* `.section-screen` releases the screen height and takes the block padding
+     down. Nothing above these two reserves room for the docked bar, so their
+     top padding has to once the viewport height no longer does. */
+  .hero:global(.section-screen),
+  .band:global(.section-screen) {
+    padding-top: calc(var(--nav-height) + clamp(32px, 5vh, 56px));
+  }
+
+  .split,
+  .applyGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rooms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .process {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 32px;
   }
 
@@ -1002,181 +778,17 @@
   }
 }
 
-/* --------------------------------------------------------------------------
-   Apply — the form section.
-
-   The form components keep the class names style.css already styles
-   (`.career-apply-form`, `.career-field`, `.career-upload-*`), so the markup is
-   untouched and the no-JavaScript POST still works. What follows re-skins that
-   base to the square-cornered treatment used above.
-
-   `.formShell.formShell` is the same module class written twice: CSS Modules
-   hashes both occurrences to one name, giving (0,2,0) instead of (0,1,0). That
-   is what puts these rules above style.css's own `.career-field input` no
-   matter which of the two stylesheets the browser applies first.
-   -------------------------------------------------------------------------- */
-
-.applySection {
-  composes: sectionAuto;
-  background: var(--car-tint);
-  border-bottom: 1px solid var(--car-line);
-}
-
-.applyGrid {
-  display: grid;
-  grid-template-columns: 1fr 1.35fr;
-  gap: clamp(40px, 5vw, 80px);
-  align-items: start;
-  width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
-}
-
-.applyAside {
-  position: sticky;
-  top: calc(var(--nav-height, 62px) + 40px);
-}
-
-.applyTitle {
-  composes: sectionTitle;
-  margin: 0 0 20px;
-}
-
-.applyBody {
-  composes: lead;
-  margin: 0 0 36px;
-}
-
-.applyInfo {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--car-line);
-}
-
-.applyInfoItem {
-  display: grid;
-  grid-template-columns: 22px 1fr;
-  gap: 16px;
-  align-items: start;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--car-line);
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--car-ink);
-}
-
-.applyInfoItem svg {
-  color: var(--car-accent);
-  margin-top: 2px;
-}
-
-@media (max-width: 900px) {
-  .applyGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .applyAside {
-    position: static;
+@media (max-width: 768px) {
+  .roleLink {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
   }
 }
 
-/* Form re-skin. */
-.formShell.formShell :global(.career-apply-form) {
-  padding: clamp(28px, 3.2vw, 44px);
-  gap: 24px;
-  border: 1px solid var(--car-line);
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.formShell.formShell :global(.career-field) label {
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  color: var(--car-ink);
-}
-
-.formShell.formShell :global(.career-field) :is(input, select, textarea) {
-  padding: 14px 16px;
-  border: 1px solid var(--car-line);
-  border-radius: 0;
-  background: #fff;
-  font-size: 15px;
-}
-
-.formShell.formShell :global(.career-field) :is(input, select, textarea):focus {
-  border-color: var(--car-accent);
-  box-shadow: inset 0 -2px 0 var(--car-accent);
-}
-
-.formShell.formShell :global(.career-upload-zone) {
-  border: 1px dashed rgba(55, 94, 157, 0.4);
-  border-radius: 0;
-  background: var(--car-tint);
-}
-
-/* The submit button matches the page's own CTA rather than the pill in
-   style.css, so the two never sit side by side in different shapes. */
-/* `width: 100%` and `height: 45px` come from style.css's own `.career-submit-btn`
-   and `.btn`; both have to be released before the padding below can size it. */
-.formShell.formShell :global(.career-submit-btn) {
-  align-self: flex-start;
-  width: auto;
-  height: auto;
-  padding: 18px 40px;
-  border: 2px solid var(--car-dark);
-  border-radius: 0;
-  background: var(--car-dark);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.formShell.formShell :global(.career-submit-btn):hover:not(:disabled) {
-  background: var(--car-accent);
-  border-color: var(--car-accent);
-}
-
-/* Left-aligned to sit under the button, which is no longer full width. */
-.formShell.formShell :global(.career-form-note) {
-  margin: 0;
-  font-size: 14px;
-  text-align: left;
-  color: var(--car-muted);
-}
-
-.formShell.formShell :global(.form-alert) {
-  border-radius: 0;
-}
-
-/* The panel that replaces the form once an application is in. */
-.successPanel {
-  padding: clamp(40px, 5vw, 72px) clamp(28px, 4vw, 56px);
-  border: 1px solid var(--car-line);
-  border-top: 3px solid var(--car-accent);
-  background: #fff;
-  text-align: center;
-}
-
-.successIcon {
-  color: var(--car-accent);
-  margin-bottom: 24px;
-}
-
-.successTitle {
-  composes: sectionTitle;
-  margin: 0 0 16px;
-  font-size: clamp(24px, 2.6vw, 34px);
-}
-
-.successBody {
-  composes: lead;
-  max-width: 34rem;
-  margin: 0 auto 32px;
+@media (max-width: 480px) {
+  .rooms {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1187,9 +799,7 @@
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .fadeUp,
-  .card,
-  .processStep {
+  .card:global(.card-cell) {
     opacity: 1;
     transform: none;
     transition: none;
@@ -1203,8 +813,15 @@
   }
 
   .roleLink,
-  .roleArrow,
   .roleTitle {
     transition: none;
+  }
+
+  .room img {
+    transition: none;
+  }
+
+  .room:hover img {
+    transform: none;
   }
 }

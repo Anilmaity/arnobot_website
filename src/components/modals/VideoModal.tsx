@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import { cn } from '@/lib/dom';
 import { useDelegatedClick } from '@/hooks/useDelegatedClick';
 import { useModalDismiss } from '@/hooks/useModalDismiss';
+import { CloseIcon } from '@/components/ui/Icons';
 
 /**
  * Video lightbox — port of the `#video-modal` markup in includes/footer.php and
@@ -41,8 +42,8 @@ export default function VideoModal() {
     >
       <div className="video-modal-overlay" onClick={close} />
       <div className="video-modal-container" ref={containerRef}>
-        <button type="button" className="video-modal-close" aria-label="Close video player" onClick={close}>
-          &times;
+        <button type="button" className="icon-btn on-dark video-modal-close" aria-label="Close video player" onClick={close}>
+          <CloseIcon size={18} />
         </button>
         <div className="video-modal-content">
           {/* Keyed so React swaps the element and the browser reloads the source. */}

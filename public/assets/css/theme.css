@@ -1,0 +1,304 @@
+/* ==========================================================================
+   ARNOBOT DESIGN SYSTEM — theme.css
+   ==========================================================================
+
+   The single source of truth for the site's design tokens. Every colour,
+   font, size scale, radius, shadow, spacing and motion value used by
+   style.css and by the page CSS modules is declared in the `:root` block
+   below. Change a value here and it updates everywhere it is used.
+
+   Loaded by SiteChrome.tsx BEFORE style.css (same `site` precedence bucket),
+   so style.css and every stylesheet after it can rely on these properties.
+
+   ──────────────────────────────────────────────────────────────────────────
+   STYLE GUIDE — the design at a glance
+   ──────────────────────────────────────────────────────────────────────────
+
+   TYPE
+   • Display / headings: "Space Grotesk", always bold (700). Tokens
+     --font-display and --fw-display. Marketing pages (home, product, the CTA
+     band, 404) set headings in uppercase with +0.02em tracking (`.russo` —
+     the class keeps its historical name). Long-form pages (company,
+     technology, careers, contact, insights) set them in sentence case with
+     −0.01em tracking. Same face, same scale, same colour on both.
+   • Body / UI (copy, navigation, buttons, forms): "Inter" (400–700). Token
+     --font-body.
+   • Weights (only the loaded faces; nothing synthetic): display face 700
+     always · body copy 400 · navigation 500 · emphasis, values and
+     `<strong>` 600 · eyebrows, micro-labels, tags, form labels, buttons 700.
+   • Exception: the legal pages are intentionally set in Arial — style.css
+     `--legal-face`. Do not re-point them at the brand faces.
+
+   SCALE (fluid; min → max)
+   • --fs-h2          28 → 44px   every heading: hero H1s and section titles
+                                  share one scale (--fs-display aliases it)
+   • --fs-display-xl  36 → 72px   unused; kept for reference only
+   • --fs-h3          18 → 22px   card / list titles
+   • --fs-h4          17 → 20px   small titles, footer headings
+   • --fs-lead        17 → 20px   hero and section leads
+   • --fs-stat        38 → 62px   big figures in stat bands
+   • --fs-body        16px        default copy   --fs-body-sm 15px
+   • --fs-sm 14px  --fs-xs 13px  --fs-2xs 12px
+   • --fs-eyebrow 13px / 700 / +0.14em / uppercase — every eyebrow and label
+
+   COLOUR
+   • Ink (brand navy-black)        --ink          #070322
+   • Accent (brand blue)           --accent       #375e9d
+   • Deep accent (hover / active)  --accent-deep  #234b91
+   • Muted text                    --muted        #5f626d
+   • Hairline                      --line         rgba(ink, .12)
+   • Light wash / surfaces         --wash, --surface, --surface-2
+   • Dark bands & footer           --footer       #121c2e
+   • Feedback                      --danger / --success (+ surface, border, ink)
+
+   BUTTONS — one grammar, style.css `.btn`
+   • Square corners (--btn-radius 0), 2px border, 13px / 700 / +0.14em
+     uppercase label, 16px 32px padding (≈50px tall).
+   • Variants: .btn (ink), .btn-accent, .btn-light, .btn-outline,
+     .btn-ghost (glass on video). Hover shifts colour, no lift; :active
+     settles to scale(.98); .btn-arrow nudges 4px; :disabled / [aria-busy].
+
+   CARDS
+   • Editorial pages: hairline grid cells (radius 0, 1px --line, no shadow).
+   • Media cards (home products, industries, insights, modals): --radius-card
+     12px, --shadow-card at rest, --shadow-card-hover + 6px lift on hover.
+
+   LAYOUT
+   • Gutter --gutter clamp(24px, 5vw, 64px); content measure --measure 78rem.
+   • Full-screen sections: padding-top --section-pad-top (clears the header),
+     padding-bottom --section-pad-bottom; min-height released below 900px.
+   • Header bar --nav-height 65px (54px ≤ 768px).
+
+   MOTION
+   • --t-fast 200ms colour / opacity, --t-base 250ms transforms,
+     --t-slowest 500ms reveals. Easing --ease-menu for UI, --ease-lift for
+     card lifts. Everything honours prefers-reduced-motion.
+
+   NOTE — Tailwind: src/app/globals.css mirrors the brand colours and fonts in
+   its `@theme` block (Tailwind v4 needs the literal values there). If you
+   change --ink / --accent / --footer / --muted / --page or the font stacks
+   here, update that block to match.
+   ========================================================================== */
+
+:root {
+  /* ── Fonts ─────────────────────────────────────────────────────────── */
+  --font-display: "Space Grotesk", Arial, sans-serif;
+  --font-body: "Inter", Arial, sans-serif;
+
+  /* ── Brand palette ─────────────────────────────────────────────────── */
+  --bg: #f5f5f5;
+  --ink: #070322;
+  --accent: #375e9d;
+  --footer: #121c2e;
+  --muted: #5f626d;
+  --white: #ffffff;
+
+  /* ── Extended palette ──────────────────────────────────────────────── */
+  --page: #dfe1e5;         /* body background behind the white .site sheet */
+  --title-ink: var(--ink); /* headings share the ink; kept as an alias */
+  --nav-ink: var(--ink);   /* header nav on light grounds */
+  --accent-deep: #234b91;  /* hover/active blue */
+  --accent-light: #8ab0e8; /* accent lifted for dark backgrounds */
+  --accent-tint: #eef2fa;  /* pale accent surface (badges, TOC hover) */
+  --btn-bg-hover: var(--accent);
+  --ink-deep: #090620;     /* darkest surface (industry/demo modal) */
+  --sky: #00a3ff;          /* footer glow line + footer link hover */
+  --gray-mid: #a4a4a4;
+  --gray-soft: #b0b4be;    /* placeholders, body text on dark modals */
+
+  /* Product & legal sub-palette (slate greys). The blue aliases ride the
+     brand accent. */
+  --blue: var(--accent);
+  --blue-deep: var(--accent-deep);
+  --slate-ink: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-400: #94a3b8;
+  --slate-200: #e2e8f0;
+
+  /* Light surfaces */
+  --surface: #f8fafc;      /* product/legal section + card ground */
+  --surface-2: #f1f5f9;    /* slightly deeper tint (specs band, toggles) */
+  --surface-3: #f5f6f9;
+  --surface-blue: var(--accent-tint);
+  --surface-tint: #f4f5f8;
+  --wash: #f5f6f8;         /* the alternating section wash */
+
+  /* Dark bands & footer */
+  --footer-top: #142136;
+  --footer-bottom: #0d1726;
+  --footer-text: var(--slate-200);
+
+  /* Feedback */
+  --danger: #d93636;
+  --danger-rgb: 217, 54, 54;
+  --danger-surface: #fff3f3;
+  --danger-border: #f2caca;
+  --danger-ink: #8b1e1e;
+  --success: #2e9d57;
+  --success-surface: #f0faf4;
+  --success-border: #bde5ca;
+  --success-ink: #216b3a;
+
+  /* ── Alpha bases — use as rgba(var(--x-rgb), <alpha>) ──────────────── */
+  --ink-rgb: 7, 3, 34;
+  --accent-rgb: 55, 94, 157;
+  --accent-deep-rgb: 35, 75, 145;
+  --slate-rgb: 15, 23, 42;
+  --blue-rgb: var(--accent-rgb);
+  --bg-rgb: 245, 245, 245;
+  --white-rgb: 255, 255, 255;
+  --surface-rgb: 248, 250, 252;
+  --sky-rgb: 0, 163, 255;
+  --footer-rgb: 18, 28, 46;
+
+  /* ── Type scale ────────────────────────────────────────────────────── */
+  --fs-display-xl: clamp(36px, 5.6vw, 72px);
+  --fs-display: var(--fs-h2);   /* a heading is a heading: H1 = H2 */
+  --fs-h2: clamp(28px, 3.2vw, 44px);
+  --fs-h3: clamp(18px, 1.5vw, 22px);
+  --fs-h4: clamp(17px, 1.3vw, 20px);
+  --fs-lead: clamp(17px, 1.4vw, 20px);
+  --fs-stat: clamp(38px, 4.4vw, 62px);   /* big figures in stat bands */
+  --fs-eyebrow: 13px;
+  --fs-body-xl: 20px;
+  --fs-body-lg: 18px;
+  --fs-body-md: 17px;
+  --fs-body: 16px;
+  --fs-body-sm: 15px;
+  --fs-nav: 12px;
+  --fs-sm: 14px;
+  --fs-xs: 13px;
+  --fs-2xs: 12px;
+  /* Legacy aliases kept for the page modules */
+  --fs-h1-lg: var(--fs-display);
+  --fs-h1: var(--fs-display);
+  --fs-h2-lg: var(--fs-h2);
+
+  /* ── Line heights & tracking ───────────────────────────────────────── */
+  --lh-display: var(--lh-heading);
+  --lh-heading: 1.1;
+  --lh-body: 1.65;
+  --ls-display: -0.01em;    /* sentence-case display type */
+  --ls-caps: 0.02em;        /* uppercase display type */
+  --ls-label: 0.14em;       /* eyebrows, buttons, micro-labels */
+  --ls-nav: 0.06em;
+
+  /* ── Font weights — exactly the faces the Google Fonts link loads:
+        Inter 400/500/600/700 upright, Space Grotesk 700. No 300, no italics;
+        `font-synthesis: none` in style.css keeps the browser from faking
+        either. Roles: body 400 · nav 500 · emphasis & values 600 ·
+        eyebrows, labels, tags, buttons 700 · display face always
+        --fw-display. ── */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-display: 700; /* the one weight every heading / display element uses */
+
+  /* ── Radii ─────────────────────────────────────────────────────────── */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-4xl: 24px;
+  --radius-round: 50%;
+  --radius-card: var(--radius-lg);   /* every rounded card, panel, menu, media */
+  --radius-control: 0;               /* buttons, inputs, chips, tags */
+
+  /* ── Lines & washes ────────────────────────────────────────────────── */
+  --line: rgba(var(--ink-rgb), 0.12);
+  --line-strong: rgba(var(--ink-rgb), 0.2);
+  --line-on-dark: rgba(var(--white-rgb), 0.16);
+
+  /* ── Shadows ───────────────────────────────────────────────────────── */
+  --shadow-card: 0 10px 28px rgba(var(--ink-rgb), 0.06);
+  --shadow-card-hover: 0 20px 40px rgba(var(--ink-rgb), 0.14);
+  --shadow-header: 0 10px 35px rgba(var(--ink-rgb), 0.08);
+  --shadow-btn-hover: 0 16px 34px rgba(var(--ink-rgb), 0.22);
+  --shadow-dropdown:
+    0 4px 6px rgba(var(--ink-rgb), 0.04),
+    0 12px 32px rgba(var(--ink-rgb), 0.12),
+    0 32px 64px rgba(var(--ink-rgb), 0.08);
+  --shadow-modal: 0 30px 70px rgba(var(--ink-rgb), 0.5);
+  --shadow-focus: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
+  --shadow-hero-text:
+    0 1px 2px rgba(var(--ink-rgb), 0.4),
+    0 8px 40px rgba(var(--ink-rgb), 0.5);
+  --shadow-hero-text-soft: 0 1px 14px rgba(var(--ink-rgb), 0.55);
+
+  /* ── Spacing ───────────────────────────────────────────────────────── */
+  --gutter: clamp(24px, 5vw, 64px);   /* page side gutter, every width */
+  --gutter-md: 24px;                  /* legacy aliases */
+  --gutter-sm: 16px;
+  --measure: 78rem;                   /* content max width (1248px) */
+  --measure-narrow: 62rem;            /* section heads, bands */
+  --measure-text: 46rem;              /* leads, paragraphs */
+  --section-pad: clamp(64px, 8vw, 112px);
+  --section-pad-lg: var(--section-pad);
+  --section-pad-xl: var(--section-pad);
+  --section-pad-md: clamp(48px, 6vw, 72px);
+  --section-pad-sm: clamp(40px, 5vw, 60px);
+  /* Full-screen sections: clear the fixed header, then breathe. */
+  --section-pad-top: calc(var(--nav-height) + clamp(20px, 2.5vh, 40px));
+  --section-pad-bottom: clamp(48px, 6vh, 88px);
+  --head-gap: clamp(32px, 4.5vh, 56px);   /* section head → content */
+  --gap-card: 24px;
+  --gap-grid: clamp(32px, 5vw, 80px);     /* two-column splits */
+
+  /* ── Motion ────────────────────────────────────────────────────────── */
+  --t-quick: 0.16s;
+  --t-fast: 0.2s;
+  --t-base: 0.25s;
+  --t-med: 0.3s;
+  --t-slow: 0.35s;
+  --t-slower: 0.4s;
+  --t-slowest: 0.5s;
+  --ease-lift: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-menu: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-drawer: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Interaction states (hover / active / focus grammar) */
+  --ix-dur-fast: 150ms;
+  --ix-dur: var(--t-fast);
+  --ix-dur-slow: var(--t-med);
+  --ix-ease: var(--ease-menu);
+  --ix-underline-offset: 4px;
+
+  /* ── Buttons ───────────────────────────────────────────────────────── */
+  --btn-radius: var(--radius-control);
+  --btn-fs: var(--fs-xs);
+  --btn-fw: var(--fw-bold);
+  --btn-ls: var(--ls-label);
+  --btn-py: 16px;
+  --btn-px: 32px;
+  --btn-min-h: 50px;
+  --btn-bg: var(--ink);
+  --btn-fg: var(--white);
+
+  /* ── Controls (inputs, chips) ──────────────────────────────────────── */
+  --control-py: 12px;
+  --control-px: 16px;
+  --control-fs: var(--fs-body-sm);
+  --control-radius: var(--radius-control);
+  --control-border: 1px solid var(--line);
+  --control-bg: var(--white);
+
+  /* ── Layout ────────────────────────────────────────────────────────── */
+  --nav-height: 65px;
+  --z-header: 999;
+  --z-menu: 9999;
+  --z-modal: 10000;
+  --z-drawer: 10001;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 54px;
+  }
+}

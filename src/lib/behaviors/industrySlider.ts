@@ -46,7 +46,7 @@ export function industrySlider(): Cleanup {
     if (firstCard) {
       const cardWidth = firstCard.offsetWidth;
       const gap = Number.parseFloat(window.getComputedStyle(track).gap) || (window.innerWidth <= 600 ? 16 : 24);
-      track.style.transition = animate ? 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+      track.style.transition = animate ? 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none';
       track.style.transform = `translateX(-${index * (cardWidth + gap)}px)`;
     }
 

@@ -2,7 +2,6 @@
 
 import Script from 'next/script';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import styles from './ContactForm.module.css';
 
 /**
  * The production key is registered against arnobot.in only, so on localhost the
@@ -48,7 +47,8 @@ declare global {
 
 /**
  * Contact form — the fields of the form in contact.php plus its inline
- * reCAPTCHA guard, restyled with the contact page's design language.
+ * reCAPTCHA guard, dressed in the site-wide `.form-*` classes from
+ * public/assets/css/style.css.
  *
  * It still performs a real POST (now to /api/contact) which redirects back to
  * /contact?success=1 or ?error=…, so it keeps working without JavaScript. The
@@ -107,14 +107,14 @@ export default function ContactForm() {
 
   return (
     <>
-      <form className={styles.form} id="contact-form" action="/api/contact" method="POST" onSubmit={onSubmit}>
-        <div className={styles.row}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="cf-fname">
-              First Name <span className={styles.required}>*</span>
+      <form className="form" id="contact-form" action="/api/contact" method="POST" onSubmit={onSubmit}>
+        <div className="form-row">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cf-fname">
+              First Name <span className="required">*</span>
             </label>
             <input
-              className={styles.input}
+              className="form-input"
               type="text"
               id="cf-fname"
               name="fname"
@@ -123,12 +123,12 @@ export default function ContactForm() {
               required
             />
           </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="cf-lname">
-              Last Name <span className={styles.required}>*</span>
+          <div className="form-field">
+            <label className="form-label" htmlFor="cf-lname">
+              Last Name <span className="required">*</span>
             </label>
             <input
-              className={styles.input}
+              className="form-input"
               type="text"
               id="cf-lname"
               name="lname"
@@ -139,13 +139,13 @@ export default function ContactForm() {
           </div>
         </div>
 
-        <div className={styles.row}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="cf-email">
-              Email Address <span className={styles.required}>*</span>
+        <div className="form-row">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cf-email">
+              Email Address <span className="required">*</span>
             </label>
             <input
-              className={styles.input}
+              className="form-input"
               type="email"
               id="cf-email"
               name="email"
@@ -154,12 +154,12 @@ export default function ContactForm() {
               required
             />
           </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="cf-phone">
-              Phone Number <span className={styles.optional}>(optional)</span>
+          <div className="form-field">
+            <label className="form-label" htmlFor="cf-phone">
+              Phone Number <span className="optional">(optional)</span>
             </label>
             <input
-              className={styles.input}
+              className="form-input"
               type="tel"
               id="cf-phone"
               name="phone"
@@ -169,13 +169,13 @@ export default function ContactForm() {
           </div>
         </div>
 
-        <div className={styles.row}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="cf-job">
-              Designation <span className={styles.required}>*</span>
+        <div className="form-row">
+          <div className="form-field">
+            <label className="form-label" htmlFor="cf-job">
+              Designation <span className="required">*</span>
             </label>
             <input
-              className={styles.input}
+              className="form-input"
               type="text"
               id="cf-job"
               name="job"
@@ -184,12 +184,12 @@ export default function ContactForm() {
               required
             />
           </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="cf-country">
-              Country <span className={styles.optional}>(optional)</span>
+          <div className="form-field">
+            <label className="form-label" htmlFor="cf-country">
+              Country <span className="optional">(optional)</span>
             </label>
             <input
-              className={styles.input}
+              className="form-input"
               type="text"
               id="cf-country"
               name="country"
@@ -199,11 +199,11 @@ export default function ContactForm() {
           </div>
         </div>
 
-        <fieldset className={styles.purpose}>
-          <legend className={styles.legend}>What is this about?</legend>
-          <div className={styles.chips}>
+        <fieldset className="form-field">
+          <legend className="form-legend">What is this about?</legend>
+          <div className="chips">
             {INQUIRY_OPTIONS.map((option, index) => (
-              <span className={styles.chip} key={option}>
+              <label className="chip" key={option}>
                 <input
                   type="radio"
                   id={`cf-purpose-${index}`}
@@ -212,20 +212,18 @@ export default function ContactForm() {
                   defaultChecked={index === 0}
                   required
                 />
-                <label className={styles.chipLabel} htmlFor={`cf-purpose-${index}`}>
-                  {option}
-                </label>
-              </span>
+                <span className="chip-label">{option}</span>
+              </label>
             ))}
           </div>
         </fieldset>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="cf-message">
-            Message <span className={styles.required}>*</span>
+        <div className="form-field">
+          <label className="form-label" htmlFor="cf-message">
+            Message <span className="required">*</span>
           </label>
           <textarea
-            className={styles.textarea}
+            className="form-input"
             id="cf-message"
             name="message"
             rows={4}
@@ -234,26 +232,29 @@ export default function ContactForm() {
           />
         </div>
 
-        <div className={styles.captcha}>
+        <div className="form-captcha">
           <div className="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY} ref={captchaRef} suppressHydrationWarning />
         </div>
 
-        <p id="captcha-error" className={styles.captchaError} role="alert" aria-live="assertive">
+        <p id="captcha-error" className="field-error" role="alert" aria-live="assertive">
           {captchaError}
         </p>
 
-        <div className={styles.actions}>
-          <button type="submit" className={styles.submit} id="contact-submit-btn" disabled={submitting} aria-busy={submitting}>
+        <div className="form-actions">
+          <button type="submit" className="btn" id="contact-submit-btn" disabled={submitting} aria-busy={submitting}>
             {submitting ? (
               'Sending…'
             ) : (
               <>
-                Send Message <span className={styles.arrow}>&rarr;</span>
+                Send Message{' '}
+                <span className="btn-arrow" aria-hidden="true">
+                  &rarr;
+                </span>
               </>
             )}
           </button>
 
-          <p className={styles.note}>We respect your privacy. Your information is never shared.</p>
+          <p className="form-note">We respect your privacy. Your information is never shared.</p>
         </div>
       </form>
 

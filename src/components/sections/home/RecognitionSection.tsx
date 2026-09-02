@@ -1,4 +1,5 @@
 import { RECOGNITION } from '@/data/recognition';
+import { cn } from '@/lib/dom';
 import styles from './RecognitionSection.module.css';
 
 /**
@@ -9,7 +10,7 @@ import styles from './RecognitionSection.module.css';
 function RecognitionGroup({ duplicate }: { readonly duplicate?: boolean }) {
   return (
     <div
-      className={duplicate ? `${styles.group} ${styles.duplicate}` : styles.group}
+      className={cn(styles.group, duplicate && styles.duplicate)}
       aria-hidden={duplicate ? 'true' : undefined}
     >
       {RECOGNITION.map((item) => (
@@ -51,11 +52,13 @@ function RecognitionGroup({ duplicate }: { readonly duplicate?: boolean }) {
  */
 export default function RecognitionSection() {
   return (
-    <section className={`${styles.band} reveal`} id="recognition" aria-labelledby="recognition-title">
-      <div className={styles.head}>
+    <section className={cn(styles.band, 'reveal')} id="recognition" aria-labelledby="recognition-title">
+      <div className={cn('section-head', 'is-centered', styles.head)}>
+        <span className="eyebrow">Track Record</span>
         <h2 className="section-title" id="recognition-title">
           Rewards and Recognition
         </h2>
+        <p className="section-lead">National and state recognition for engineering and innovation.</p>
       </div>
 
       {/* The ids are the handles `recognitionMarquee` grabs to turn the CSS

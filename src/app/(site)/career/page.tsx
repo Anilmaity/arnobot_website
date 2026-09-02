@@ -1,29 +1,21 @@
 import type { Metadata } from 'next';
 import { Fragment, type ReactNode } from 'react';
 import Link from 'next/link';
-import Cta from '@/components/sections/Cta';
 import CareerForm from '@/components/forms/CareerForm';
 import FormAlert from '@/components/forms/FormAlert';
 import { CheckCircleIcon, MailIcon, PhoneIcon, PinIcon } from '@/components/ui/Icons';
 import { HQ_ADDRESS_LINES, SITE } from '@/data/site';
+import { cn } from '@/lib/dom';
 import styles from './career.module.css';
 
 export const metadata: Metadata = {
   title: 'Careers',
-  description: 'Build the robots that change the world — join the ARNOBOT engineering team.',
+  description: 'Build the robots that go where people shouldn’t — open roles on the ARNOBOT engineering team in Ahmedabad.',
 };
 
 /* ---------------------------------------------------------------------------
    Content
    -------------------------------------------------------------------------- */
-
-/** The strip under the hero. Every figure is one the rest of the site backs up. */
-const STATS: ReadonlyArray<{ readonly value: string; readonly label: string }> = [
-  { value: '04', label: 'Robot platforms in the field' },
-  { value: '01', label: 'Autonomy core running on all of them' },
-  { value: '06', label: 'Roles open right now' },
-  { value: '05', label: 'Business days to a reply, every time' },
-];
 
 /** How the team works — the culture section, written as commitments rather than adjectives. */
 const PRINCIPLES: ReadonlyArray<{ readonly title: string; readonly body: string; readonly icon: ReactNode }> = [
@@ -79,23 +71,31 @@ const PRINCIPLES: ReadonlyArray<{ readonly title: string; readonly body: string;
  */
 const PEOPLE: ReadonlyArray<{ readonly name: string; readonly role: string; readonly shipped: string }> = [
   {
-    name: 'Harshil Shah',
-    role: 'Software & Website',
-    shipped:
-      'Software for the duct-cleaning platform and the rebuild of this site — the operator’s screen and the customer’s first screen, both in one quarter.',
-  },
-  {
     name: 'Prijen Balar',
     role: 'Duct Cleaning & SAIBYA',
-    shipped:
-      'The duct-cleaning system itself, plus the SAIBYA work running alongside it — two platforms carried through the same quarter.',
+    shipped: 'The duct-cleaning system, with the SAIBYA platform work running alongside it.',
+  },
+  {
+    name: 'Harshil Shah',
+    role: 'Software & Website',
+    shipped: 'Operator software for the duct-cleaning platform, and the rebuild of this site.',
   },
   {
     name: 'Noman Menon',
     role: 'Hardware & Documentation',
-    shipped:
-      'Duct-cleaning hardware, and the technical documentation that ships with it — the part that decides whether a customer can run the machine without us in the room.',
+    shipped: 'Duct-cleaning hardware, and the documentation a customer runs the machine from.',
   },
+];
+
+/**
+ * The four rooms of the Ahmedabad workshop — where the roles below are based.
+ * Every photograph is of the actual floor, not a stock lab.
+ */
+const ROOMS: ReadonlyArray<{ readonly image: string; readonly label: string }> = [
+  { image: '/assets/images/designassmbly1.jpg', label: 'Design & Assembly' },
+  { image: '/assets/images/lab1.jpg', label: 'Electronics Lab' },
+  { image: '/assets/images/proto.jpg', label: 'Prototyping Lab' },
+  { image: '/assets/images/soft.jpg', label: 'Software Development' },
 ];
 
 /**
@@ -203,7 +203,7 @@ function BandMedia({ src, preload = 'metadata' }: { readonly src: string; readon
   );
 }
 
-/** Line-art glyph for the principle cards. Sized by `.cardIcon svg`. */
+/** Line-art glyph for the principle cards. Sized by the global `.card-icon svg`. */
 function Glyph({ children }: { readonly children: ReactNode }) {
   return (
     <svg
@@ -235,22 +235,21 @@ export default async function CareerPage({ searchParams }: PageProps) {
   return (
     <main className={styles.page}>
       {/* 1 — Hero */}
-      <section className={`${styles.hero} reveal`} id="career-hero" data-cinematic-hero>
+      <section className={cn('on-dark', 'section-screen', styles.hero, 'reveal')} id="career-hero" data-cinematic-hero data-header-theme="dark">
         <BandMedia src="/assets/videos/Gecko_Showreel_Robots.mp4" preload="auto" />
         <div className={styles.heroInner}>
-          <div className={styles.fadeUp}>
-            <span className={styles.eyebrow}>Careers at {SITE.name}</span>
-            <h1 className={styles.heroTitle}>Build the robots that go where people shouldn&apos;t</h1>
-            <hr className={styles.rule} />
-            <p className={styles.heroLead}>
+          <div className="fade-up">
+            <span className="eyebrow">Careers at {SITE.name}</span>
+            <h1 className={cn('hero-title', styles.heroTitle)}>Build the robots that go where people shouldn&apos;t</h1>
+            <p className={cn('hero-lead', styles.heroLead)}>
               Autonomous ground platforms for hazardous inspection, defence and critical infrastructure. A small team,
               real hardware, and work that leaves the building.
             </p>
             <div className={styles.heroActions}>
-              <a href="#open-roles" className={styles.btnLight}>
+              <a href="#open-roles" className="btn btn-light">
                 See open roles
               </a>
-              <a href="#apply" className={styles.btnOutline}>
+              <a href="#apply" className="btn btn-outline">
                 Send an open application
               </a>
             </div>
@@ -258,34 +257,22 @@ export default async function CareerPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      {/* 2 — The numbers, as a caption under the hero rather than a section. */}
-      <div className={styles.statsBand}>
-        <ul className={styles.stats}>
-          {STATS.map((stat) => (
-            <li className={styles.stat} key={stat.label}>
-              <span className={styles.statNumber}>{stat.value}</span>
-              <span className={styles.statLabel}>{stat.label}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 3 — Why the work matters */}
-      <section className={`${styles.section} reveal`} id="career-why">
+      {/* 2 — Why the work matters */}
+      <section className="section-screen reveal" id="career-why">
         <div className={styles.split}>
-          <div className={styles.fadeUp}>
-            <span className={styles.eyebrow}>Why it matters</span>
-            <h2 className={styles.sectionTitle}>Somebody still has to go inside the tank.</h2>
-            <p className={styles.splitBody}>
+          <div className="fade-up">
+            <span className="eyebrow">Why it matters</span>
+            <h2 className="section-title is-editorial">Somebody still has to go inside the tank.</h2>
+            <p className={cn('section-lead', styles.splitBody)}>
               Pressure vessels, ship hulls, live substations, confined spaces underground. Checking whether any of them
               is safe is still done by a person with a torch, a permit, and a rescue team waiting outside.
             </p>
-            <p className={styles.splitBody}>
+            <p className={cn('section-lead', styles.splitBody)}>
               We build the machines that take that job instead. Four platforms, one autonomy core, and software that
               turns a pass through a hazardous space into a report somebody can read at a desk.
             </p>
           </div>
-          <div className={`${styles.pullStat} ${styles.fadeUp} ${styles.d1}`}>
+          <div className={cn(styles.pullStat, 'fade-up', 'd1')}>
             <span className={styles.pullStatNumber}>0</span>
             <p className={styles.pullStatBody}>
               <strong>People we want inside a pressure vessel.</strong>
@@ -295,66 +282,60 @@ export default async function CareerPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      {/* 4 — Chapter marker: what the work is actually like */}
-      <section className={`${styles.band} reveal`} id="career-life">
+      {/* 3 — Chapter marker: what the work is actually like */}
+      <section className={cn('on-dark', 'section-screen', styles.band, 'reveal')} id="career-life" data-header-theme="dark">
         <BandMedia src="/assets/videos/techv.mp4" />
         <div className={styles.bandInner}>
-          <div className={styles.fadeUp}>
-            <span className={styles.bandLabel}>Life at {SITE.name}</span>
-            <hr className={styles.bandRule} />
-          </div>
-          <div className={`${styles.fadeUp} ${styles.d1}`}>
-            <h2 className={styles.bandTitle}>Rust on our boots</h2>
-            <p className={styles.bandBody}>
+          <div className="fade-up">
+            <span className={cn('eyebrow', styles.bandLabel)}>Life at {SITE.name}</span>
+            <h2 className="hero-title">Rust on our boots</h2>
+            <p className={cn('hero-lead', styles.bandBody)}>
               Nothing here is finished at a desk. Every platform gets driven into a real site — dust, water, bad light,
-              no signal — and comes back with a list of everything that broke. That list is the roadmap, and whoever
-              wrote the code is usually the one holding the clipboard.
+              no signal — and the list of what broke is the roadmap.
             </p>
           </div>
         </div>
       </section>
 
-      {/* 5 — How we work */}
-      <section className={`${styles.sectionTint} reveal`} id="career-principles">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>How we work</span>
-          <hr className={styles.ruleCenter} />
-          <h2 className={styles.sectionTitle}>Four things we hold each other to</h2>
-          <p className={styles.sectionLead}>
+      {/* 4 — How we work */}
+      <section className="section-screen is-wash reveal" id="career-principles">
+        <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
+          <span className="eyebrow">How we work</span>
+          <h2 className="section-title is-editorial">Four things we hold each other to</h2>
+          <p className="section-lead">
             Not values on a wall. These are the arguments we actually have, settled in advance.
           </p>
         </div>
-        <ul className={styles.grid4}>
+        <ul className={cn('card-grid', styles.grid4)}>
           {PRINCIPLES.map((principle) => (
-            <li className={styles.card} key={principle.title}>
-              <span className={styles.cardIcon}>
+            <li className={cn('card-cell', styles.card)} key={principle.title}>
+              <span className="card-icon">
                 <Glyph>{principle.icon}</Glyph>
               </span>
-              <h3 className={styles.cardTitle}>{principle.title}</h3>
-              <p className={styles.cardBody}>{principle.body}</p>
+              <h3>{principle.title}</h3>
+              <p>{principle.body}</p>
             </li>
           ))}
         </ul>
       </section>
 
-      {/* 6 — The people */}
-      <section className={`${styles.section} reveal`} id="career-team">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>Who you would work with</span>
-          <hr className={styles.ruleCenter} />
-          <h2 className={styles.sectionTitle}>Engineers, and what they last shipped</h2>
-          <p className={styles.sectionLead}>
+      {/* 5 — The people */}
+      <section className="section-screen reveal" id="career-team">
+        <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
+          <span className="eyebrow">Who you would work with</span>
+          <h2 className="section-title is-editorial">Engineers, and what they last shipped</h2>
+          <p className="section-lead">
             The team is small enough that everybody&apos;s work has a name attached to it. Here is the most recent
             quarter.
           </p>
         </div>
-        <ul className={styles.grid3}>
+        <ul className={cn('card-grid', styles.grid3)}>
           {PEOPLE.map((person) => (
-            <li className={styles.card} key={person.name}>
+            <li className={cn('card-cell', styles.card)} key={person.name}>
               <h3 className={styles.personName}>{person.name}</h3>
-              <span className={styles.personRole}>{person.role}</span>
+              <span className={cn('micro-label', styles.personRole)}>{person.role}</span>
               <div className={styles.personShip}>
-                <span className={styles.personShipLabel}>Shipped this quarter</span>
+                <span className={cn('micro-label', styles.personShipLabel)}>Shipped this quarter</span>
                 <p className={styles.personShipBody}>{person.shipped}</p>
               </div>
             </li>
@@ -362,25 +343,43 @@ export default async function CareerPage({ searchParams }: PageProps) {
         </ul>
       </section>
 
+      {/* 6 — Facility: where the work happens */}
+      <section className="section-screen is-wash reveal" id="facility">
+        <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
+          <span className="eyebrow">Facility</span>
+          <h2 className="section-title is-editorial">Built in-house</h2>
+        </div>
+
+        <ul className={cn('card-grid', styles.rooms, 'fade-up', 'd1')}>
+          {ROOMS.map((room) => (
+            <li className={styles.room} key={room.label}>
+              {/* The visible label names the photo it sits on, so a matching
+                  alt would have every tile announced twice. */}
+              <img src={room.image} alt="" />
+              <span className={cn('micro-label', styles.roomLabel)}>{room.label}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {/* 7 — Open roles */}
-      <section className={`${styles.sectionAuto} reveal`} id="open-roles">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>Open roles</span>
-          <hr className={styles.ruleCenter} />
-          <h2 className={styles.sectionTitle}>{ROLE_COUNT} positions open</h2>
-          <p className={styles.sectionLead}>
+      <section className="section-screen is-auto reveal" id="open-roles">
+        <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
+          <span className="eyebrow">Open roles</span>
+          <h2 className="section-title is-editorial">{ROLE_COUNT} positions open</h2>
+          <p className="section-lead">
             All based at the Ahmedabad workshop, where the robots are. Pick the one that fits and the form below will
             take it from there.
           </p>
         </div>
 
-        <div className={`${styles.roles} ${styles.fadeUp} ${styles.d1}`}>
+        <div className={cn(styles.roles, 'fade-up', 'd1')}>
           {ROLE_GROUPS.map((group) => (
             <div className={styles.roleGroup} key={group.discipline}>
               <div className={styles.roleGroupHead}>
-                <h3 className={styles.roleGroupName}>{group.discipline}</h3>
+                <h3 className={cn('micro-label', styles.roleGroupName)}>{group.discipline}</h3>
                 <hr className={styles.roleGroupLine} />
-                <span className={styles.roleGroupCount}>
+                <span className={cn('micro-label', styles.roleGroupCount)}>
                   {group.roles.length} {group.roles.length === 1 ? 'role' : 'roles'}
                 </span>
               </div>
@@ -394,14 +393,17 @@ export default async function CareerPage({ searchParams }: PageProps) {
                         <p className={styles.roleBody}>{role.body}</p>
                         <div className={styles.roleMeta}>
                           {role.tags.map((tag) => (
-                            <span className={styles.roleTag} key={tag}>
+                            <span className="tag" key={tag}>
                               {tag}
                             </span>
                           ))}
                         </div>
                       </div>
-                      <span className={styles.roleAction} aria-hidden="true">
-                        Apply <span className={styles.roleArrow}>&rarr;</span>
+                      <span className={cn('link-arrow', styles.roleAction)} aria-hidden="true">
+                        Apply{' '}
+                        <span className="btn-arrow" aria-hidden="true">
+                          &rarr;
+                        </span>
                       </span>
                     </a>
                   </li>
@@ -416,7 +418,7 @@ export default async function CareerPage({ searchParams }: PageProps) {
               Send an open application and tell us what you would build. We hire for the person more often than for the
               posting.
             </p>
-            <a href="#apply" className={styles.btn}>
+            <a href="#apply" className="btn">
               Open application
             </a>
           </div>
@@ -424,19 +426,18 @@ export default async function CareerPage({ searchParams }: PageProps) {
       </section>
 
       {/* 8 — Hiring process */}
-      <section className={`${styles.processSection} reveal`} id="career-process">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>What happens next</span>
-          <hr className={styles.ruleCenter} />
-          <h2 className={styles.sectionTitle}>Four steps, three weeks</h2>
-          <p className={styles.sectionLead}>
+      <section className={cn('on-dark', 'section-screen', styles.processSection, 'reveal')} id="career-process" data-header-theme="dark">
+        <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
+          <span className="eyebrow">What happens next</span>
+          <h2 className="section-title is-editorial">Four steps, three weeks</h2>
+          <p className="section-lead">
             The whole process, written down — so you know where you stand at every point in it.
           </p>
         </div>
         <ol className={styles.process}>
           {PROCESS.map((step, index) => (
-            <li className={styles.processStep} key={step.name}>
-              <span className={styles.processNum}>{String(index + 1).padStart(2, '0')}</span>
+            <li className={cn('fade-up', index > 0 && `d${index}`, styles.processStep)} key={step.name}>
+              <span className={cn('micro-label', styles.processNum)}>{String(index + 1).padStart(2, '0')}</span>
               <h3 className={styles.processName}>{step.name}</h3>
               <p className={styles.processBody}>{step.body}</p>
             </li>
@@ -445,14 +446,14 @@ export default async function CareerPage({ searchParams }: PageProps) {
       </section>
 
       {/* 9 — Apply */}
-      <section className={`${styles.applySection} reveal`} id="apply">
+      <section className="section-screen is-auto is-wash reveal" id="apply">
         <div className={styles.applyGrid}>
-          <div className={`${styles.applyAside} ${styles.fadeUp}`}>
-            <span className={styles.eyebrow}>Apply</span>
-            <h2 className={styles.applyTitle}>Start your application</h2>
-            <p className={styles.applyBody}>
-              Pick a role from the list above, or send an open application and tell us what you would build. Either way
-              it reaches the same three people, and you will hear back inside five business days.
+          <div className={cn(styles.applyAside, 'fade-up')}>
+            <span className="eyebrow">Apply</span>
+            <h2 className={cn('section-title is-editorial', styles.applyTitle)}>Start your application</h2>
+            <p className={cn('section-lead', styles.applyBody)}>
+              Pick a role from the list above, or tell us what you would build. Either way it reaches the same three
+              people.
             </p>
 
             <div className={styles.applyInfo}>
@@ -480,18 +481,18 @@ export default async function CareerPage({ searchParams }: PageProps) {
 
           {/* The form is replaced by the receipt once /api/career redirects back
               with ?success=1 — the two never need to be on screen together. */}
-          <div className={`${styles.formShell} ${styles.fadeUp} ${styles.d1}`}>
+          <div className={cn(styles.formShell, 'fade-up', 'd1')}>
             {applied ? (
               <div className={styles.successPanel} role="status" aria-live="polite">
                 <div className={styles.successIcon}>
                   <CheckCircleIcon size={56} strokeWidth="1.5" />
                 </div>
-                <h3 className={styles.successTitle}>Application received</h3>
-                <p className={styles.successBody}>
+                <h3 className={cn('section-title is-editorial', styles.successTitle)}>Application received</h3>
+                <p className={cn('section-lead', styles.successBody)}>
                   Thank you for applying to {SITE.name}. Your details and resume are with the team — we will come back
                   to you within five business days.
                 </p>
-                <Link href="/career" className={styles.btn}>
+                <Link href="/career" className="btn btn-accent">
                   Back to careers
                 </Link>
               </div>
@@ -504,8 +505,6 @@ export default async function CareerPage({ searchParams }: PageProps) {
           </div>
         </div>
       </section>
-
-      <Cta />
     </main>
   );
 }

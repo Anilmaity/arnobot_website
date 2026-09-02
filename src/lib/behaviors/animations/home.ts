@@ -15,7 +15,10 @@ function heroSection(): void {
   const timeline = gsap.timeline();
 
   timeline.from('.hero-bg', { scale: 1.12, duration: 1.8, ease: 'power3.out' });
-  timeline.from('.logo', { opacity: 0, scale: 0.9, y: -10, duration: 0.8, ease: 'power3.out' }, '-=1.4');
+  /* The logo is deliberately NOT in this timeline. The glyph tile paints
+     itself through CSS (interactions.css) and the reference bar's mark just
+     sits; a GSAP `.from` here re-captured a mid-animation opacity on
+     re-init and wedged the mark invisible. */
   timeline.from('.hero-content .eyebrow', { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' }, '-=0.8');
   timeline.from('.hero h1', { opacity: 0, y: 40, duration: 0.8, ease: 'power3.out' }, '-=0.6');
 

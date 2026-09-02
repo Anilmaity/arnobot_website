@@ -13,13 +13,15 @@ export default function IndustriesSection() {
       <div className="industries-head">
         <span className="eyebrow">Powering Progress Across</span>
         <h2 className="section-title">Industries We Serve</h2>
-        <p>Robotics solutions built for mission-critical industries operating in hazardous and complex environments.</p>
+        <p className="section-lead">
+          Robotics solutions built for mission-critical industries operating in hazardous and complex environments.
+        </p>
       </div>
 
       <div className="industry-slider-wrapper">
         <button
           type="button"
-          className="industry-slider-arrow prev"
+          className="icon-btn icon-btn-solid industry-slider-arrow prev"
           id="indSliderPrev"
           aria-label="Previous industries"
           aria-controls="indSliderTrack"
@@ -33,7 +35,6 @@ export default function IndustriesSection() {
               <article
                 className="industry"
                 data-industry={card.id}
-                style={{ cursor: 'pointer' }}
                 key={card.id}
                 role="button"
                 tabIndex={0}
@@ -52,7 +53,7 @@ export default function IndustriesSection() {
 
         <button
           type="button"
-          className="industry-slider-arrow next"
+          className="icon-btn icon-btn-solid industry-slider-arrow next"
           id="indSliderNext"
           aria-label="Next industries"
           aria-controls="indSliderTrack"

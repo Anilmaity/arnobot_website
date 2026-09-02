@@ -24,6 +24,16 @@ export default function SiteChrome({ children }: { readonly children: ReactNode 
   return (
     <>
       {/*
+        theme.css is the central design system — every color, font, size,
+        radius, shadow, spacing and motion token lives in its `:root` block.
+        It must load BEFORE style.css (same precedence bucket, listed first)
+        so the rules there can consume its custom properties.
+      */}
+      {/* eslint-disable-next-line @next/next/no-css-tags -- served from /public
+          alongside style.css so the two stay in one pipeline. */}
+      <link rel="stylesheet" precedence="site" href="/assets/css/theme.css" />
+
+      {/*
         style.css is the stylesheet from the PHP build, pruned of the rules for
         pages the rebuild dropped. It is served straight from /public rather than
         bundled so every relative url() keeps resolving exactly as it did before.

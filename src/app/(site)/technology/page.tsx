@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Cta from '@/components/sections/Cta';
+import { cn } from '@/lib/dom';
 import styles from './technology.module.css';
 
 export const metadata: Metadata = {
@@ -146,16 +147,13 @@ function ChapterBand({
   readonly id?: string;
 }) {
   return (
-    <section className={`${styles.band} reveal`} id={id}>
+    <section className={cn('on-dark', styles.band, 'reveal')} id={id} data-header-theme="dark">
       <BandMedia src={video} />
       <div className={styles.bandInner}>
-        <div className={styles.fadeUp}>
-          <span className={styles.bandLabel}>{label}</span>
-          <hr className={styles.bandRule} />
-        </div>
-        <div className={`${styles.fadeUp} ${styles.d1}`}>
-          <h2 className={styles.bandTitle}>{title}</h2>
-          {body ? <p className={styles.bandBody}>{body}</p> : null}
+        <div className="fade-up">
+          <span className="eyebrow">{label}</span>
+          <h2 className="hero-title">{title}</h2>
+          {body ? <p className={cn('hero-lead', styles.bandBody)}>{body}</p> : null}
         </div>
       </div>
     </section>
@@ -267,14 +265,18 @@ export default function TechnologyPage() {
   return (
     <main className={styles.page}>
       {/* 1 — Hero */}
-      <section className={`${styles.hero} reveal`} id="tech-hero" data-cinematic-hero>
+      <section
+        className={cn('on-dark', styles.hero, 'reveal')}
+        id="tech-hero"
+        data-cinematic-hero
+        data-header-theme="dark"
+      >
         <BandMedia src="/assets/videos/Cantilever_Header.mp4" preload="auto" />
         <div className={styles.heroInner}>
-          <div className={styles.fadeUp}>
-            <span className={styles.eyebrow}>ARNOBOT Technology</span>
-            <h1 className={styles.heroTitle}>The autonomy platform for critical ground</h1>
-            <hr className={styles.rule} />
-            <p className={styles.heroLead}>
+          <div className="fade-up">
+            <span className="eyebrow">ARNOBOT Technology</span>
+            <h1 className={cn('hero-title', styles.heroTitle)}>The autonomy platform for critical ground</h1>
+            <p className="hero-lead">
               Intelligent software, advanced ground control, and robust robotic vehicle platforms for extreme and
               mission-critical environments.
             </p>
@@ -283,15 +285,18 @@ export default function TechnologyPage() {
       </section>
 
       {/* 2 — Statement */}
-      <section className={`${styles.section} ${styles.center} reveal`}>
-        <div className={`${styles.statementInner} ${styles.fadeUp}`}>
-          <h2 className={styles.statementTitle}>Specialized robots.</h2>
-          <p className={styles.statementLead}>
-            Purpose-built robotic platforms for different missions — from compact wireless robots to heavy-duty
-            and vertical-climbing systems. Built with the flexibility to operate from RC to semi-autonomous to
-            fully autonomous.
-          </p>
-          <Link href="/product" className={styles.btn}>
+      <section className={cn('section-screen', styles.center, 'reveal')}>
+        <div className={cn('fade-up', styles.statementInner)}>
+          <div className={cn('section-head', 'is-centered', styles.sectionHead)}>
+            <span className="eyebrow">Purpose-built platforms</span>
+            <h2 className="section-title is-editorial">Specialized robots.</h2>
+            <p className="section-lead">
+              Purpose-built robotic platforms for different missions — from compact wireless robots to heavy-duty
+              and vertical-climbing systems. Built with the flexibility to operate from RC to semi-autonomous to
+              fully autonomous.
+            </p>
+          </div>
+          <Link href="/product" className="btn">
             See how it works
           </Link>
         </div>
@@ -307,21 +312,20 @@ export default function TechnologyPage() {
       />
 
       {/* Hardware & Software — the architecture stack */}
-      <section className={`${styles.section} reveal`} id="tech-architecture">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>Hardware meets intelligence</span>
-          <hr className={styles.ruleCenter} />
-          <h3 className={styles.sectionTitle}>Hardware &amp; Software</h3>
-          <p className={styles.sectionLead}>
+      <section className={cn('section-screen', 'reveal')} id="tech-architecture">
+        <div className={cn('section-head', 'is-centered', 'fade-up', styles.sectionHead)}>
+          <span className="eyebrow">Hardware meets intelligence</span>
+          <h2 className="section-title is-editorial">Hardware &amp; Software</h2>
+          <p className="section-lead">
             Four bodies, one four-layer core. For a new environment we change the body, not the intelligence.
           </p>
         </div>
 
-        <figure className={`${styles.diagram} ${styles.fadeUp} ${styles.d1}`}>
+        <figure className={cn('fade-up', 'd1', styles.diagram)}>
           <ArchitectureDiagram />
         </figure>
 
-        <p className={`${styles.pullQuote} ${styles.fadeUp} ${styles.d2}`}>
+        <p className={cn('fade-up', 'd2', styles.pullQuote)}>
           Emergency stop is wired to the reflexes, not the brain — so it works even when the autonomy computer is fully
           loaded.
         </p>
@@ -335,19 +339,18 @@ export default function TechnologyPage() {
       />
 
       {/* The onboard loop — perceive, localise, decide. */}
-      <section className={`${styles.sectionTight} reveal`} id="tech-loop">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>How the robot thinks</span>
-          <hr className={styles.ruleCenter} />
-          <h3 className={styles.sectionTitle}>Perceive. Localise. Decide.</h3>
-          <p className={styles.sectionLead}>One loop, running onboard — with or without a link to the control room.</p>
+      <section className={cn('section-screen', 'reveal')} id="tech-loop">
+        <div className={cn('section-head', 'is-centered', 'fade-up', styles.sectionHead)}>
+          <span className="eyebrow">How the robot thinks</span>
+          <h2 className="section-title is-editorial">Perceive. Localise. Decide.</h2>
+          <p className="section-lead">One loop, running onboard — with or without a link to the control room.</p>
         </div>
-        <ol className={`${styles.steps} ${styles.fadeUp} ${styles.d1}`}>
+        <ol className={cn('card-grid', 'fade-up', 'd1', styles.steps)}>
           {PERCEPTION_STEPS.map((step, i) => (
-            <li className={styles.step} key={step.name}>
-              <span className={styles.stepIndex}>{String(i + 1).padStart(2, '0')}</span>
-              <h4 className={styles.stepName}>{step.name}</h4>
-              <p className={styles.stepBody}>{step.body}</p>
+            <li className={cn('card-cell', styles.step)} key={step.name}>
+              <span className={cn('micro-label', styles.stepIndex)}>{String(i + 1).padStart(2, '0')}</span>
+              <h3>{step.name}</h3>
+              <p>{step.body}</p>
             </li>
           ))}
         </ol>
@@ -357,24 +360,23 @@ export default function TechnologyPage() {
           so it is shown whole on a white section — no crop, no scrim, no
           knocked-back opacity. Cropping it into a full-bleed band cut the
           machine off at the edges and hid the screen. */}
-      <section className={`${styles.showcaseSection} reveal`} id="tech-analytics">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>From data to mission impact</span>
-          <hr className={styles.ruleCenter} />
-          <h3 className={styles.sectionTitle}>Analytics &amp; Operations</h3>
-          <p className={styles.sectionLead}>
+      <section className={cn('section-screen', styles.showcaseSection, 'reveal')} id="tech-analytics">
+        <div className={cn('section-head', 'is-centered', 'fade-up', styles.sectionHead)}>
+          <span className="eyebrow">From data to mission impact</span>
+          <h2 className="section-title is-editorial">Analytics &amp; Operations</h2>
+          <p className="section-lead">
             Every pass comes back as data — the map, the route it actually drove, what it saw and when. Reviewed at a
             desk, long after the robot has left the site.
           </p>
         </div>
-        <figure className={`${styles.showcase} ${styles.fadeUp} ${styles.d1}`}>
+        <figure className={cn('fade-up', 'd1', styles.showcase)}>
           <video autoPlay muted loop playsInline preload="metadata">
             <source src="/assets/videos/Gecko_Software_on_Laptop.mp4" type="video/mp4" />
           </video>
         </figure>
       </section>
 
-      {/* <section className={`${styles.sectionTight} reveal`} id="tech-gcs">
+      {/* <section className={`${styles.section} reveal`} id="tech-gcs">
         <div className={styles.split}>
           <div className={`${styles.splitMedia} ${styles.fadeUp}`}>
             <img src="/assets/images/gcs_interface.png" alt="ARNOBOT Ground Control Station (GCS) user interface" />
@@ -417,21 +419,20 @@ export default function TechnologyPage() {
       {/* Robust & Reliable — the same card rhythm as the loop above, on light
           ground, so the argument sits above the spec table rather than behind
           another full-screen video. */}
-      <section className={`${styles.sectionTight} reveal`} id="tech-reliability">
-        <div className={`${styles.sectionHead} ${styles.center} ${styles.fadeUp}`}>
-          <span className={styles.eyebrow}>Built tough. Built reliable.</span>
-          <hr className={styles.ruleCenter} />
-          <h3 className={styles.sectionTitle}>Robust &amp; Reliable</h3>
-          <p className={styles.sectionLead}>
+      <section className={cn('section-screen', 'reveal')} id="tech-reliability">
+        <div className={cn('section-head', 'is-centered', 'fade-up', styles.sectionHead)}>
+          <span className="eyebrow">Built tough. Built reliable.</span>
+          <h2 className="section-title is-editorial">Robust &amp; Reliable</h2>
+          <p className="section-lead">
             Hardware qualified for the ground it works on, and a control chain that keeps a fault local.
           </p>
         </div>
-        <ul className={`${styles.steps} ${styles.fadeUp} ${styles.d1}`}>
+        <ul className={cn('card-grid', 'fade-up', 'd1', styles.steps)}>
           {RELIABILITY_POINTS.map((point) => (
-            <li className={styles.step} key={point.name}>
-              <span className={styles.stepIndex}>{point.tag}</span>
-              <h4 className={styles.stepName}>{point.name}</h4>
-              <p className={styles.stepBody}>{point.body}</p>
+            <li className={cn('card-cell', styles.step)} key={point.name}>
+              <span className={cn('micro-label', styles.stepIndex)}>{point.tag}</span>
+              <h3>{point.name}</h3>
+              <p>{point.body}</p>
             </li>
           ))}
         </ul>

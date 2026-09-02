@@ -17,10 +17,10 @@ export default function NotFound() {
         title="We couldn't find that page"
         description="The page may have moved, or the link that brought you here may be out of date."
       >
-        <Link href="/" className="btn btn-cta-primary">
+        <Link href="/" className="btn btn-accent">
           Back to home
         </Link>
-        <Link href="/product" className="btn">
+        <Link href="/product" className="btn btn-outline">
           Explore products
         </Link>
       </StatusSection>

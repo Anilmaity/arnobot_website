@@ -5,6 +5,7 @@ import { cn } from '@/lib/dom';
 import { getIndustry } from '@/data/industries';
 import { useDelegatedClick } from '@/hooks/useDelegatedClick';
 import { useModalDismiss } from '@/hooks/useModalDismiss';
+import { CloseIcon } from '@/components/ui/Icons';
 import type { Industry } from '@/types';
 
 /**
@@ -41,8 +42,8 @@ export default function IndustryModal() {
     >
       <div className="industry-modal-overlay" onClick={close} />
       <div className="industry-modal-container" ref={containerRef}>
-        <button type="button" className="industry-modal-close" aria-label="Close modal" onClick={close}>
-          &times;
+        <button type="button" className="icon-btn on-dark industry-modal-close" aria-label="Close modal" onClick={close}>
+          <CloseIcon size={18} />
         </button>
         <div className="industry-modal-content">
           <div className="industry-modal-single">

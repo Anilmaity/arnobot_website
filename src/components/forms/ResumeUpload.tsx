@@ -2,6 +2,7 @@
 
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { cn } from '@/lib/dom';
+import { CloseIcon } from '@/components/ui/Icons';
 import { MAX_RESUME_BYTES, RESUME_ACCEPT, RESUME_MIME_TYPES } from '@/lib/resume';
 
 /**
@@ -147,13 +148,13 @@ export default function ResumeUpload() {
               setError('');
             }}
           >
-            ✕
+            <CloseIcon size={14} />
           </button>
         </div>
       </div>
 
       {error ? (
-        <p role="alert" style={{ color: '#e53e3e', marginTop: '8px', fontSize: '14px' }}>
+        <p className="field-error" role="alert">
           {error}
         </p>
       ) : null}

@@ -96,6 +96,7 @@ export default async function ProductPage({ searchParams }: PageProps) {
         />
 
         <div className="hero-content">
+          <span className="eyebrow">{product.name}</span>
           <h1 className="russo">
             {product.heroTitleLines[0]}
             <br />
@@ -104,14 +105,14 @@ export default async function ProductPage({ searchParams }: PageProps) {
         </div>
 
         {product.heroImage ? null : (
-          <img
+          <button
+            type="button"
             className="hero-play play-trigger"
-            src="/assets/icons/play.png"
-            alt={`Play ${product.name} video`}
             data-video={product.heroVideo}
-            role="button"
-            tabIndex={0}
-          />
+            aria-label={`Play ${product.name} video`}
+          >
+            <img src="/assets/icons/play.png" alt="" />
+          </button>
         )}
       </section>
 
@@ -149,16 +150,16 @@ export default async function ProductPage({ searchParams }: PageProps) {
 
             <div className="product-actions">
               {hasBrochure ? (
-                <a href={product.brochure} download className="prod-btn btn-black">
+                <a href={product.brochure} download className="btn btn-outline">
                   Download Brochure (PDF)
                 </a>
               ) : (
-                <Link href="/contact" className="prod-btn btn-black">
+                <Link href="/contact" className="btn btn-outline">
                   Request Brochure
                 </Link>
               )}
-              <Link href="/contact" className="prod-btn btn-blue">
-                Schedule Field Demo
+              <Link href="/contact" className="btn btn-accent">
+                Schedule Field Demo <span className="btn-arrow" aria-hidden="true">&rarr;</span>
               </Link>
             </div>
           </div>
@@ -211,17 +212,16 @@ export default async function ProductPage({ searchParams }: PageProps) {
             <div className="showcase-grid">
               {product.showcase.map((item) => (
                 <div className="showcase-item" key={item.title}>
-                  <div
+                  <button
+                    type="button"
                     className="showcase-card play-trigger"
                     data-video={item.video}
-                    role="button"
-                    tabIndex={0}
                     aria-label={`Play video: ${item.title}`}
                   >
-                    <img className="showcase-img" src={item.img} alt={item.title} />
-                    <div className="showcase-overlay" />
+                    <img className="showcase-img" src={item.img} alt="" />
+                    <span className="showcase-overlay" />
                     <img className="showcase-play-icon" src="/assets/icons/play.png" alt="" />
-                  </div>
+                  </button>
                   <h4 className="showcase-name">{item.title}</h4>
                 </div>
               ))}

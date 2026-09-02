@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type { Route } from 'next';
 import { useMemo, useState } from 'react';
 import { INSIGHT_CATEGORIES, INSIGHTS_BY_DATE, type InsightCategory, type InsightPost } from '@/data/insights';
+import { cn } from '@/lib/dom';
 import styles from './insights.module.css';
 
 type Filter = 'All' | InsightCategory;
@@ -17,10 +18,10 @@ const PAGE_SIZE = 6;
 
 function Meta({ post }: { readonly post: InsightPost }) {
   return (
-    <div className={styles.meta}>
+    <div className="meta-line">
       <span className={styles.category}>{post.category}</span>
       <time dateTime={post.isoDate}>{post.date}</time>
-      <span className={styles.readTime}>{post.readTime}</span>
+      <span>{post.readTime}</span>
     </div>
   );
 }
@@ -36,14 +37,27 @@ function Card({ post }: { readonly post: InsightPost }) {
         <Meta post={post} />
         <h3 className={styles.cardTitle}>{post.title}</h3>
         <p className={styles.cardExcerpt}>{post.excerpt}</p>
-        <span className={styles.cardRead}>
-          Read article <span aria-hidden="true">→</span>
+        <span className={cn('link-arrow', styles.cardRead)}>
+          Read article
+          <span className="btn-arrow" aria-hidden="true">
+            &rarr;
+          </span>
         </span>
       </Link>
     </article>
   );
 }
 
+/**
+ * The two content screens under the hero. Both are rendered here rather than
+ * in the page because one filter drives both: the newest of the selection
+ * leads the first screen, the rest fill the second.
+ *
+ * Both sections stay mounted whatever the filter yields. The scroll reveal
+ * observes `.reveal` sections once, at page load — a section that unmounted
+ * and came back would never be marked visible, and its `fade-up` children
+ * would stay hidden.
+ */
 export default function InsightsIndex() {
   const [filter, setFilter] = useState<Filter>('All');
   const [visible, setVisible] = useState(PAGE_SIZE);
@@ -68,64 +82,103 @@ export default function InsightsIndex() {
 
   return (
     <>
-      {/* Toggle buttons, not tabs. The ARIA tab pattern would promise arrow-key
-          roving focus and a tabpanel for each control, and there is neither —
-          `aria-pressed` says what these actually are. */}
-      <div className={styles.filters} role="group" aria-label="Filter insights by category">
-        {FILTERS.map((option) => (
-          <button
-            key={option}
-            type="button"
-            aria-pressed={filter === option}
-            className={option === filter ? `${styles.filter} ${styles.filterActive}` : styles.filter}
-            onClick={() => choose(option)}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
+      {/* 2 — The filter and the lead article */}
+      <section className="section-screen reveal" id="latest">
+        <div className={styles.shell}>
+          <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
+            <span className="eyebrow">Latest</span>
+            <h2 className="section-title is-editorial">Start with the newest</h2>
+            <p className="section-lead">
+              Pick a category, or read across all of them. The most recent article leads; the rest of the archive
+              follows below.
+            </p>
+          </div>
 
-      {/* The count is announced so filtering is not a silent change for anyone
-          using a screen reader. */}
-      <p className={styles.count} role="status">
-        {posts.length} {posts.length === 1 ? 'article' : 'articles'}
-        {filter === 'All' ? '' : ` in ${filter}`}
-      </p>
+          {/* Toggle buttons, not tabs. The ARIA tab pattern would promise
+              arrow-key roving focus and a tabpanel for each control, and there
+              is neither — `aria-pressed` says what these actually are. */}
+          <div className="fade-up d1">
+            <div className={styles.filters} role="group" aria-label="Filter insights by category">
+              {FILTERS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  aria-pressed={filter === option}
+                  className={cn(styles.filter, option === filter && styles.filterActive)}
+                  onClick={() => choose(option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
 
-      {featured ? (
-        <article className={styles.featured}>
-          <Link href={articleHref(featured.slug)} className={styles.featuredLink}>
-            <span className={styles.featuredMedia}>
-              <img src={featured.image} alt="" />
-            </span>
-            <span className={styles.featuredBody}>
-              <Meta post={featured} />
-              <h2 className={styles.featuredTitle}>{featured.title}</h2>
-              <p className={styles.featuredExcerpt}>{featured.excerpt}</p>
-              <span className={styles.cardRead}>
-                Read article <span aria-hidden="true">→</span>
-              </span>
-            </span>
-          </Link>
-        </article>
-      ) : null}
+            {/* The count is announced so filtering is not a silent change for
+                anyone using a screen reader. */}
+            <p className={styles.count} role="status">
+              {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+              {filter === 'All' ? '' : ` in ${filter}`}
+            </p>
+          </div>
 
-      {shown.length > 0 ? (
-        <div className={styles.grid}>
-          {shown.map((post) => (
-            <Card post={post} key={post.slug} />
-          ))}
+          {featured ? (
+            <article className={cn(styles.featured, 'fade-up', 'd2')}>
+              <Link href={articleHref(featured.slug)} className={styles.featuredLink}>
+                <span className={styles.featuredMedia}>
+                  <img src={featured.image} alt="" />
+                </span>
+                <span className={styles.featuredBody}>
+                  <Meta post={featured} />
+                  <h3 className={styles.featuredTitle}>{featured.title}</h3>
+                  <p className={styles.featuredExcerpt}>{featured.excerpt}</p>
+                  <span className={cn('link-arrow', styles.cardRead)}>
+                    Read article
+                    <span className="btn-arrow" aria-hidden="true">
+                      &rarr;
+                    </span>
+                  </span>
+                </span>
+              </Link>
+            </article>
+          ) : null}
         </div>
-      ) : null}
+      </section>
 
-      {remaining > 0 ? (
-        <div className={styles.loadMoreRow}>
-          <button type="button" className={styles.loadMore} onClick={() => setVisible((n) => n + PAGE_SIZE)}>
-            Load more articles
-            <span className={styles.loadMoreCount}>{remaining} left</span>
-          </button>
+      {/* 3 — The archive */}
+      <section className="section-screen is-wash reveal" id="articles">
+        <div className={styles.shell}>
+          <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
+            <span className="eyebrow">Archive</span>
+            <h2 className="section-title is-editorial">
+              {filter === 'All' ? 'Everything else we have written' : `More in ${filter}`}
+            </h2>
+          </div>
+
+          {shown.length > 0 ? (
+            <div className={cn(styles.grid, 'fade-up', 'd1')}>
+              {shown.map((post) => (
+                <Card post={post} key={post.slug} />
+              ))}
+            </div>
+          ) : (
+            <p className={cn(styles.emptyNote, 'fade-up', 'd1')}>
+              That is the only article in {filter} so far.
+            </p>
+          )}
+
+          {remaining > 0 ? (
+            <div className={styles.loadMoreRow}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => setVisible((n) => n + PAGE_SIZE)}
+              >
+                Load more articles
+                <span className="btn-count">{remaining} left</span>
+              </button>
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </section>
     </>
   );
 }

@@ -2,75 +2,38 @@
    Contact page.
 
    Same rhythm as the technology page — one idea per screen, hairline rules
-   instead of shadows, square corners — and the same tokens, declared in
-   public/assets/css/style.css (:root): Russo One for display, Outfit for body,
-   --ink / --accent / --footer / --muted for colour. Fallbacks are inlined in
-   case this module ever renders before style.css lands.
+   instead of shadows, square corners. Every value comes from the design
+   tokens in public/assets/css/theme.css; the eyebrows, buttons, form fields
+   and the dark-ground `on-dark` marker come from public/assets/css/style.css.
 
    The page reads top to bottom as one question answered four ways: who to
    reach, how to reach them, what to say, and where to find us.
    ========================================================================== */
 
 .page {
-  --c-ink: var(--ink, #070322);
-  --c-accent: var(--accent, #375e9d);
-  --c-dark: var(--footer, #121c2e);
-  --c-muted: var(--muted, #5f626d);
-  --c-line: rgba(7, 3, 34, 0.12);
-  --c-tint: #f5f6f8;
-
-  --c-display: "Russo One", "Arial Black", sans-serif;
-  --c-body: "Outfit", Arial, sans-serif;
-
-  --page-margin: clamp(24px, 5vw, 64px);
-  /* The header is fixed, so a 100svh section hides its first 62px under the
-     bar. Reserved on the top edge only, exactly as the technology page does. */
-  --pad-top: calc(var(--nav-height, 62px) + clamp(24px, 4vh, 56px));
-  --pad-bottom: clamp(48px, 7vh, 96px);
-
-  background: #fff;
-  font-family: var(--c-body);
-  color: var(--c-ink);
+  background: var(--white);
+  color: var(--ink);
 }
 
 /* --------------------------------------------------------------------------
    Shared type
    -------------------------------------------------------------------------- */
 
-.eyebrow {
-  display: block;
-  font-family: var(--c-body);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-accent);
-  margin-bottom: 14px;
-}
-
 .sectionTitle {
-  font-family: var(--c-display);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  font-size: clamp(28px, 3.6vw, 48px);
-  line-height: 1.12;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-display);
+  color: var(--ink);
 }
 
 .sectionLead {
-  font-size: clamp(16px, 1.3vw, 18px);
-  line-height: 1.65;
-  color: var(--c-muted);
-  margin-top: 18px;
-  max-width: 44rem;
-}
-
-.rule {
-  width: 88px;
-  height: 2px;
-  background: var(--c-accent);
-  border: 0;
-  margin-bottom: 22px;
+  margin-top: 20px;
+  max-width: var(--measure-text);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
 /* Scroll reveal piggybacks on the site-wide IntersectionObserver in
@@ -79,8 +42,8 @@
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity 0.5s ease-out,
-    transform 0.5s ease-out;
+    opacity var(--t-slowest) var(--ease-lift),
+    transform var(--t-slowest) var(--ease-lift);
 }
 
 :global(.visible) .fadeUp,
@@ -104,11 +67,11 @@
 .hero {
   position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   min-height: 100vh;
   min-height: 100svh;
-  padding: calc(var(--pad-top) + clamp(24px, 6vh, 80px)) var(--page-margin) clamp(32px, 5vh, 64px);
-  background: var(--c-dark);
+  padding: var(--section-pad-top) var(--gutter) var(--section-pad-bottom);
+  background: var(--footer);
   overflow: hidden;
 }
 
@@ -131,110 +94,28 @@
   background:
     linear-gradient(
       105deg,
-      rgba(18, 28, 46, 0.92) 0%,
-      rgba(18, 28, 46, 0.74) 45%,
-      rgba(18, 28, 46, 0.42) 100%
+      rgba(var(--footer-rgb), 0.92) 0%,
+      rgba(var(--footer-rgb), 0.74) 45%,
+      rgba(var(--footer-rgb), 0.42) 100%
     ),
-    radial-gradient(circle at 78% 34%, rgba(55, 94, 157, 0.34), transparent 58%);
+    radial-gradient(circle at 78% 34%, rgba(var(--accent-rgb), 0.34), transparent 58%);
 }
 
+/* The same 58rem column the other page heroes hold; the title, rule and lead
+   are the global `hero-title`, `rule` and `hero-lead`. */
 .heroInner {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 78rem;
-  margin: 0 auto;
-}
-
-.heroEyebrow {
-  composes: eyebrow;
-  color: #fff;
-  opacity: 0.9;
-}
-
-.heroTitle {
-  font-family: var(--c-display);
-  font-weight: 400;
-  font-size: clamp(38px, 6.4vw, 84px);
-  line-height: 1.04;
-  letter-spacing: -0.01em;
-  color: #fff;
-  max-width: 18ch;
-  text-shadow: 0 1px 2px rgba(7, 3, 34, 0.4);
-}
-
-.heroLead {
-  margin-top: 24px;
-  max-width: 40rem;
-  font-size: clamp(16px, 1.4vw, 19px);
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.78);
+  max-width: 58rem;
+  margin-right: auto;
 }
 
 .heroActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 36px;
-}
-
-/* Square-cornered, high-contrast buttons — the technology page's CTA treatment. */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 17px 40px;
-  border: 2px solid transparent;
-  border-radius: 0;
-  font-family: var(--c-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.btnPrimary {
-  composes: btn;
-  background: var(--c-accent);
-  border-color: var(--c-accent);
-  color: #fff;
-}
-
-.btnPrimary:hover,
-.btnPrimary:focus-visible {
-  background: #fff;
-  border-color: #fff;
-  color: var(--c-ink);
-}
-
-.btnGhost {
-  composes: btn;
-  background: transparent;
-  border-color: rgba(255, 255, 255, 0.42);
-  color: #fff;
-}
-
-.btnGhost:hover,
-.btnGhost:focus-visible {
-  background: #fff;
-  border-color: #fff;
-  color: var(--c-ink);
-}
-
-.btnArrow {
-  display: inline-block;
-  transition: transform 0.25s ease;
-}
-
-.btn:hover .btnArrow {
-  transform: translateX(4px);
+  gap: 16px;
+  margin-top: 40px;
 }
 
 /* The facts a visitor scans for before they read anything else. */
@@ -244,30 +125,30 @@
   gap: clamp(20px, 3vw, 48px);
   margin-top: clamp(40px, 6vh, 72px);
   padding-top: 26px;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: 1px solid var(--line-on-dark);
 }
 
 .metaLabel {
   display: block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.52);
+  color: rgba(var(--white-rgb), 0.55);
   margin-bottom: 8px;
 }
 
 .metaValue {
   display: block;
-  font-size: clamp(15px, 1.2vw, 17px);
-  font-weight: 500;
+  font-size: var(--fs-body-md);
+  font-weight: var(--fw-semibold);
   line-height: 1.4;
-  color: #fff;
+  color: var(--white);
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .heroMeta {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 18px;
   }
 }
@@ -282,14 +163,9 @@
   justify-content: center;
   min-height: 100vh;
   min-height: 100svh;
-  padding: var(--pad-top) var(--page-margin) var(--pad-bottom);
-  background: #fff;
-  border-bottom: 1px solid var(--c-line);
-}
-
-.sectionTint {
-  composes: section;
-  background: var(--c-tint);
+  padding: var(--section-pad-top) var(--gutter) var(--section-pad-bottom);
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
 }
 
 /* --------------------------------------------------------------------------
@@ -300,25 +176,34 @@
    fields, the map and the copy are untouched — which is the same trade the
    pre-rebuild stylesheet made for the contact form, and for the same reason:
    it is still the tallest block on the site.
+
+   Both compose `.section` DIRECTLY. The bundler only carries one level of
+   `composes`, so routing the tinted variant through a `.sectionTint` middle
+   step silently dropped `.section` from the class list — and with it the page
+   gutter and the min-height.
    -------------------------------------------------------------------------- */
 
 .sectionTight {
   composes: section;
-  padding-top: calc(var(--nav-height, 62px) + clamp(8px, 1.2vh, 18px));
+  padding-top: calc(var(--nav-height) + clamp(8px, 1.2vh, 18px));
   padding-bottom: clamp(20px, 2.6vh, 36px);
 }
 
 .sectionTintTight {
-  composes: sectionTint;
-  padding-top: calc(var(--nav-height, 62px) + clamp(8px, 1.2vh, 18px));
+  composes: section;
+  background: var(--wash);
+  padding-top: calc(var(--nav-height) + clamp(8px, 1.2vh, 18px));
   padding-bottom: clamp(20px, 2.6vh, 36px);
 }
 
 @media (max-width: 900px) {
   /* A full screen per section is a lot of scrolling on a phone, and these are
-     already tall there. Let them size to their content. */
+     already tall there. Let them size to their content. The tightening above
+     only exists to hold a 100svh section to one screen, so it hands back to the
+     standard padding here rather than being left to source order to undo. */
   .section,
-  .sectionTint {
+  .sectionTight,
+  .sectionTintTight {
     min-height: 0;
     padding-block: clamp(56px, 9vh, 88px);
   }
@@ -326,13 +211,18 @@
 
 .inner {
   width: 100%;
-  max-width: 78rem;
+  max-width: var(--measure);
   margin: 0 auto;
 }
 
 .sectionHead {
-  max-width: 48rem;
-  margin-bottom: clamp(32px, 5vh, 56px);
+  max-width: var(--measure-narrow);
+  margin-bottom: var(--head-gap);
+}
+
+/* Centred with the global `section-head is-centered`: the lead follows. */
+.sectionHead:global(.is-centered) .sectionLead {
+  margin-inline: auto;
 }
 
 /* --------------------------------------------------------------------------
@@ -345,11 +235,8 @@
   /* A single-pixel gap over a line-coloured ground draws the dividers, so the
      three cards read as one object rather than three floating boxes. */
   gap: 1px;
-  background: var(--c-line);
-  border: 1px solid var(--c-line);
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  background: var(--line);
+  border: 1px solid var(--line);
 }
 
 /* Tall enough to carry the band on its own, and ruled into three rows so the
@@ -357,16 +244,17 @@
    however many lines the address in the middle one happens to run to. */
 .channel {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 28px;
   min-height: clamp(240px, 32vh, 320px);
-  padding: clamp(28px, 3vw, 44px) clamp(24px, 2.4vw, 36px);
-  background: #fff;
-  transition: background-color 0.25s ease;
+  padding: clamp(28px, 2.6vw, 40px);
+  background: var(--white);
+  transition: background-color var(--t-base) var(--ease-menu);
 }
 
 .channel:hover {
-  background: #fafbfc;
+  /* The page tint — the same resting-hover wash the about cards take. */
+  background: var(--wash);
 }
 
 .channelTop {
@@ -381,68 +269,77 @@
 }
 
 .channelIndex {
-  font-family: var(--c-display);
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  color: rgba(7, 3, 34, 0.28);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: rgba(var(--ink-rgb), 0.28);
 }
 
 .channelIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border: 1px solid var(--c-line);
-  color: var(--c-accent);
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  color: var(--accent);
   transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease,
-    color 0.25s ease;
+    background-color var(--t-base) var(--ease-menu),
+    border-color var(--t-base) var(--ease-menu),
+    color var(--t-base) var(--ease-menu);
 }
 
 .channel:hover .channelIcon {
-  background: var(--c-accent);
-  border-color: var(--c-accent);
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
 }
 
+/* Same 12px tracked-caps label as .metaLabel / .visitRowLabel, so every
+   label-above-a-value on this page reads at one size and weight. */
 .channelName {
-  font-family: var(--c-display);
-  font-weight: 400;
-  font-size: 14px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-body);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-label);
+  line-height: 1.3;
   text-transform: uppercase;
-  color: var(--c-ink);
+  color: var(--ink);
   margin-bottom: 10px;
 }
 
 .channelValue {
   display: block;
-  font-size: clamp(16px, 1.4vw, 19px);
-  font-weight: 600;
+  font-size: var(--fs-body-lg);
+  font-weight: var(--fw-semibold);
   line-height: 1.4;
-  color: var(--c-ink);
-  transition: color 0.2s ease;
+  color: var(--ink);
+  transition: color var(--t-fast) var(--ease-menu);
 }
 
 a.channelValue:hover,
 a.channelValue:focus-visible {
-  color: var(--c-accent);
+  color: var(--accent);
 }
 
 .channelNote {
   display: block;
   align-self: end;
-  font-size: 14px;
+  font-size: var(--fs-sm);
   line-height: 1.5;
-  color: var(--c-muted);
+  color: var(--muted);
 }
 
 @media (max-width: 900px) {
   .channels {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* One column: the floor that kept three cards level now only pads them out. */
+  .channel {
+    min-height: 0;
   }
 }
 
@@ -453,33 +350,29 @@ a.channelValue:focus-visible {
 .enquiryGrid {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(32px, 5vw, 80px);
+  gap: var(--gap-grid);
   align-items: start;
-}
-
-@media (max-width: 1023px) {
-  .enquiryGrid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Sticky so the promise stays on screen while the form is being filled in. */
 .rail {
   position: sticky;
-  top: calc(var(--nav-height, 62px) + 32px);
+  top: calc(var(--nav-height) + 32px);
 }
 
 @media (max-width: 1023px) {
+  .enquiryGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .rail {
     position: static;
   }
 }
 
 .steps {
-  list-style: none;
-  padding: 0;
   margin: clamp(28px, 4vh, 40px) 0 0;
-  border-top: 1px solid var(--c-line);
+  border-top: 1px solid var(--line);
 }
 
 .step {
@@ -487,62 +380,59 @@ a.channelValue:focus-visible {
   grid-template-columns: 44px minmax(0, 1fr);
   gap: 18px;
   padding: 22px 0;
-  border-bottom: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--line);
 }
 
 .stepIndex {
-  font-family: var(--c-display);
-  font-weight: 400;
-  font-size: 15px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-body-sm);
   line-height: 1.4;
-  color: var(--c-accent);
+  color: var(--accent);
   padding-top: 1px;
 }
 
 .stepName {
   display: block;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
   line-height: 1.35;
-  color: var(--c-ink);
+  color: var(--ink);
   margin-bottom: 6px;
 }
 
 .stepBody {
   display: block;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--c-muted);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
 .railNote {
   margin-top: 26px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--c-muted);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
 .railNote a {
-  color: var(--c-accent);
-  font-weight: 600;
-  border-bottom: 1px solid rgba(55, 94, 157, 0.35);
+  color: var(--accent);
+  font-weight: var(--fw-semibold);
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.35);
+  transition: border-color var(--t-fast) var(--ease-menu);
 }
 
-.railNote a:hover {
-  border-bottom-color: var(--c-accent);
+.railNote a:hover,
+.railNote a:focus-visible {
+  border-bottom-color: var(--accent);
 }
 
-/* The form's own container. Its fields are styled by ContactForm.module.css. */
+/* The form's own container. Its fields come from the global `.form-*` classes
+   in style.css. */
 .formCard {
-  background: #fff;
-  border: 1px solid var(--c-line);
+  background: var(--white);
+  border: 1px solid var(--line);
   padding: clamp(20px, 2.2vw, 26px);
-}
-
-/* style.css rounds the ?error notice; square it up with the rest of the page. */
-.formCard :global(.form-alert) {
-  border-radius: 0;
-  margin: 0 0 24px;
 }
 
 /* --------------------------------------------------------------------------
@@ -554,50 +444,37 @@ a.channelValue:focus-visible {
   flex-direction: column;
   align-items: flex-start;
   gap: 18px;
-  background: #fff;
-  border: 1px solid var(--c-line);
-  border-top: 3px solid var(--c-accent);
   padding: clamp(32px, 4vw, 56px);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
 }
 
 .successIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  border: 1px solid rgba(55, 94, 157, 0.3);
-  background: rgba(55, 94, 157, 0.08);
-  color: var(--c-accent);
+  width: 56px;
+  height: 56px;
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--accent);
 }
 
 .successTitle {
-  font-family: var(--c-display);
-  font-weight: 400;
-  font-size: clamp(24px, 2.6vw, 32px);
-  line-height: 1.15;
-  color: var(--c-ink);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-display);
+  color: var(--ink);
 }
 
 .successBody {
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--c-muted);
-  max-width: 34rem;
-}
-
-.successAction {
-  composes: btn;
-  margin-top: 6px;
-  background: var(--c-ink);
-  border-color: var(--c-ink);
-  color: #fff;
-}
-
-.successAction:hover,
-.successAction:focus-visible {
-  background: var(--c-accent);
-  border-color: var(--c-accent);
+  max-width: var(--measure-text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
 /* --------------------------------------------------------------------------
@@ -613,7 +490,7 @@ a.channelValue:focus-visible {
 
 @media (max-width: 900px) {
   .visitGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -621,7 +498,7 @@ a.channelValue:focus-visible {
    iframe grows to whatever height the card beside it settles on. */
 .mapFrame {
   display: flex;
-  border: 1px solid var(--c-line);
+  border: 1px solid var(--line);
   overflow: hidden;
   min-height: clamp(320px, 48vh, 460px);
 }
@@ -634,7 +511,7 @@ a.channelValue:focus-visible {
   /* Desaturated so the map sits inside the page's palette rather than shouting
      over it; full colour on hover, when the visitor is actually reading it. */
   filter: grayscale(1) contrast(1.04);
-  transition: filter 0.35s ease;
+  transition: filter var(--t-slow) var(--ease-menu);
 }
 
 .mapFrame:hover iframe,
@@ -645,62 +522,57 @@ a.channelValue:focus-visible {
 .visitCard {
   display: flex;
   flex-direction: column;
-  background: var(--c-dark);
-  color: #fff;
   padding: clamp(22px, 2.2vw, 30px);
-}
-
-.visitEyebrow {
-  composes: eyebrow;
-  color: rgba(255, 255, 255, 0.55);
+  background: var(--footer);
+  color: var(--white);
 }
 
 .visitName {
-  font-family: var(--c-display);
-  font-weight: 400;
-  font-size: clamp(20px, 2vw, 26px);
-  line-height: 1.2;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h3);
+  line-height: 1.25;
+  letter-spacing: var(--ls-display);
   margin-bottom: 16px;
 }
 
 .visitAddress {
-  font-size: 16px;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--white-rgb), 0.7);
 }
 
 .visitRows {
-  list-style: none;
-  padding: 0;
   margin: 28px 0 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 1px solid var(--line-on-dark);
 }
 
 .visitRow {
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom: 1px solid var(--line-on-dark);
 }
 
 .visitRowLabel {
   display: block;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--white-rgb), 0.55);
   margin-bottom: 7px;
 }
 
 .visitRowValue {
   display: block;
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--white);
+  transition: color var(--t-fast) var(--ease-menu);
 }
 
 a.visitRowValue:hover,
 a.visitRowValue:focus-visible {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--white-rgb), 0.75);
 }
 
 /* The wrapper takes the `margin-top: auto`, not the button: that pins the
@@ -709,20 +581,6 @@ a.visitRowValue:focus-visible {
 .visitFoot {
   margin-top: auto;
   padding-top: 32px;
-}
-
-.directions {
-  composes: btn;
-  background: #fff;
-  border-color: #fff;
-  color: var(--c-ink);
-}
-
-.directions:hover,
-.directions:focus-visible {
-  background: var(--c-accent);
-  border-color: var(--c-accent);
-  color: #fff;
 }
 
 /* --------------------------------------------------------------------------

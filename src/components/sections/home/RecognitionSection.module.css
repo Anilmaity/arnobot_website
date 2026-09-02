@@ -7,19 +7,13 @@
 
    It lands between the dark environment shot and the white industries
    carousel, so the band takes a light wash rather than white — the three
-   sections then read as three, not as one long white run. Colour, type and
-   radius come from the tokens declared in public/assets/css/style.css, with
-   fallbacks inlined in case this module ever renders before it lands.
+   sections then read as three, not as one long white run. Colour, type,
+   radius, shadow and motion all come from the tokens declared in
+   public/assets/css/theme.css; the heading uses the global `section-head` /
+   `section-title` pattern from public/assets/css/style.css.
    ========================================================================== */
 
 .band {
-  --rec-ink: var(--ink, #070322);
-  --rec-accent: var(--accent, #375e9d);
-  --rec-muted: var(--muted, #5f626d);
-  --rec-wash: #f5f6f8;
-  --rec-line: rgba(7, 3, 34, 0.09);
-  --rec-display: "Russo One", "Arial Black", sans-serif;
-
   /* Tile geometry, measured off the reference section: a 250x150 landscape
      box with the badge fitted inside it, 20px between cards. */
   --rec-tile-w: 250px;
@@ -30,17 +24,19 @@
      or disturbing the row's rhythm. */
   --rec-tile-pad: 18px 24px;
 
-  padding: 78px 0 84px;
-  background: var(--rec-wash);
-  border-top: 1px solid var(--rec-line);
-  border-bottom: 1px solid var(--rec-line);
+  padding: var(--section-pad-md) 0;
+  /* White, not the wash: the badges sit on white tiles, and a white ground
+     behind them reads cleaner than a tinted strip. */
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   overflow: hidden;
 }
 
+/* The centring and the head → content gap come from the global
+   `section-head is-centered`; only the measure is set here. */
 .head {
-  width: min(100% - 48px, 700px);
-  margin: 0 auto 44px;
-  text-align: center;
+  width: min(100% - (2 * var(--gutter)), var(--measure-narrow));
 }
 
 /* --------------------------------------------------------------------------
@@ -176,16 +172,20 @@
   height: var(--rec-tile-h);
   padding: var(--rec-tile-pad);
   overflow: hidden;
-  background: #fff;
-  border: 1px solid var(--rec-line);
-  border-radius: 15px;
-  box-shadow: 0 10px 26px rgba(7, 3, 34, 0.06);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  /* Flat on the white ground until hovered: no border, no shadow, so the
+     marks read as a row of logos. The card only surfaces under the pointer. */
+  background: var(--white);
+  border: 1px solid transparent;
+  border-radius: var(--radius-card);
+  box-shadow: none;
+  transition:
+    box-shadow var(--t-med) var(--ease-menu),
+    border-color var(--t-med) var(--ease-menu);
 }
 
 .item:hover .tile {
-  border-color: rgba(55, 94, 157, 0.35);
-  box-shadow: 0 18px 38px rgba(7, 3, 34, 0.12);
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* `contain`, never `cover`: the badges are brand logos drawn on white with
@@ -195,14 +195,14 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform 0.35s ease;
+  transition: transform var(--t-slow) var(--ease-lift);
   /* A dragged logo would fight the dragged strip. */
   -webkit-user-drag: none;
   user-select: none;
 }
 
 .item:hover .image {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 /* Stand-in until artwork lands: the awarding body's monogram, set as a seal.
@@ -212,26 +212,28 @@
   place-items: center;
   height: 74%;
   aspect-ratio: 1;
-  border-radius: 50%;
-  color: var(--rec-accent);
-  background: rgba(55, 94, 157, 0.07);
-  border: 1px solid rgba(55, 94, 157, 0.28);
-  box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 6px rgba(55, 94, 157, 0.16);
-  font-family: var(--rec-display);
-  font-weight: 400; /* Russo One ships a single weight */
-  font-size: 22px;
-  letter-spacing: 1px;
+  border-radius: var(--radius-round);
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.07);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  box-shadow:
+    inset 0 0 0 5px var(--white),
+    inset 0 0 0 6px rgba(var(--accent-rgb), 0.16);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h3);
+  letter-spacing: var(--ls-caps);
   text-transform: uppercase;
 }
 
 .heading {
   width: 100%;
   margin-top: 14px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
   line-height: 1.4;
   text-align: center;
-  color: var(--rec-ink);
+  color: var(--ink);
 }
 
 /* --------------------------------------------------------------------------
@@ -246,20 +248,12 @@
     --rec-gap: 14px;
     --rec-tile-pad: 12px 16px;
 
-    padding: 58px 0 62px;
-  }
-
-  .head {
-    margin-bottom: 34px;
-  }
-
-  .seal {
-    font-size: 16px;
+    padding: var(--section-pad-sm) 0;
   }
 
   .heading {
     margin-top: 11px;
-    font-size: 12.5px;
+    font-size: var(--fs-2xs);
   }
 }
 
@@ -277,5 +271,14 @@
 
   .duplicate {
     display: none;
+  }
+
+  .tile,
+  .image {
+    transition: none;
+  }
+
+  .item:hover .image {
+    transform: none;
   }
 }

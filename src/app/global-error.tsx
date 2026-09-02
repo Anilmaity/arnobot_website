@@ -28,12 +28,24 @@ export default function GlobalError({
           justifyContent: 'center',
           background: '#dfe1e5',
           color: '#070322',
-          fontFamily: 'Outfit, Arial, sans-serif',
+          fontFamily: 'Inter, Arial, sans-serif',
           padding: '24px',
         }}
       >
         <main style={{ maxWidth: '32rem', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '1.75rem', margin: '0 0 12px', letterSpacing: '0.5px' }}>Something went wrong</h1>
+          <h1
+            style={{
+              fontFamily: "'Space Grotesk', Arial, sans-serif",
+              fontWeight: 700,
+              fontSize: 'clamp(30px, 3.8vw, 52px)',
+              lineHeight: 1.1,
+              letterSpacing: '0.02em',
+              textTransform: 'uppercase',
+              margin: '0 0 16px',
+            }}
+          >
+            Something went wrong
+          </h1>
           <p style={{ margin: '0 0 24px', lineHeight: 1.6, color: '#5f626d' }}>
             The application failed to start. Please reload the page — if the problem persists, contact
             contact@arnobot.in.
@@ -42,13 +54,16 @@ export default function GlobalError({
             type="button"
             onClick={reset}
             style={{
-              padding: '14px 32px',
-              borderRadius: '14px',
-              border: 0,
-              background: '#11153a',
+              // Mirrors the site's .btn (theme.css --btn-*): ink ground, square,
+              // 13px bold tracked caps.
+              padding: '16px 32px',
+              border: '2px solid #070322',
+              borderRadius: 0,
+              background: '#070322',
               color: '#fff',
-              fontSize: '15px',
-              fontWeight: 600,
+              font: "700 13px/1.2 Inter, Arial, sans-serif",
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
               cursor: 'pointer',
             }}
           >

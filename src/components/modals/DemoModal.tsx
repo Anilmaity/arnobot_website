@@ -5,7 +5,7 @@ import { cn } from '@/lib/dom';
 import { PRODUCT_NAV } from '@/data/site';
 import { useDelegatedClick } from '@/hooks/useDelegatedClick';
 import { useModalDismiss } from '@/hooks/useModalDismiss';
-import { CheckCircleIcon } from '@/components/ui/Icons';
+import { CheckCircleIcon, CloseIcon } from '@/components/ui/Icons';
 import type { DemoResponse } from '@/app/api/schedule-demo/route';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
@@ -88,23 +88,19 @@ export default function DemoModal() {
       aria-labelledby="demo-modal-title"
     >
       <div className="industry-modal-overlay" onClick={close} />
-      <div className="industry-modal-container" style={{ maxWidth: '650px' }} ref={containerRef}>
+      <div className="industry-modal-container industry-modal-compact" ref={containerRef}>
         <button
           type="button"
-          className="industry-modal-close"
+          className="icon-btn on-dark industry-modal-close"
           id="demo-modal-close"
           aria-label="Close demo scheduler"
           onClick={close}
         >
-          &times;
+          <CloseIcon size={18} />
         </button>
 
         <div className="industry-modal-content">
-          <h3
-            className="russo modal-ind-title"
-            id="demo-modal-title"
-            style={{ textAlign: 'center', marginBottom: '58px' }}
-          >
+          <h3 className="russo modal-ind-title demo-modal-title" id="demo-modal-title">
             Schedule a Live Demo
           </h3>
 
@@ -192,74 +188,38 @@ export default function DemoModal() {
               <textarea id="demo-message" name="message" rows={4} />
             </div>
 
-            <p role="alert" aria-live="polite" style={{ color: '#e53e3e', minHeight: '1em', textAlign: 'center' }}>
-              {status === 'error' ? errorMessage : ''}
-            </p>
-
-            <div className="demo-submit-wrap" style={{ textAlign: 'center', marginTop: '24px' }}>
+            <div className="demo-form-footer">
+              <p className="field-error" role="alert" aria-live="polite">
+                {status === 'error' ? errorMessage : ''}
+              </p>
               <button
                 type="submit"
-                className="btn btn-cta-primary"
+                className="btn btn-accent"
                 id="demo-submit-btn"
                 disabled={submitting}
                 aria-busy={submitting}
-                style={{
-                  padding: '14px 44px',
-                  fontSize: '16px',
-                  ...(submitting ? { opacity: 0.65, cursor: 'progress' } : null),
-                }}
               >
                 {submitting ? (
-                  'Sending...'
+                  'Sending…'
                 ) : (
                   <>
-                    Schedule Demo <span className="btn-arrow">&rarr;</span>
+                    Schedule Demo <span className="btn-arrow" aria-hidden="true">&rarr;</span>
                   </>
                 )}
               </button>
             </div>
           </form>
 
-          <div
-            id="demo-success"
-            style={{
-              display: succeeded ? 'flex' : 'none',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center',
-              gap: '20px',
-              padding: '40px 20px',
-            }}
-          >
-            <div
-              className="contact-success-icon"
-              style={{
-                background: 'rgba(55, 94, 157, 0.15)',
-                width: '80px',
-                height: '80px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent)',
-              }}
-            >
-              <CheckCircleIcon size={40} />
+          <div id="demo-success" className="demo-success" hidden={!succeeded}>
+            <div className="demo-success-icon">
+              <CheckCircleIcon size={28} />
             </div>
-            <h3 className="russo" style={{ color: '#fff', fontSize: '24px' }}>
-              Demo Scheduled!
-            </h3>
-            <p style={{ color: '#b0b4be', maxWidth: '450px', lineHeight: 1.6 }}>
+            <h3 className="russo">Demo Scheduled!</h3>
+            <p>
               Thank you for your interest in ARNOBOT. A technical representative will reach out to you within 24 hours
               to confirm the scheduling details for your demo.
             </p>
-            <button
-              type="button"
-              className="btn btn-blue"
-              id="demo-success-close"
-              onClick={close}
-              style={{ marginTop: '10px', padding: '10px 24px', fontSize: '14px', borderRadius: '8px' }}
-            >
+            <button type="button" className="btn btn-light" id="demo-success-close" onClick={close}>
               Close Window
             </button>
           </div>

@@ -27,32 +27,51 @@ Node 20.9+ (developed on Node 24).
 | --- | --- |
 | Framework | Next.js 16.3.3, App Router, Turbopack |
 | UI | React 19.2, TypeScript 5.9 (`strict`, `noUncheckedIndexedAccess`) |
-| Styling | the original `style.css` + Tailwind CSS 4 (see below) |
+| Styling | `theme.css` (design tokens) + `style.css` (components) + Tailwind CSS 4 for the loading skeleton (see below) |
 | Animation | `gsap` 3.12.2 + ScrollTrigger (npm, was an unpinned CDN global) |
 | Lightbox | `@fancyapps/ui` 6 (npm, was an unpinned CDN global) |
 | Mail | `nodemailer` (was PHPMailer) |
 
-## How Tailwind and `style.css` coexist
+## The design system
 
-`public/assets/css/style.css` is the PHP build's stylesheet — pruned of the rules for
-pages the rebuild dropped — and remains the source of truth for the design. It is
-served from `/public` via a `<link>` rather than bundled, so its relative `url()`s
-keep resolving as they always have.
+Two static stylesheets served from `/public` carry the whole design, in this order:
 
-Tailwind is layered underneath it in `src/app/globals.css`:
+- **`public/assets/css/theme.css`** — every token: the fluid type scale
+  (`--fs-display-xl`, `--fs-display`, `--fs-h2`, `--fs-h3`, `--fs-lead`, body sizes),
+  colours and their `--*-rgb` alpha bases, radii (`--radius-card` 12px for media and
+  panels, `--radius-control` 0 for buttons and inputs), shadows, spacing
+  (`--gutter`, `--measure`, `--section-pad*`, `--head-gap`), motion (`--t-*`, `--ease-*`)
+  and the button/control tokens. The style guide at the top of the file is the
+  one-page summary of the system.
+- **`public/assets/css/style.css`** — every shared component: typography classes
+  (`.russo`, `.eyebrow`, `.section-title`, `.section-lead`), the button family
+  (`.btn`, `.btn-accent`, `.btn-light`, `.btn-outline`, `.btn-ghost`, `.btn-block`,
+  `.btn-arrow`, `.link-arrow`, `.icon-btn`, `.tag`), the form classes (`.form-*`,
+  `.chip*`, `.form-alert`, `.field-error`), the header, mobile drawer, footer, the
+  three dialogs, the home sections, the product page, the legal pages and the status
+  pages. Section headings are uppercase (`.russo` — the class kept its name from the old
+  Russo One face) on the marketing pages and sentence case on the long-form pages —
+  same face, same scale, same colour.
+
+The page CSS modules (`about`, `technology`, `career`, `contact`, `insights`,
+`insights/[slug]`) only hold that page's layout. They read the same tokens and their
+markup uses the global button, eyebrow, tag and form classes rather than re-declaring
+them.
+
+Dark sections (video heroes, dark bands, the footer) carry `data-header-theme="dark"`
+plus the global `on-dark` class. The header is fully transparent at every scroll depth;
+`Header.tsx` probes what is under the bar on every scroll frame and flips the nav
+between ink and white (`.header-on-light`), and tucks it away while scrolling down
+(`.header-tucked`).
+
+Tailwind is layered underneath in `src/app/globals.css` for the loading skeleton only:
 
 - **Preflight is not imported.** Tailwind's reset would re-style headings, lists,
   images and borders that `style.css` already defines.
-- Only the theme variables and the utilities actually used are emitted (~10 KB).
-- The brand tokens (`--color-ink`, `--color-accent`, …) are re-declared with `@theme`
-  so new UI can use `text-accent` / `bg-footer` and stay in sync.
+- The brand colours and fonts are mirrored in its `@theme` block so utilities such as
+  `bg-footer` stay in sync with `theme.css`.
 - `container`, `visible` and `hidden` are excluded via `@source not inline(...)`:
-  `style.css` owns those class names, and a competing `.container { width: 100% }`
-  would have broken the page gutters on every `.container` page.
-
-Tailwind is used for the parts that did not exist before — the loading skeleton,
-error boundary and 404 — plus two small shims that `style.css` cannot express
-(the dropdown caret position, formerly injected by JS at runtime).
+  `style.css` owns those class names.
 
 ## Structure
 
@@ -60,7 +79,7 @@ error boundary and 404 — plus two small shims that `style.css` cannot express
 src/
   app/
     layout.tsx                 <html>, fonts, global CSS
-    globals.css                Tailwind entry + a11y additions
+    globals.css                Tailwind entry (skeleton utilities only)
     not-found.tsx              404 inside the site chrome
     global-error.tsx           root boundary (no stylesheet dependency)
     (site)/
@@ -146,10 +165,14 @@ pending label, and failures render in an inline live region instead of `alert()`
   `global-error.tsx` as the inline-styled last resort.
 - **Empty** — the insights index renders an empty state when a filter matches
   nothing; the product showcase is omitted when a product has none.
-- **Focus** — the original stylesheet defined no focus style at all. `:focus-visible`
-  rings are added globally; they never fire on mouse clicks, so the resting design is
-  untouched. Modals trap focus and restore it on close.
-- **Disabled** — form submit buttons disable with `aria-busy` while submitting.
+- **Focus** — `:focus-visible` rings are defined once in `style.css`; they never fire
+  on mouse clicks, so the resting design is untouched. Modals trap focus and restore it
+  on close, and are `visibility: hidden` while closed so their controls leave the tab
+  order.
+- **Hover / active** — every button shares one hover (colour shift), one pressed state
+  (`scale(.98)`) and one clock (`--t-fast`); nav and footer links draw an underline.
+- **Disabled** — `.btn:disabled` and `.btn[aria-busy="true"]` dim the control; the
+  three submit buttons set both while submitting.
 - **Reduced motion** — the industries carousel does not autoplay, and skeletons do not
   pulse, for visitors who ask their OS to reduce motion.
 
@@ -157,8 +180,8 @@ pending label, and failures render in an inline live region instead of `alert()`
 
 `aria-expanded`, `aria-selected` and `aria-current` are now driven by React state
 rather than set by hand. The PRODUCT menu is a real `<button>` with the standard
-menu-button keys (Enter/Space/ArrowUp/ArrowDown); it repeats four declarations from
-`.main-nav a` in `globals.css` because it no longer matches that selector.
+menu-button keys (Enter/Space/ArrowUp/ArrowDown) and shares the nav link styling
+through the `.main-nav > a, .nav-dropdown-toggle` rule in `style.css`.
 
 ## Deliberate deviations
 
@@ -167,8 +190,9 @@ menu-button keys (Enter/Space/ArrowUp/ArrowDown); it repeats four declarations f
   already served Fancybox v6, where `animated`, `wheel: "zoom"` and the top-level
   `Toolbar`/`Thumbs` options no longer exist and were silently ignored — only
   `dragToClose` ever applied, so that is all the lightbox now passes.
-- Google Fonts stays a `<link>`: `style.css` asks for "Outfit" and "Russo One" by
-  name, and `next/font` would rename the families.
+- Google Fonts stays a `<link>`: `style.css` asks for "Inter" and "Space Grotesk" by
+  name, and `next/font` would rename the families. Space Grotesk is loaded at 700
+  only; every heading uses `--fw-display`.
 - Duplicate `id`s in the contact form (`cf-name`, `cf-email`, `cf-phone` were each
   used twice) are now unique, so `<label for>` works.
 - Dead code from the PHP build is gone: the unreachable blog search/modal, the

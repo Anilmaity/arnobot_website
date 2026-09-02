@@ -105,19 +105,12 @@ export default function CareerForm() {
         <textarea id="car-cover" name="cover" rows={4} required />
       </div>
 
-      <button
-        type="submit"
-        className="btn career-submit-btn"
-        id="career-submit-btn"
-        disabled={submitting}
-        aria-busy={submitting}
-        style={submitting ? { opacity: 0.65, cursor: 'progress' } : undefined}
-      >
+      <button type="submit" className="btn btn-block" id="career-submit-btn" disabled={submitting} aria-busy={submitting}>
         {submitting ? (
           'Submitting…'
         ) : (
           <>
-            Submit Application <span className="btn-arrow">→</span>
+            Submit Application <span className="btn-arrow" aria-hidden="true">&rarr;</span>
           </>
         )}
       </button>

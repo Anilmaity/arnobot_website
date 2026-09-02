@@ -5,6 +5,7 @@ import ContactForm from '@/components/forms/ContactForm';
 import FormAlert from '@/components/forms/FormAlert';
 import { CheckCircleIcon, MailIcon, PhoneIcon, PinIcon } from '@/components/ui/Icons';
 import { HQ_ADDRESS_LINES, SITE } from '@/data/site';
+import { cn } from '@/lib/dom';
 import styles from './contact.module.css';
 
 export const metadata: Metadata = {
@@ -97,25 +98,33 @@ export default async function ContactPage({ searchParams }: PageProps) {
   return (
     <main className={styles.page}>
       {/* `data-cinematic-hero` is what Header measures to decide when to dock. */}
-      <section className={styles.hero} id="contact-hero" data-cinematic-hero>
+      <section
+        className={cn('on-dark', styles.hero, 'reveal')}
+        id="contact-hero"
+        data-cinematic-hero
+        data-header-theme="dark"
+      >
         <div className={styles.heroMedia} aria-hidden="true" />
         <div className={styles.heroScrim} aria-hidden="true" />
 
         <div className={styles.heroInner}>
-          <span className={styles.heroEyebrow}>Get in touch</span>
-          <h1 className={styles.heroTitle}>
+          <span className="eyebrow">Get in touch</span>
+          <h1 className="hero-title">
             Let&apos;s build the future together
           </h1>
-          <p className={styles.heroLead}>
+          <p className="hero-lead">
             Tell us about the environment, the task, and the risk you would rather not put a person in.
             Our engineering team will tell you plainly whether a robot belongs there — and which one.
           </p>
 
           <div className={styles.heroActions}>
-            <a className={styles.btnPrimary} href="#enquiry">
-              Send a message <span className={styles.btnArrow}>&rarr;</span>
+            <a className="btn btn-accent" href="#enquiry">
+              Send a message{' '}
+              <span className="btn-arrow" aria-hidden="true">
+                &rarr;
+              </span>
             </a>
-            <a className={styles.btnGhost} href={TEL_HREF}>
+            <a className="btn btn-outline" href={TEL_HREF}>
               {SITE.phone}
             </a>
           </div>
@@ -131,11 +140,10 @@ export default async function ContactPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <section className={`${styles.section} reveal`} id="contact-channels">
+      <section className={cn(styles.section, 'reveal')} id="contact-channels">
         <div className={styles.inner}>
-          <div className={`${styles.sectionHead} ${styles.fadeUp}`}>
-            <hr className={styles.rule} />
-            <span className={styles.eyebrow}>Direct lines</span>
+          <div className={cn('section-head', 'is-centered', styles.sectionHead, styles.fadeUp)}>
+            <span className="eyebrow">Direct lines</span>
             <h2 className={styles.sectionTitle}>Reach the right desk</h2>
             <p className={styles.sectionLead}>
               Three ways in, all of them monitored by the people who would actually work on your
@@ -143,7 +151,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
             </p>
           </div>
 
-          <ul className={`${styles.channels} ${styles.fadeUp} ${styles.d1}`}>
+          <ul className={cn(styles.channels, styles.fadeUp, styles.d1)}>
             {CHANNELS.map((channel, index) => (
               <li className={styles.channel} key={channel.name}>
                 <span className={styles.channelTop}>
@@ -169,20 +177,19 @@ export default async function ContactPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <section className={`${styles.sectionTintTight} reveal`} id="enquiry">
+      <section className={cn(styles.sectionTintTight, 'reveal')} id="enquiry">
         <div className={styles.inner}>
           <div className={styles.enquiryGrid}>
             <div className={styles.rail}>
               <div className={styles.fadeUp}>
-                <hr className={styles.rule} />
-                <span className={styles.eyebrow}>Send a message</span>
+                <span className="eyebrow">Send a message</span>
                 <h2 className={styles.sectionTitle}>How can we help?</h2>
                 <p className={styles.sectionLead}>
                   One form, whatever the enquiry — the routing happens on our side.
                 </p>
               </div>
 
-              <ol className={`${styles.steps} ${styles.fadeUp} ${styles.d1}`}>
+              <ol className={cn(styles.steps, styles.fadeUp, styles.d1)}>
                 {NEXT_STEPS.map((step, index) => (
                   <li className={styles.step} key={step.name}>
                     <span className={styles.stepIndex} aria-hidden="true">
@@ -196,13 +203,13 @@ export default async function ContactPage({ searchParams }: PageProps) {
                 ))}
               </ol>
 
-              <p className={`${styles.railNote} ${styles.fadeUp} ${styles.d2}`}>
+              <p className={cn(styles.railNote, styles.fadeUp, styles.d2)}>
                 Would rather write your own email? <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
               </p>
             </div>
 
             {sent ? (
-              <div className={`${styles.success} ${styles.fadeUp} ${styles.d1}`} aria-live="polite">
+              <div className={cn(styles.success, styles.fadeUp, styles.d1)} aria-live="polite">
                 <span className={styles.successIcon}>
                   <CheckCircleIcon size={32} />
                 </span>
@@ -211,12 +218,12 @@ export default async function ContactPage({ searchParams }: PageProps) {
                   Thank you for reaching out to ARNOBOT. Your enquiry is with the right team and you
                   will have a reply within one business day.
                 </p>
-                <Link className={styles.successAction} href="/contact">
+                <Link className="btn btn-accent" href="/contact">
                   Send another message
                 </Link>
               </div>
             ) : (
-              <div className={`${styles.formCard} ${styles.fadeUp} ${styles.d1}`}>
+              <div className={cn(styles.formCard, styles.fadeUp, styles.d1)}>
                 <FormAlert error={error} />
                 <ContactForm />
               </div>
@@ -225,11 +232,10 @@ export default async function ContactPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <section className={`${styles.sectionTight} reveal`} id="contact-visit">
+      <section className={cn(styles.sectionTight, 'reveal')} id="contact-visit">
         <div className={styles.inner}>
-          <div className={`${styles.sectionHead} ${styles.fadeUp}`}>
-            <hr className={styles.rule} />
-            <span className={styles.eyebrow}>Find us</span>
+          <div className={cn(styles.sectionHead, styles.fadeUp)}>
+            <span className="eyebrow">Find us</span>
             <h2 className={styles.sectionTitle}>Visit the Ahmedabad office</h2>
             <p className={styles.sectionLead}>
               Design, electronics and prototyping share one building, so a visit means meeting the
@@ -237,7 +243,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
             </p>
           </div>
 
-          <div className={`${styles.visitGrid} ${styles.fadeUp} ${styles.d1}`}>
+          <div className={cn(styles.visitGrid, styles.fadeUp, styles.d1)}>
             <div className={styles.mapFrame}>
               <iframe
                 id="contact-map-iframe"
@@ -249,8 +255,8 @@ export default async function ContactPage({ searchParams }: PageProps) {
               />
             </div>
 
-            <div className={styles.visitCard}>
-              <span className={styles.visitEyebrow}>Head office</span>
+            <div className={cn('on-dark', styles.visitCard)}>
+              <span className="eyebrow">Head office</span>
               <h3 className={styles.visitName}>{SITE.name} Private Limited</h3>
               <p className={styles.visitAddress}>
                 {ADDRESS_LINES.map((line, index) => (
@@ -281,8 +287,11 @@ export default async function ContactPage({ searchParams }: PageProps) {
               </ul>
 
               <div className={styles.visitFoot}>
-                <a className={styles.directions} href={DIRECTIONS_URL} target="_blank" rel="noreferrer">
-                  Get directions <span className={styles.btnArrow}>&rarr;</span>
+                <a className="btn btn-light" href={DIRECTIONS_URL} target="_blank" rel="noreferrer">
+                  Get directions{' '}
+                  <span className="btn-arrow" aria-hidden="true">
+                    &rarr;
+                  </span>
                 </a>
               </div>
             </div>

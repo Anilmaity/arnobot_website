@@ -22,13 +22,13 @@ export default function SiteError({
       title="This page failed to load"
       description="An unexpected error interrupted the page. Trying again usually clears it — if it keeps happening, get in touch and we will take a look."
     >
-      <button type="button" className="btn btn-cta-primary" onClick={reset}>
+      <button type="button" className="btn btn-accent" onClick={reset}>
         Try again
       </button>
-      <Link href="/" className="btn">
+      <Link href="/" className="btn btn-outline">
         Back to home
       </Link>
-      {error.digest ? <p className="w-full text-xs text-muted">Reference: {error.digest}</p> : null}
+      {error.digest ? <p className="status-ref">Reference: {error.digest}</p> : null}
     </StatusSection>
   );
 }

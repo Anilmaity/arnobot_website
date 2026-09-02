@@ -17,12 +17,12 @@ export default function StatusSection({
 }) {
   return (
     <main>
-      <section className="flex min-h-[70vh] items-center justify-center px-6 py-32 text-center">
-        <div className="mx-auto max-w-xl">
+      <section className="status-section">
+        <div className="status-inner">
           <span className="eyebrow">{eyebrow}</span>
-          <h1 className="russo mt-2 text-3xl leading-tight text-ink sm:text-4xl">{title}</h1>
-          <p className="mt-5 text-base leading-relaxed text-muted">{description}</p>
-          {children ? <div className="mt-9 flex flex-wrap items-center justify-center gap-4">{children}</div> : null}
+          <h1 className="russo">{title}</h1>
+          <p>{description}</p>
+          {children ? <div className="status-actions">{children}</div> : null}
         </div>
       </section>
     </main>

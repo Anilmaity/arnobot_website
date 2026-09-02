@@ -1,96 +1,120 @@
 /* ==========================================================================
    /insights — article index.
 
-   The layout follows the reference structure (header, category filter,
-   featured lead, paged grid) but is drawn in the site's own language rather
-   than the reference's dark theme: Russo One for display, Outfit for body,
-   --ink / --accent / --footer from public/assets/css/style.css, dark hero band
-   over a light body the way the company and technology pages run. Fallbacks
-   are inlined in case this module ever renders before style.css lands.
+   One idea per screen, on the same system as the technology, careers and
+   company pages: a full-bleed photographic hero, then two light `section-screen`s —
+   the category filter with the lead article, and the archive grid. Every
+   colour, size, radius, shadow and duration below comes from the tokens in
+   public/assets/css/theme.css; the section shell, heads, eyebrow, buttons,
+   read links, meta line and "load more" reuse the global classes in
+   public/assets/css/style.css. What is left here is the page's own layout.
    ========================================================================== */
 
 .page {
-  --in-ink: var(--ink, #070322);
-  --in-accent: var(--accent, #375e9d);
-  --in-muted: var(--muted, #5f626d);
-  --in-dark: var(--footer, #121c2e);
-  --in-line: rgba(7, 3, 34, 0.1);
-  --in-display: "Russo One", "Arial Black", sans-serif;
-
-  --page-margin: clamp(24px, 5vw, 64px);
-  --measure: 1280px;
-
-  background: #fff;
-  color: var(--in-ink);
+  background: var(--white);
+  color: var(--ink);
 }
 
+/* One measure, one centring rule, shared by both content screens. The gutter
+   is `section-screen`'s own. `width` stays because an auto inline margin
+   inside a flex column would otherwise shrink the shell to its content. */
 .shell {
   width: 100%;
   max-width: var(--measure);
-  margin: 0 auto;
-  padding-inline: var(--page-margin);
+  margin-inline: auto;
 }
 
 /* --------------------------------------------------------------------------
-   Hero
+   Hero — a full-screen `section-screen` that opts out of its white ground and
+   its closing hairline. The extra step of specificity is deliberate: a CSS
+   module can land before style.css, so a bare class would not reliably win.
    -------------------------------------------------------------------------- */
 
-/* A compact band, not a full screen: eyebrow, title and lead in a dark strip
-   a little under 300px tall, with the article grid starting right below it.
-   The top padding clears the fixed header, which is transparent over the band
-   (`data-cinematic-hero`) and docks once half of it has scrolled past. */
-.hero {
-  padding: clamp(84px, 9vw, 100px) 0 clamp(32px, 4vw, 44px);
-  background: var(--in-dark);
-  text-align: center;
+.hero:global(.section-screen) {
+  background: var(--footer);
+  border-bottom: 0;
 }
 
-/* The shared eyebrow is accent blue, which is too close to the dark band to
-   read; lifted here rather than changed globally. */
-.hero :global(.eyebrow) {
-  color: #8fb0e8;
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--footer);
+}
+
+/* A plain still, no drift: the other heroes move because they are footage. */
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.72;
+}
+
+/* Keeps display type legible over the photograph. Weighted to the left where
+   the words sit and clear on the right, so the photograph reads as a
+   photograph rather than a dark texture behind a panel. The second, shallow
+   pass only darkens the top edge, where the header sits over the frame. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(var(--footer-rgb), 0.86) 0%,
+      rgba(var(--footer-rgb), 0.6) 32%,
+      rgba(var(--footer-rgb), 0.14) 62%,
+      rgba(var(--footer-rgb), 0) 100%
+    ),
+    linear-gradient(180deg, rgba(var(--footer-rgb), 0.3) 0%, rgba(var(--footer-rgb), 0) 30%);
+}
+
+/* The same 58rem column the careers and technology heroes hold. */
+.heroInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 58rem;
 }
 
 .heroTitle {
-  font-family: var(--in-display);
-  font-weight: 400; /* Russo One ships a single weight */
-  font-size: clamp(32px, 4.6vw, 58px);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  color: #fff;
+  margin-bottom: 28px;
 }
 
-.heroLead {
-  max-width: 62ch;
-  margin: 20px auto 0;
-  font-size: clamp(15px, 1.3vw, 18px);
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.72);
+/* The global `hero-lead` opens with 28px of its own; here the title's own
+   28px below already carries the gap. */
+.hero .heroLead {
+  margin-top: 0;
+  text-shadow: var(--shadow-hero-text-soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+/* The global eyebrow, over footage. */
+.hero :global(.eyebrow) {
+  text-shadow: var(--shadow-hero-text-soft);
 }
 
 /* --------------------------------------------------------------------------
-   Body
+   Light content sections — the shell is the global `section-screen`. Every
+   head is the same three parts in the same order: eyebrow → heading → lead.
+   `section-head is-centered` carries the centring and the gap to the
+   content; the measure is this page's.
    -------------------------------------------------------------------------- */
 
-.body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  /* The fixed header consumes no layout space, so a 100svh section hides its
-     first 62px under the docked bar — here, the filter row. Reserve it on the
-     top edge only, added to the section's own rhythm rather than replacing it. */
-  padding: calc(var(--nav-height, 62px) + clamp(24px, 3vh, 48px)) 0 clamp(64px, 8vw, 96px);
-}
-
-@media (max-width: 767px) {
-  /* A full screen per section is a lot of scrolling on a phone, and the grid is
-     already far taller than one there. Let the body size to its content. */
-  .body {
-    min-height: 0;
-    padding-block: clamp(56px, 9vh, 88px);
-  }
+.sectionHead {
+  width: 100%;
+  max-width: var(--measure-narrow);
 }
 
 /* Filters ---------------------------------------------------------------- */
@@ -100,64 +124,61 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: clamp(12px, 2.4vw, 34px);
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--in-line);
+  border-bottom: 1px solid var(--line);
 }
 
 .filter {
-  padding: 6px 2px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
   border: 0;
   border-bottom: 2px solid transparent;
   background: none;
-  font: inherit;
-  font-size: 15px;
-  color: var(--in-muted);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--muted);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color var(--t-fast) var(--ease-menu),
+    border-color var(--t-fast) var(--ease-menu);
 }
 
 .filter:hover {
-  color: var(--in-accent);
+  color: var(--ink);
 }
 
 .filterActive {
-  color: var(--in-accent);
-  font-weight: 600;
-  border-bottom-color: var(--in-accent);
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }
 
-.count {
+.count,
+.emptyNote {
   margin-top: 16px;
-  font-size: 13.5px;
-  color: var(--in-muted);
+  font-size: var(--fs-xs);
+  color: var(--muted);
   text-align: center;
+}
+
+/* Under the archive head there is no filter row above it to hang from. */
+.emptyNote {
+  margin-top: 0;
+  font-size: var(--fs-body-sm);
 }
 
 /* Shared meta line ------------------------------------------------------- */
 
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  font-size: 12.5px;
-  color: var(--in-muted);
-}
-
+/* The row itself is the global `meta-line`, which also draws the separating
+   bullets; only the category's accent lives here. */
 .category {
-  color: var(--in-accent);
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
   text-transform: uppercase;
-}
-
-/* Separated by rule rather than by a character in the markup, so a screen
-   reader is not read a row of bullets. */
-.readTime::before,
-.meta time::before {
-  content: "•";
-  margin-right: 12px;
-  color: var(--in-line);
 }
 
 /* Featured --------------------------------------------------------------- */
@@ -165,51 +186,45 @@
 .featured {
   margin-top: clamp(28px, 4vw, 48px);
   padding: clamp(16px, 2vw, 24px);
-  background: #f7f8fa;
-  border: 1px solid var(--in-line);
-  border-radius: 18px;
-  transition: border-color 0.25s ease, background 0.25s ease;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color var(--t-base) var(--ease-lift),
+    box-shadow var(--t-base) var(--ease-lift),
+    transform var(--t-base) var(--ease-lift);
 }
 
 .featured:hover {
-  border-color: rgba(55, 94, 157, 0.3);
-  background: #f3f5f8;
+  border-color: rgba(var(--accent-rgb), 0.3);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
 }
 
 /* The whole card is one link, so the layout lives on the anchor. */
 .featuredLink {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   gap: clamp(20px, 3vw, 44px);
   align-items: center;
 }
 
-@media (min-width: 900px) {
-  .featuredLink {
-    grid-template-columns: 1.05fr 1fr;
-  }
-}
-
+/* The photographs are shown whole. Most are 3:2, so that is the frame; a
+   square or wider one sits inside it on the surface tint rather than being
+   cropped and blown up to fill. */
 .featuredMedia {
   display: block;
   overflow: hidden;
-  border-radius: 12px;
-  aspect-ratio: 16 / 10;
-  background: #e9ebef;
-}
-
-.featuredMedia img {
-  transition: transform 0.5s ease;
-}
-
-.featured:hover .featuredMedia img {
-  transform: scale(1.03);
+  border-radius: var(--radius-card);
+  aspect-ratio: 3 / 2;
+  background: var(--surface-2);
 }
 
 .featuredMedia img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .featuredBody {
@@ -219,27 +234,29 @@
   padding: clamp(4px, 1.5vw, 20px);
 }
 
+/* An h3 under the screen's h2, set at the h2 scale: it is the largest thing
+   on the card, and the card is the screen's subject. */
 .featuredTitle {
-  font-family: var(--in-display);
-  font-weight: 400;
-  font-size: clamp(21px, 2.4vw, 32px);
-  line-height: 1.2;
-  letter-spacing: -0.005em;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-display);
 }
 
 .featuredExcerpt {
-  font-size: clamp(14.5px, 1.2vw, 16.5px);
-  line-height: 1.7;
-  color: var(--in-muted);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
 /* Grid ------------------------------------------------------------------- */
 
+/* Opens straight under the archive head; `section-head` carries the gap. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: clamp(24px, 3vw, 40px);
-  margin-top: clamp(32px, 4vw, 56px);
 }
 
 .card {
@@ -254,63 +271,52 @@
   width: 100%;
 }
 
+/* Same frame and same rule as the lead: whole image, never cropped. */
 .cardMedia {
   display: block;
   overflow: hidden;
-  border-radius: 12px;
-  aspect-ratio: 4 / 3;
-  background: #e9ebef;
+  border-radius: var(--radius-card);
+  aspect-ratio: 3 / 2;
+  background: var(--surface-2);
 }
 
 .cardMedia img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.card:hover .cardMedia img {
-  transform: scale(1.05);
+  object-fit: contain;
 }
 
 .cardTitle {
-  font-family: var(--in-display);
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 1.32;
-  transition: color 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h3);
+  line-height: 1.25;
+  letter-spacing: var(--ls-display);
+  transition: color var(--t-fast) var(--ease-menu);
 }
 
 .card:hover .cardTitle {
-  color: var(--in-accent);
+  color: var(--accent);
 }
 
 .cardExcerpt {
-  font-size: 14.5px;
-  line-height: 1.65;
-  color: var(--in-muted);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--muted);
 }
 
-/* The affordance that says a card opens something. */
+/* The affordance that says a card opens something. The look is the global
+   `link-arrow`; only the placement inside the card lives here. */
 .cardRead {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   margin-top: auto;
   padding-top: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--in-accent);
 }
 
-.card:hover .cardRead span,
-.featured:hover .cardRead span {
-  transform: translateX(3px);
-}
-
-.cardRead span {
-  display: inline-block;
-  transition: transform 0.25s ease;
+/* The card, not the little link, is the hover target, so the arrow has to be
+   nudged from the anchor rather than by `.link-arrow:hover`. */
+.cardLink:hover .cardRead :global(.btn-arrow),
+.featuredLink:hover .cardRead :global(.btn-arrow) {
+  transform: translateX(4px);
 }
 
 /* Load more -------------------------------------------------------------- */
@@ -321,42 +327,47 @@
   margin-top: clamp(36px, 4.5vw, 60px);
 }
 
-.loadMore {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px 30px;
-  border: 1px solid var(--in-line);
-  border-radius: 999px;
-  background: none;
-  font: inherit;
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--in-ink);
-  cursor: pointer;
-  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  /* `section-screen` releases the screen height and takes the block padding
+     down. Nothing above the hero reserves room for the docked bar, so its
+     top padding has to once the viewport height no longer does. */
+  .hero:global(.section-screen) {
+    padding-top: calc(var(--nav-height) + clamp(32px, 5vh, 56px));
+  }
+
+  /* One column on a phone, so the text needs cover across the whole frame —
+     but the floor is kept low enough that the footage still shows through. */
+  .scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(var(--footer-rgb), 0.8) 0%,
+      rgba(var(--footer-rgb), 0.58) 55%,
+      rgba(var(--footer-rgb), 0.44) 100%
+    );
+  }
+
+  .featuredLink {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-.loadMore:hover {
-  border-color: var(--in-accent);
-  color: var(--in-accent);
-  background: rgba(55, 94, 157, 0.06);
-}
-
-.loadMoreCount {
-  font-weight: 400;
-  font-size: 13px;
-  color: var(--in-muted);
-}
+/* --------------------------------------------------------------------------
+   Motion guard. Last in the file on purpose: every rule it cancels is defined
+   above it, and at equal specificity the later rule wins.
+   -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .cardMedia img,
+  .cardTitle,
   .filter,
-  .loadMore {
+  .featured {
     transition: none;
   }
 
-  .card:hover .cardMedia img {
+  .featured:hover {
     transform: none;
   }
 }

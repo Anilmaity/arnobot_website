@@ -23,7 +23,7 @@ export default function Footer() {
   const [products, company, quickLinks] = FOOTER_NAV;
 
   return (
-    <footer className="footer" id="contact">
+    <footer className="footer" id="site-footer" data-header-theme="dark">
       {/* Five columns on a single row; the last stacks Quick Links over Connect. */}
       <div className="footer-grid">
         <div className="footer-brand">

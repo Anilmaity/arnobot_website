@@ -13,8 +13,9 @@ export default function ProductsSection() {
   return (
     <section className="products reveal" id="product">
       <div className="product-head">
+        <span className="eyebrow">What We Build</span>
         <h2 className="section-title">Our Robotics Solution</h2>
-        <p>Advanced robotic systems for defense, industrial, and hazardous environments.</p>
+        <p className="section-lead">Advanced robotic systems for defense, industrial, and hazardous environments.</p>
       </div>
 
       <div className="product-grid">

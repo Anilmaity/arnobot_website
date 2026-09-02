@@ -2,7 +2,7 @@ const HERO_VIDEO = '/assets/videos/saibya-hero.mp4';
 
 export default function HeroSection() {
   return (
-    <section className="hero hero-cinematic" id="home" data-cinematic-hero>
+    <section className="hero hero-cinematic" id="home" data-cinematic-hero data-header-theme="dark">
       {/* Layer 0 — poster fallback, sits behind the video in case it never paints. */}
       <img className="hero-bg" src="/assets/images/hero-bg.png" alt="ARNOBOT robot payload field test" />
       {/* Layer 1 — the video is the hero background. */}
@@ -20,9 +20,9 @@ export default function HeroSection() {
         </h1>
       </div>
 
-      <button type="button" className="hero-video-btn play-trigger" data-video={HERO_VIDEO}>
+      <button type="button" className="btn btn-ghost hero-video-btn play-trigger" data-video={HERO_VIDEO}>
         Full Video
-        <span className="hero-video-btn-arrow" aria-hidden="true">
+        <span className="btn-arrow" aria-hidden="true">
           &#8599;
         </span>
       </button>

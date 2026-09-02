@@ -5,6 +5,7 @@ import type { Route } from 'next';
 import Cta from '@/components/sections/Cta';
 import { ArrowLeftIcon, ArrowRightIcon, CalendarIcon } from '@/components/ui/Icons';
 import { INSIGHTS_BY_DATE } from '@/data/insights';
+import { cn } from '@/lib/dom';
 import styles from './article.module.css';
 
 interface PageProps {
@@ -65,16 +66,22 @@ export default async function InsightArticlePage({ params }: PageProps) {
     <main className={styles.page}>
       {/* `data-cinematic-hero` is what the header measures to decide when to
           dock; without it the bar would sit solid over the article from the
-          first pixel, unlike every other page with a hero. */}
-      <header className={styles.hero} data-cinematic-hero>
+          first pixel, unlike every other page with a hero. `data-header-theme`
+          flips the bar's ink to white over the band, and the global `on-dark`
+          class lifts the eyebrow to the light accent. */}
+      <header
+        className={cn('on-dark', styles.hero, 'reveal')}
+        data-cinematic-hero
+        data-header-theme="dark"
+      >
         <div className={styles.heroShell}>
-          <Link href={'/insights' as Route} className={styles.back}>
+          <Link href={'/insights' as Route} className={cn('link-arrow', styles.back)}>
             <ArrowLeftIcon size={16} aria-hidden="true" />
             All insights
           </Link>
 
-          <span className={styles.heroCategory}>{post.category}</span>
-          <h1 className={styles.heroTitle}>{post.title}</h1>
+          <span className="eyebrow">{post.category}</span>
+          <h1 className="hero-title is-compact">{post.title}</h1>
 
           <div className={styles.heroMeta}>
             <span>
