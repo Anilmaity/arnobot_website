@@ -1,0 +1,418 @@
+/* ==========================================================================
+   Architecture diagram — the four-layer stack as a live system diagram.
+
+   Three columns on a wide screen: the Ground Control Station (with the E-stop
+   under it), the onboard core (Autonomy Engine and Real-Time Control side by
+   side in one panel), and the Robot Hardware. The link layer is the dashed
+   rail between the station and the core. Below 1040px the columns stack and
+   the rail becomes a band.
+
+   The nodes are laid out here; the wires between them are an SVG overlay the
+   component routes from the rendered boxes, so this file only has to leave
+   room for them: the padding on `.diagram` is where the feedback lanes run.
+
+   One section, one screen: `.frame` is the section's flex item and takes the
+   height left under the head and above the pull quote; `.diagram` is drawn
+   at its natural size inside it and scaled by the component to fit. Copy is
+   the four layers' name, role and one line each, and the wire labels are one
+   word — the owner asked for the plain live flow with few words and no
+   imagery. Everything rides the tokens in public/assets/css/theme.css and
+   the global `micro-label` from style.css; the cards keep the editorial
+   pages' hairline grammar — square, 1px line, no shadow.
+   ========================================================================== */
+
+.frame {
+  position: relative;
+  flex: 1 1 0;
+  width: 100%;
+  min-width: 0;
+  /* Before the component has measured, take the natural height. */
+  min-height: 0;
+  font-family: var(--font-body);
+  text-align: left;
+}
+
+.diagram {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  /* Proportional tracks, so the core panel keeps its share as the width
+     drops rather than the outer columns taking theirs first and starving
+     the two cards inside it. Roughly the reference's balance. */
+  grid-template-columns:
+    minmax(176px, 1fr)
+    minmax(72px, 0.5fr)
+    minmax(0, 2.6fr)
+    minmax(48px, 0.35fr)
+    minmax(176px, 1fr);
+  align-items: center;
+  width: 100%;
+  max-width: var(--measure);
+  /* Two lanes run along the top and two along the bottom, 18px and 38px in
+     from the edge, each with its label on the outer side. */
+  padding: 52px 0;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+
+/* --------------------------------------------------------------------------
+   Entrance. Each node is delayed inline by the component so the diagram
+   assembles left to right; the wires arrive last, once the boxes they join
+   are in place.
+   -------------------------------------------------------------------------- */
+
+.node {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--t-slowest) var(--ease-lift),
+    transform var(--t-slowest) var(--ease-lift);
+}
+
+:global(.visible) .node {
+  opacity: 1;
+  transform: none;
+}
+
+.wires {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-lift) 0.5s;
+}
+
+:global(.visible) .wires {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.copy {
+  padding: 14px 16px 16px;
+}
+
+.name {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-body-md);
+  line-height: 1.2;
+  letter-spacing: var(--ls-display);
+}
+
+.role {
+  display: block;
+  margin-top: 4px;
+  color: var(--accent);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  line-height: 1.3;
+}
+
+.desc {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------------------
+   Column 1 — the station and the E-stop under it.
+   -------------------------------------------------------------------------- */
+
+.station {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.estop {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--danger);
+  background: var(--white);
+}
+
+.estop :global(.micro-label) {
+  color: var(--danger-ink);
+}
+
+.estopDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-round);
+  background: var(--danger);
+  box-shadow: 0 0 0 0 rgba(var(--danger-rgb), 0.35);
+  animation: estop-breathe 2.4s ease-out infinite;
+}
+
+@keyframes estop-breathe {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--danger-rgb), 0.35);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(var(--danger-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--danger-rgb), 0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Column 2 — the link layer rail: a dashed line the full height of the
+   diagram, lanes included, with a two-line label lifted above the mission
+   wire that crosses it.
+   -------------------------------------------------------------------------- */
+
+.rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  text-align: center;
+}
+
+.rail::before {
+  content: '';
+  position: absolute;
+  top: -52px;
+  bottom: -52px;
+  left: 50%;
+  border-left: 1.5px dashed rgba(var(--accent-rgb), 0.55);
+}
+
+.railLabel {
+  position: relative;
+  /* Lifted above the vertical centre: the mission wire leaves the station's
+     copy, which sits low in its card, and crosses the rail below this. */
+  margin-bottom: 88px;
+  padding: 6px 6px;
+  background: var(--white);
+}
+
+.railName {
+  display: block;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-sm);
+  line-height: 1.2;
+}
+
+/* --------------------------------------------------------------------------
+   Column 3 — the onboard core.
+   -------------------------------------------------------------------------- */
+
+.panel {
+  position: relative;
+  padding: 14px 18px 18px;
+  border: 1px solid var(--line);
+  background: var(--wash);
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.panelLogo {
+  display: block;
+  width: auto;
+  height: 14px;
+  color: var(--ink);
+}
+
+.panelGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 76px minmax(0, 1fr);
+  align-items: stretch;
+}
+
+/* The named packet between the two core cards, placed by the component on
+   the midpoint of the wire it rides. */
+.tag {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  padding: 4px 9px;
+  border: 1px solid var(--line-strong);
+  background: var(--white);
+  color: var(--ink);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-lift) 0.5s;
+}
+
+:global(.visible) .tag {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Wires and packets
+   -------------------------------------------------------------------------- */
+
+.wire {
+  fill: none;
+  stroke-linejoin: miter;
+  stroke-linecap: butt;
+}
+
+.wire_command {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.wire_feedback {
+  stroke: rgba(var(--ink-rgb), 0.38);
+  stroke-width: 1.25;
+  stroke-dasharray: 3 4;
+}
+
+.wire_estop {
+  stroke: var(--danger);
+  stroke-width: 1.25;
+  stroke-dasharray: 3 4;
+}
+
+.head_command {
+  fill: var(--accent);
+}
+
+.head_feedback {
+  fill: rgba(var(--ink-rgb), 0.45);
+}
+
+.head_estop {
+  fill: var(--danger);
+}
+
+.pulse {
+  stroke: var(--white);
+  stroke-width: 1.5;
+}
+
+.pulse_command {
+  fill: var(--accent);
+}
+
+.pulse_feedback {
+  fill: rgba(var(--ink-rgb), 0.6);
+}
+
+.pulse_estop {
+  fill: var(--danger);
+}
+
+/* Wire labels: one word, set in the body face, with a white halo so they read
+   where they cross a line. */
+.label {
+  fill: var(--muted);
+  font-family: var(--font-body);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  paint-order: stroke;
+  stroke: var(--white);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+/* --------------------------------------------------------------------------
+   Stacked layout: one column, lanes down either side, nothing scaled — the
+   section is no longer a fixed screen here and simply scrolls.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1040px) {
+  .frame {
+    flex: none;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .diagram {
+    position: relative;
+    top: auto;
+    left: auto;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 56px;
+    max-width: none;
+    /* One lane each side, 14px in, label on its outer side. */
+    padding: 0 30px;
+    transform: none;
+  }
+
+  .estop {
+    align-self: flex-end;
+  }
+
+  .rail {
+    align-self: auto;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 6px 0;
+  }
+
+  .rail::before {
+    top: 50%;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    border-left: 0;
+    border-top: 1.5px dashed rgba(var(--accent-rgb), 0.55);
+  }
+
+  .railLabel {
+    margin-bottom: 0;
+    padding: 6px 10px 6px 0;
+    text-align: left;
+  }
+
+  .panelGrid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 60px auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Motion guard. Last, so every rule it cancels is above it. The packets are
+   not rendered at all for these readers; this stills the rest.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .wires,
+  .tag {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .estopDot {
+    animation: none;
+  }
+}

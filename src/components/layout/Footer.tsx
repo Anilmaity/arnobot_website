@@ -86,7 +86,7 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <p>{SITE.copyright}</p>
-        <p>MADE IN INDIA 🇮🇳</p>
+        <p>MADE IN INDIA</p>
       </div>
     </footer>
   );

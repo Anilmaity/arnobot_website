@@ -197,7 +197,7 @@ export const INSIGHTS: readonly InsightPost[] = [
       {
         heading: 'Payload',
         text:
-          'The only layer that changes between platforms. The three underneath are the same whether the machine is a 3 kg scout or a 500 kg carrier.',
+          'The only layer that changes between platforms. The three underneath are the same whether the machine is a 3\u00A0kg scout or a 500\u00A0kg carrier.',
       },
     ],
   },
@@ -208,7 +208,7 @@ export const INSIGHTS: readonly InsightPost[] = [
     category: 'Industry',
     title: 'Inspection at Height Without the Scaffolding',
     excerpt:
-      'ALTIUS holds a 30 kg vertical payload on steel by magnetic grip, with interchangeable tooling. What that changes about surveying a structure nobody wants to climb.',
+      'ALTIUS holds a 30\u00A0kg vertical payload on steel by magnetic grip, with interchangeable tooling. What that changes about surveying a structure nobody wants to climb.',
     date: 'August 11, 2026',
     isoDate: '2026-08-11',
     readTime: '6 min read',
@@ -222,7 +222,7 @@ export const INSIGHTS: readonly InsightPost[] = [
       {
         heading: 'Thirty kilograms, held by magnets',
         text:
-          'ALTIUS climbs steel on magnetic grip and carries a 30 kg vertical payload, so the instrument goes to the structure instead of the structure being wrapped in access equipment.',
+          'ALTIUS climbs steel on magnetic grip and carries a 30\u00A0kg vertical payload, so the instrument goes to the structure instead of the structure being wrapped in access equipment.',
       },
       {
         heading: 'Tooling that changes with the job',
@@ -329,7 +329,7 @@ export const INSIGHTS: readonly InsightPost[] = [
       {
         heading: 'Two hundred kilograms',
         text:
-          'SAIBYA carries 200 kg on a 4x4 high-traction drivetrain, which is the difference between a patrol carrying its own supply and a machine carrying it for them.',
+          'SAIBYA carries 200\u00A0kg on a 4x4 high-traction drivetrain, which is the difference between a patrol carrying its own supply and a machine carrying it for them.',
       },
       {
         heading: 'Terrain that has no road',
@@ -406,7 +406,7 @@ export const INSIGHTS: readonly InsightPost[] = [
     category: 'Company',
     title: 'Four Platforms, One Core',
     excerpt:
-      'From a 3 kg tactical scout to a 500 kg carrier, the same core runs underneath — so a crew trained on one robot can keep the whole fleet moving.',
+      'From a 3\u00A0kg tactical scout to a 500\u00A0kg carrier, the same core runs underneath — so a crew trained on one robot can keep the whole fleet moving.',
     date: 'July 25, 2026',
     isoDate: '2026-07-25',
     readTime: '5 min read',
@@ -415,7 +415,7 @@ export const INSIGHTS: readonly InsightPost[] = [
       {
         heading: 'Three kilograms to five hundred',
         text:
-          'NEXUS at 3 kg scouts ahead, SAIBYA carries 200 kg, ATM carries 500 kg, and ALTIUS works vertically on steel. Four platforms covering very different jobs.',
+          'NEXUS at 3\u00A0kg scouts ahead, SAIBYA carries 200\u00A0kg, ATM carries 500\u00A0kg, and ALTIUS works vertically on steel. Four platforms covering very different jobs.',
       },
       {
         heading: 'The core does not change',
@@ -490,9 +490,9 @@ export const INSIGHTS: readonly InsightPost[] = [
   {
     slug: 'from-200-kg-to-500-kg',
     category: 'Engineering',
-    title: 'From 200 kg to 500 kg',
+    title: 'From 200\u00A0kg to 500\u00A0kg',
     excerpt:
-      'SAIBYA carries 200 kg on a 4×4 drivetrain; ATM carries 500 kg on front and rear suspension. What changes structurally when the payload more than doubles.',
+      'SAIBYA carries 200\u00A0kg on a 4×4 drivetrain; ATM carries 500\u00A0kg on front and rear suspension. What changes structurally when the payload more than doubles.',
     date: 'August 21, 2026',
     isoDate: '2026-08-21',
     readTime: '8 min read',
@@ -501,7 +501,7 @@ export const INSIGHTS: readonly InsightPost[] = [
       {
         heading: 'Two carriers, one job',
         text:
-          'SAIBYA carries 200 kg on a 4x4 high-traction drivetrain. ATM carries 500 kg. The task is the same; almost nothing structural is.',
+          'SAIBYA carries 200\u00A0kg on a 4x4 high-traction drivetrain. ATM carries 500\u00A0kg. The task is the same; almost nothing structural is.',
       },
       {
         heading: 'Suspension changes the problem',
@@ -520,7 +520,7 @@ export const INSIGHTS: readonly InsightPost[] = [
     category: 'Engineering',
     title: 'Holding a Machine to a Steel Wall',
     excerpt:
-      'Magnetic grip has to carry the robot, its tooling and a 30 kg payload — and stay predictable across welds, coatings and the edge of the plate.',
+      'Magnetic grip has to carry the robot, its tooling and a 30\u00A0kg payload — and stay predictable across welds, coatings and the edge of the plate.',
     date: 'August 1, 2026',
     isoDate: '2026-08-01',
     readTime: '7 min read',
@@ -529,7 +529,7 @@ export const INSIGHTS: readonly InsightPost[] = [
       {
         heading: 'The load path',
         text:
-          'Magnetic grip has to carry the robot, its tooling and a 30 kg vertical payload, with margin, while the machine is moving rather than parked.',
+          'Magnetic grip has to carry the robot, its tooling and a 30\u00A0kg vertical payload, with margin, while the machine is moving rather than parked.',
       },
       {
         heading: 'Welds, coatings and edges',
@@ -562,7 +562,7 @@ export const INSIGHTS: readonly InsightPost[] = [
       {
         heading: 'Rapid deployment',
         text:
-          'At 3 kg it is carried rather than transported, which is what makes it useful for urban reconnaissance, indoor inspection and scouting high-risk ground.',
+          'At 3\u00A0kg it is carried rather than transported, which is what makes it useful for urban reconnaissance, indoor inspection and scouting high-risk ground.',
       },
       {
         heading: 'Encrypted control',

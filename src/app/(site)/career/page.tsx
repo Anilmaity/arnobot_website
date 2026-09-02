@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 const PRINCIPLES: ReadonlyArray<{ readonly title: string; readonly body: string; readonly icon: ReactNode }> = [
   {
     title: 'Go to the site',
-    body: 'Specifications argue with each other. Sites do not. There is a site visit before the design review, and whoever writes the control loop has stood on the ground it will drive over.',
+    body: 'Specifications argue with each other. Sites do not. There is a site visit before the design review, and whoever writes the control loop has stood on the ground it will drive\u00A0over.',
     icon: (
       <>
         <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0Z" />

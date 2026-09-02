@@ -9,7 +9,7 @@ export const SITE = {
     'Autonomous robotic platforms for defence, industrial inspection, maritime and critical infrastructure operations.',
   phone: '+91 9925512860',
   email: 'contact@arnobot.in',
-  addressLines: ['G-2, Parul Apartments,', 'Satellite Road,', 'Ahmedabad – 380015, India'],
+  addressLines: ['G-2, Parul Apartments,', 'Satellite Road,', 'Ahmedabad – 380015,\u00A0India'],
   officeHours: 'Mon – Sat, 10 AM – 7 PM IST',
   /** Prefixed onto the address wherever it is displayed - see HQ_ADDRESS_LINES. */
   addressLabel: 'HQ',

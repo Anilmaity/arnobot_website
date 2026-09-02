@@ -165,111 +165,9 @@
   max-width: var(--measure-narrow);
 }
 
-/* --------------------------------------------------------------------------
-   Architecture diagram.
-
-   The four-layer stack is drawn as inline SVG so it scales without a raster
-   asset, stays legible in a screenshot, and can be recoloured from these
-   tokens rather than re-exported.
-   -------------------------------------------------------------------------- */
-
-.diagram {
-  width: 100%;
-  max-width: 64rem;
-  margin: 0 auto;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  padding: clamp(20px, 3vw, 36px);
-}
-
-/* The section is one screen tall and the head and pull-quote take their share,
-   so the diagram is sized by HEIGHT first and only then capped by width. Without
-   this it renders at its natural aspect ratio and runs off the bottom of the
-   screen — the layers below the fold are the ones that carry the argument. The
-   floor keeps it readable on a short landscape phone, where 34svh alone would
-   shrink the labels to nothing. */
-.stackSvg {
-  display: block;
-  width: auto;
-  height: min(34svh, 320px);
-  min-height: 220px;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-@media (max-width: 900px) {
-  /* Stacked layout has the vertical room, so let it size by width instead —
-     with a floor under the width, so the labels never scale below legible. The
-     figure scrolls rather than the page if the screen is narrower than that. */
-  .diagram {
-    overflow-x: auto;
-  }
-
-  .stackSvg {
-    width: 100%;
-    min-width: 300px;
-    height: auto;
-  }
-}
-
-.stackBox {
-  fill: var(--white);
-  stroke: var(--line);
-  stroke-width: 1;
-}
-
-.stackArrow,
-.stackRail {
-  stroke: var(--accent);
-  stroke-width: 1.5;
-}
-
-.stackRail {
-  stroke-dasharray: 3 5;
-}
-
-.stackArrowHead {
-  fill: var(--accent);
-}
-
-/* SVG font sizes are viewBox user units, not screen pixels — they ride the
-   token values so the diagram matches the page's scale as it is drawn. */
-.stackName {
-  font-family: var(--font-display);
-  font-weight: var(--fw-display);
-  font-size: var(--fs-body-md);
-  fill: var(--ink);
-}
-
-.stackRole {
-  font-family: var(--font-body);
-  font-size: var(--fs-xs);
-  font-style: italic;
-  fill: var(--accent);
-}
-
-.stackDesc {
-  font-family: var(--font-body);
-  font-size: var(--fs-xs);
-  fill: var(--muted);
-}
-
-/* Layers resolve one after another as the section reveals, so the reader sees
-   the stack assemble top-down rather than arrive all at once. Per-element
-   delays are set inline in the component, which is why this keeps its own
-   transition rather than riding the global `fade-up`. */
-.stackLayer {
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity var(--t-slowest) var(--ease-lift),
-    transform var(--t-slowest) var(--ease-lift);
-}
-
-:global(.visible) .stackLayer {
-  opacity: 1;
-  transform: none;
-}
+/* The architecture diagram — nodes, wires, motion and its one-screen fit —
+   is the ArchitectureDiagram component and its own module; it sits in the
+   section as a flex item of its own. */
 
 /* The one argument on the page that earns its own typographic moment. */
 .pullQuote {
@@ -284,31 +182,34 @@
 /* --------------------------------------------------------------------------
    Analytics & Operations — the software showcase.
 
-   The clip is already a laptop standing on a pure-white ground, so it needs no
-   frame, no scrim and no crop: the section's white simply continues the clip's
-   own. Copy sits at the top of the screen and the machine runs edge to edge
-   underneath it, which is the whole point of a shot of the software.
+   Copy on the left, the laptop clip on the right: the same two-column split as
+   the Origin section on About, held to the content measure like the card grids
+   above it. The clip is already a laptop standing on a pure-white ground, so
+   it needs no frame, no scrim and no crop — the section's white simply
+   continues the clip's own.
    -------------------------------------------------------------------------- */
 
-.showcaseSection {
+.showcaseSplit {
+  display: grid;
+  /* The copy holds a narrow column, as a section head does elsewhere on the
+     page; the machine takes the rest, because it is the subject of the shot. */
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  gap: var(--gap-grid);
   align-items: center;
-  /* Top-aligned rather than centred, so the copy stays high on the screen and
-     the footage takes the space it frees. */
-  justify-content: flex-start;
-  overflow: hidden;
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
 }
 
-/* The clip carries its own white margin above the lid, so the head needs less
-   room beneath it here than in a section that opens straight onto text. */
-.showcaseSection .sectionHead {
-  margin-bottom: clamp(4px, 1vh, 16px);
+/* The lead opens under the title with the same gap `section-head` gives it. */
+.showcaseCopy p {
+  margin-top: 20px;
 }
 
 .showcase {
-  /* Cancels the page gutter: the clip runs the full width of the viewport. */
-  align-self: stretch;
-  margin: 0 calc(var(--gutter) * -1);
+  margin: 0;
   padding: 0;
+  min-width: 0;
 }
 
 .showcase video {
@@ -317,24 +218,15 @@
   height: auto;
   /* Declared up front so the section does not reflow when metadata lands. */
   aspect-ratio: 16 / 9;
-  /* Runs at its native 16:9 so the machine spans the full width of the screen.
-     The cap keeps the section on one screen: at 92svh the clip alone stood
-     740px and took the band 255px past the fold, because the heading above it
-     is not free. What is left after the heading and the padding is the cap, so
-     when it bites the clip letterboxes invisibly — its ground is the section's. */
-  max-height: calc(100svh - 320px);
   object-fit: contain;
 }
 
 /* On a phone the clip is only a fifth of the screen tall, so top-aligning it
    would leave the bottom half of the section empty. Centre it instead. */
+/* One column on a phone: the copy first, the machine under it. */
 @media (max-width: 900px) {
-  .showcaseSection {
-    justify-content: center;
-  }
-
-  .showcaseSection .sectionHead {
-    margin-bottom: clamp(16px, 3vh, 32px);
+  .showcaseSplit {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -346,6 +238,10 @@
    -------------------------------------------------------------------------- */
 
 .steps {
+  /* Explicit width: the section is a column flex box that does not stretch its
+     items, and a shrink-wrapped grid sized itself to its longest line and ran
+     off the right edge of a phone. */
+  width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   max-width: var(--measure);
   margin: 0 auto;
@@ -387,13 +283,12 @@
    Motion guard.
 
    Last in the file on purpose: every rule it cancels is defined above it, and
-   at equal specificity the later rule wins. Covers the diagram's layer
-   sequence, the step stagger and the drifting band footage — the `fade-up`
-   reveals are covered by the global guard in style.css.
+   at equal specificity the later rule wins. Covers the step stagger and the
+   drifting band footage — the `fade-up` reveals are covered by the global
+   guard in style.css, and the architecture diagram carries its own.
    -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .stackLayer,
   .step {
     opacity: 1;
     transform: none;

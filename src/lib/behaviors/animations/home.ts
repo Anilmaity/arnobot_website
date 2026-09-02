@@ -22,17 +22,17 @@ function heroSection(): void {
   timeline.from('.hero-content .eyebrow', { opacity: 0, y: 30, duration: 0.6, ease: 'power3.out' }, '-=0.8');
   timeline.from('.hero h1', { opacity: 0, y: 40, duration: 0.8, ease: 'power3.out' }, '-=0.6');
 
-  /* The play affordance: the home hero's Full Video button, and the product
-     hero's play glyph — which only renders for a product shipping no still, so
-     it is absent whenever every product has one. Resolved up front and skipped
-     when nothing matches, because an empty selector is a GSAP console warning
-     on every page load, not a silent no-op.
+  /* The play affordance: the product hero's play glyph — which only renders
+     for a product shipping no still, so it is absent whenever every product has
+     one, and never on the home page. Resolved up front and skipped when nothing
+     matches, because an empty selector is a GSAP console warning on every page
+     load, not a silent no-op.
 
      `-=0.2` rather than the old `-=0.6`: this used to follow two tweens on
      `.hero-sub` and `.hero-actions`, markup the rebuild does not have. They
      matched nothing but still held their 0.4s of timeline, so removing them
      would have pulled this entrance that much earlier. It still lands at 1.0s. */
-  const playTargets = queryAll('.hero-play, .hero-video-btn');
+  const playTargets = queryAll('.hero-play');
   if (playTargets.length > 0) {
     // fromTo, not from: React's dev-mode double effect re-creates this timeline, and
     // a plain `from` would capture the half-scaled mid-flight value as its end state
@@ -58,9 +58,6 @@ function heroSection(): void {
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom 40%', scrub: true },
   });
 
-  // `.hero-video-btn` is deliberately excluded: the home hero keeps its Full Video
-  // action visible for the whole scroll, and a scrub tween here would also pin the
-  // button at the entrance tween's start scale.
   const playGlyph = document.querySelector('.hero-play');
   if (playGlyph) {
     gsap.to(playGlyph, {

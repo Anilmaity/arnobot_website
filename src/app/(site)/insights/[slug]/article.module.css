@@ -21,30 +21,31 @@
    Hero
    -------------------------------------------------------------------------- */
 
-/* One screen, like the index hero and like `.blog-hero` on the page this
-   supersedes: the title block is what the reader lands on, and the header
-   measures this element to decide when to dock, so a full screen keeps that
-   threshold the same half-screen it is on every other route.
-
-   `min-height` rather than `height` — a four-line title on a phone grows the
-   band instead of clipping it. `--section-pad-top` reserves the fixed header,
-   which is transparent here (`data-cinematic-hero`). */
+/* The band is sized to the title block, and the lead image below is pulled up
+   over its bottom edge by `--overlap`, so the first screen is the title and the
+   picture together. It used to be a full screen of navy with the title alone in
+   the middle and the photo under the fold, which read as an empty page.
+   `--section-pad-top` reserves the fixed header, which is transparent here
+   (`data-cinematic-hero`); the bottom padding is the overlap plus the air
+   between the meta line and the picture. */
 .hero {
+  --overlap: clamp(72px, 10vw, 128px);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: var(--section-pad-top) 0 var(--section-pad-bottom);
+  padding: calc(var(--section-pad-top) + clamp(8px, 2vh, 24px)) 0
+    calc(var(--overlap) + clamp(40px, 6vh, 64px));
   background: var(--footer);
 }
 
 @media (max-width: 900px) {
-  /* A full screen of title is a lot of dark on a phone; let the band size to
-     the copy, still clear of the docked bar. */
+  /* Less dark on a phone: a shallower overlap and a tighter band, still clear
+     of the docked bar. */
   .hero {
-    min-height: 0;
-    padding-block: calc(var(--nav-height) + clamp(24px, 4vh, 48px)) clamp(40px, 6vh, 64px);
+    --overlap: clamp(34px, 5vw, 56px);
+
+    padding-block: calc(var(--nav-height) + clamp(24px, 4vh, 48px)) calc(var(--overlap) + clamp(28px, 4vh, 40px));
   }
 }
 
@@ -102,7 +103,7 @@
 }
 
 .media {
-  margin: clamp(-56px, -5vw, -34px) auto 0;
+  margin: calc(-1 * var(--overlap)) auto 0;
   max-width: 960px;
   overflow: hidden;
   border-radius: var(--radius-card);

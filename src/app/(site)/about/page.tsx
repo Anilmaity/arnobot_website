@@ -31,7 +31,7 @@ const RECORD: ReadonlyArray<{
   {
     value: '4',
     label: 'Robotic platforms',
-    note: 'SAIBYA, ATM, NEXUS and ALTIUS — from a 3 kg tactical scout to a 500 kg carrier.',
+    note: 'SAIBYA, ATM, NEXUS and ALTIUS — from a 3\u00A0kg tactical scout to a 500\u00A0kg carrier.',
   },
   { value: '2', label: 'Awards', note: 'National and state recognition for engineering and innovation.' },
   { value: '4', label: 'IPs filed', note: 'Protecting the drivetrain and climbing work developed in-house.' },
@@ -45,7 +45,7 @@ const RECORD: ReadonlyArray<{
 const STAT_DELAY: readonly string[] = ['', 'd1', 'd2', 'd3'];
 
 /** The mission and the vision: one statement per screen, each typed out as
-    it comes into view. */
+    it comes into view, held for three seconds, and typed again. */
 const STATEMENTS: ReadonlyArray<{
   readonly id: string;
   readonly icon: ReactNode;
@@ -66,7 +66,8 @@ const STATEMENTS: ReadonlyArray<{
   },
 ];
 
-/** The values, on a band of their own, one at a time at display scale. */
+/** The values, on a band of their own, one at a time at display scale, each
+    typed out as it slides in. */
 const VALUES = [
   'Engineering Excellence',
   'Safety First',
@@ -177,7 +178,7 @@ export default function AboutPage() {
             <span className={cn('card-icon', styles.statementIcon)}>{statement.icon}</span>
             <span className="eyebrow">{statement.title}</span>
             <h2 className="section-title is-editorial">
-              <TypingAnimation text={statement.body} />
+              <TypingAnimation text={statement.body} repeatDelay={3000} />
             </h2>
           </div>
         </section>
@@ -188,7 +189,7 @@ export default function AboutPage() {
         <div className={cn(styles.values, 'fade-up')}>
           <span className="eyebrow">Our Values</span>
           <p className="value-current is-display">
-            <WordRotate words={VALUES} />
+            <WordRotate words={VALUES} typing />
           </p>
         </div>
       </section>

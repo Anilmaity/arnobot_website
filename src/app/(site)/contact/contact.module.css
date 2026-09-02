@@ -196,6 +196,19 @@
   padding-bottom: clamp(20px, 2.6vh, 36px);
 }
 
+/* The visit band is the last thing before the footer, and its card is set
+   on the footer's own ink — with the tight bottom above, the two read as
+   one block. So it takes the standard bottom clearance back, and the room
+   comes out of the card's rhythm instead (see `.visitCard` onward), which
+   scales with viewport height so the band still holds to one screen down
+   to a 768px-tall viewport (probed at 1366x768, 1440x804, 1536x864).
+   Sits with `.sectionTight` on the section; declared after it so the
+   padding wins, and before the 900px rule so phones keep theirs. */
+.visit {
+  --head-gap: clamp(20px, 3vh, 40px);
+  padding-bottom: var(--section-pad-bottom);
+}
+
 @media (max-width: 900px) {
   /* A full screen per section is a lot of scrolling on a phone, and these are
      already tall there. Let them size to their content. The tightening above
@@ -274,7 +287,7 @@
   font-size: var(--fs-2xs);
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: rgba(var(--ink-rgb), 0.28);
+  color: rgba(var(--ink-rgb), 0.55);
 }
 
 .channelIcon {
@@ -519,10 +532,12 @@ a.channelValue:focus-visible {
   filter: none;
 }
 
+/* The card's vertical rhythm is in vh so it gives way on short screens
+   before the band does; the copy, the map and the button are untouched. */
 .visitCard {
   display: flex;
   flex-direction: column;
-  padding: clamp(22px, 2.2vw, 30px);
+  padding: clamp(18px, 3vh, 28px) clamp(22px, 2.2vw, 30px);
   background: var(--footer);
   color: var(--white);
 }
@@ -533,22 +548,22 @@ a.channelValue:focus-visible {
   font-size: var(--fs-h3);
   line-height: 1.25;
   letter-spacing: var(--ls-display);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .visitAddress {
   font-size: var(--fs-body);
-  line-height: var(--lh-body);
+  line-height: 1.5;
   color: rgba(var(--white-rgb), 0.7);
 }
 
 .visitRows {
-  margin: 28px 0 0;
+  margin: clamp(16px, 2.6vh, 24px) 0 0;
   border-top: 1px solid var(--line-on-dark);
 }
 
 .visitRow {
-  padding: 10px 0;
+  padding: clamp(7px, 1.1vh, 10px) 0;
   border-bottom: 1px solid var(--line-on-dark);
 }
 
@@ -559,13 +574,14 @@ a.channelValue:focus-visible {
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: rgba(var(--white-rgb), 0.55);
-  margin-bottom: 7px;
+  margin-bottom: 5px;
 }
 
 .visitRowValue {
   display: block;
   font-size: var(--fs-body);
   font-weight: var(--fw-semibold);
+  line-height: 1.4;
   color: var(--white);
   transition: color var(--t-fast) var(--ease-menu);
 }
@@ -580,7 +596,7 @@ a.visitRowValue:focus-visible {
    column, while the padding keeps a floor of air above it when it does not. */
 .visitFoot {
   margin-top: auto;
-  padding-top: 32px;
+  padding-top: clamp(20px, 3.2vh, 32px);
 }
 
 /* --------------------------------------------------------------------------

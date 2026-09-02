@@ -3,6 +3,9 @@ import { SITE } from '@/data/site';
 import './globals.css';
 
 export const metadata: Metadata = {
+  // Absolute base for Open Graph / Twitter image URLs (the article pages set
+  // `openGraph.images`); without it Next warns and falls back to localhost.
+  metadataBase: new URL('https://arnobot.in'),
   title: { default: SITE.title, template: `%s | ${SITE.name}` },
   description: SITE.description,
   applicationName: SITE.name,

@@ -11,7 +11,7 @@ export default function HeroSection() {
       </video>
       {/* Layer 2 — the dark gradient scrim is `.hero-cinematic::after`. */}
 
-      {/* Layer 3 — copy and controls. */}
+      {/* Layer 3 — copy. */}
       <div className="hero-content">
         <span className="eyebrow">Robotics Redefined</span>
         <h1 className="russo">
@@ -19,13 +19,6 @@ export default function HeroSection() {
           Systems For Industry
         </h1>
       </div>
-
-      <button type="button" className="btn btn-ghost hero-video-btn play-trigger" data-video={HERO_VIDEO}>
-        Full Video
-        <span className="btn-arrow" aria-hidden="true">
-          &#8599;
-        </span>
-      </button>
     </section>
   );
 }

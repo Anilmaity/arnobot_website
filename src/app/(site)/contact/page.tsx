@@ -232,7 +232,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <section className={cn(styles.sectionTight, 'reveal')} id="contact-visit">
+      <section className={cn(styles.sectionTight, styles.visit, 'reveal')} id="contact-visit">
         <div className={styles.inner}>
           <div className={cn(styles.sectionHead, styles.fadeUp)}>
             <span className="eyebrow">Find us</span>

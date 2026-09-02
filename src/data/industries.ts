@@ -18,7 +18,7 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       },
       {
         name: 'SAIBYA',
-        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200 kg.',
+        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
         image: '/assets/images/SAIBYA.png',
         specs: ['UGV', '200kg Load', '4x4 Drive', 'LiDAR SLAM'],
       },
@@ -72,7 +72,7 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
     robots: [
       {
         name: 'SAIBYA',
-        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200 kg.',
+        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
         image: '/assets/images/SAIBYA.png',
         specs: ['UGV', 'Heavy Load', 'IP65 Weatherproof', 'Auto-Charger'],
       },
@@ -86,7 +86,7 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
     robots: [
       {
         name: 'SAIBYA',
-        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200 kg.',
+        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
         image: '/assets/images/SAIBYA.png',
         specs: ['UGV', 'Heavy Load', 'IP65 Weatherproof', 'Auto-Charger'],
       },
@@ -120,7 +120,7 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
     robots: [
       {
         name: 'SAIBYA',
-        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200 kg.',
+        desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
         image: '/assets/images/SAIBYA.png',
         specs: ['UGV', 'Heavy Load', 'IP65 Weatherproof', 'Auto-Charger'],
       },

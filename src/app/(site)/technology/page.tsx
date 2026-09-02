@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Cta from '@/components/sections/Cta';
+import ArchitectureDiagram from '@/components/sections/technology/ArchitectureDiagram';
 import { cn } from '@/lib/dom';
 import styles from './technology.module.css';
 
@@ -47,36 +48,8 @@ const GCS_FEATURES: ReadonlyArray<{ readonly title: string; readonly body: strin
 ];
 */
 
-/**
- * The four layers drawn by `ArchitectureDiagram`, top to bottom. Order is the
- * diagram's order: the operator sits at the top, the hardware at the bottom.
- */
-const ARCHITECTURE_LAYERS: ReadonlyArray<{
-  readonly name: string;
-  readonly role: string;
-  readonly desc: string;
-}> = [
-  {
-    name: 'Ground Control Station',
-    role: 'the human layer',
-    desc: 'Where a person plans the mission, watches it run, and takes it back.',
-  },
-  {
-    name: 'Autonomy Engine',
-    role: 'the thinking layer',
-    desc: 'Runs on the robot. Fuses the sensors, holds the map, decides the next move.',
-  },
-  {
-    name: 'Real-Time Control',
-    role: 'the reflex layer',
-    desc: 'Does not think. Reacts — thousands of times a second, deterministically.',
-  },
-  {
-    name: 'Robot Hardware',
-    role: 'the body layer',
-    desc: 'The only layer that changes between platforms.',
-  },
-];
+/* The four-layer architecture — its copy, wiring and motion — lives with the
+   diagram in src/components/sections/technology/ArchitectureDiagram.tsx. */
 
 /** The onboard loop, in the order the robot runs it. One line each. */
 const PERCEPTION_STEPS: ReadonlyArray<{ readonly name: string; readonly body: string }> = [
@@ -160,103 +133,6 @@ function ChapterBand({
   );
 }
 
-/**
- * The four-layer stack, drawn rather than listed. Arrows run down between the
- * layers; the one between Autonomy Engine and Real-Time Control runs both ways,
- * because the two exchange status many times a second. The link layer is a rail
- * beside all four rather than a fifth box, since it spans them.
- *
- * `viewBox` units are the design's own grid, so the diagram scales cleanly and
- * the labels stay in proportion at any width.
- */
-function ArchitectureDiagram() {
-  const BOX_H = 96;
-  const GAP = 40;
-  const TOP = 12;
-
-  return (
-    <svg
-      className={styles.stackSvg}
-      viewBox="0 0 720 580"
-      role="img"
-      aria-label="Arnobot system architecture: Ground Control Station, Autonomy Engine, Real-Time Control and Robot Hardware, with a link layer spanning all four."
-    >
-      <defs>
-        <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-          <path d="M0 0 L10 5 L0 10 z" className={styles.stackArrowHead} />
-        </marker>
-        <marker id="arwUp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-          <path d="M0 0 L10 5 L0 10 z" className={styles.stackArrowHead} />
-        </marker>
-      </defs>
-
-      {ARCHITECTURE_LAYERS.map((layer, i) => {
-        const y = TOP + i * (BOX_H + GAP);
-        return (
-          <g key={layer.name} className={styles.stackLayer} style={{ transitionDelay: `${0.1 + i * 0.12}s` }}>
-            <rect x="8" y={y} width="536" height={BOX_H} rx="4" className={styles.stackBox} />
-            <text x="32" y={y + 38} className={styles.stackName}>
-              {layer.name}
-            </text>
-            <text x="32" y={y + 64} className={styles.stackRole}>
-              {layer.role}
-            </text>
-            <text x="32" y={y + 84} className={styles.stackDesc}>
-              {layer.desc}
-            </text>
-          </g>
-        );
-      })}
-
-      {/* Connectors. Index 1 is the two-way link between thinking and reflexes. */}
-      {[0, 1, 2].map((i) => {
-        const y1 = TOP + i * (BOX_H + GAP) + BOX_H + 6;
-        const y2 = y1 + GAP - 14;
-        const twoWay = i === 1;
-        return (
-          <line
-            key={i}
-            x1="276"
-            y1={twoWay ? y1 + 4 : y1}
-            x2="276"
-            y2={y2}
-            className={`${styles.stackArrow} ${styles.stackLayer}`}
-            style={{ transitionDelay: `${0.22 + i * 0.12}s` }}
-            markerEnd="url(#arw)"
-            markerStart={twoWay ? 'url(#arwUp)' : undefined}
-          />
-        );
-      })}
-
-      {/* Link layer — a rail beside the stack, not a fifth box. */}
-      <g className={styles.stackLayer} style={{ transitionDelay: '0.6s' }}>
-        <line x1="584" y1={TOP} x2="584" y2={TOP + 4 * BOX_H + 3 * GAP} className={styles.stackRail} />
-        <text x="604" y={TOP + 30} className={styles.stackName}>
-          Link layer
-        </text>
-        <text x="604" y={TOP + 56} className={styles.stackRole}>
-          spans all four
-        </text>
-        <text x="604" y={TOP + 84} className={styles.stackDesc}>
-          Site wireless,
-        </text>
-        <text x="604" y={TOP + 104} className={styles.stackDesc}>
-          cellular, long-range
-        </text>
-        <text x="604" y={TOP + 124} className={styles.stackDesc}>
-          RF override, or a
-        </text>
-        <text x="604" y={TOP + 144} className={styles.stackDesc}>
-          tether where radio
-        </text>
-        <text x="604" y={TOP + 164} className={styles.stackDesc}>
-          cannot reach.
-        </text>
-      </g>
-    </svg>
-  );
-}
-
 /* ---------------------------------------------------------------------------
    Page
    -------------------------------------------------------------------------- */
@@ -317,13 +193,16 @@ export default function TechnologyPage() {
           <span className="eyebrow">Hardware meets intelligence</span>
           <h2 className="section-title is-editorial">Hardware &amp; Software</h2>
           <p className="section-lead">
-            Four bodies, one four-layer core. For a new environment we change the body, not the intelligence.
+            One four-layer core, from remote control to full autonomy. For a new environment we change the body,
+            not the intelligence.
           </p>
         </div>
 
-        <figure className={cn('fade-up', 'd1', styles.diagram)}>
-          <ArchitectureDiagram />
-        </figure>
+        {/* The diagram assembles itself node by node once the section is in
+            view, so it does not ride the section's fade-up. It is the
+            section's own flex item so it can take the height left between the
+            head and the pull quote and scale itself to fit one screen. */}
+        <ArchitectureDiagram />
 
         <p className={cn('fade-up', 'd2', styles.pullQuote)}>
           Emergency stop is wired to the reflexes, not the brain — so it works even when the autonomy computer is fully
@@ -333,8 +212,10 @@ export default function TechnologyPage() {
 
       {/* Software Overview */}
       <ChapterBand
+        id="tech-software"
         label="Intelligence behind every mission"
         title="Software Overview"
+        body="The software runs on our platform: the operator interface, where missions are planned and monitored; the autonomy engine, which executes missions on the robot with or without a live connection; and the mission record, which is retrieved when the robot reconnects to the operator system."
         video="/assets/videos/products/altius/GroundStation_setup.mp4"
       />
 
@@ -356,24 +237,26 @@ export default function TechnologyPage() {
         </ol>
       </section>
 
-      {/* Analytics & Operations. The clip is already a laptop standing on white,
-          so it is shown whole on a white section — no crop, no scrim, no
-          knocked-back opacity. Cropping it into a full-bleed band cut the
-          machine off at the edges and hid the screen. */}
-      <section className={cn('section-screen', styles.showcaseSection, 'reveal')} id="tech-analytics">
-        <div className={cn('section-head', 'is-centered', 'fade-up', styles.sectionHead)}>
-          <span className="eyebrow">From data to mission impact</span>
-          <h2 className="section-title is-editorial">Analytics &amp; Operations</h2>
-          <p className="section-lead">
-            Every pass comes back as data — the map, the route it actually drove, what it saw and when. Reviewed at a
-            desk, long after the robot has left the site.
-          </p>
+      {/* Analytics & Operations. Copy on the left, the laptop clip on the right —
+          the same split as the Origin section on About. The clip is already a
+          laptop standing on white, so it is shown whole on a white section: no
+          crop, no scrim, no knocked-back opacity. */}
+      <section className={cn('section-screen', 'reveal')} id="tech-analytics">
+        <div className={styles.showcaseSplit}>
+          <div className={cn(styles.showcaseCopy, 'fade-up')}>
+            <span className="eyebrow">From data to mission impact</span>
+            <h2 className="section-title is-editorial">Analytics &amp; Operations</h2>
+            <p className="section-lead">
+              Every pass comes back as data — the map, the route it actually drove, what it saw and when. Reviewed at
+              a desk, long after the robot has left the site.
+            </p>
+          </div>
+          <figure className={cn('fade-up', 'd1', styles.showcase)}>
+            <video autoPlay muted loop playsInline preload="metadata">
+              <source src="/assets/videos/Gecko_Software_on_Laptop.mp4" type="video/mp4" />
+            </video>
+          </figure>
         </div>
-        <figure className={cn('fade-up', 'd1', styles.showcase)}>
-          <video autoPlay muted loop playsInline preload="metadata">
-            <source src="/assets/videos/Gecko_Software_on_Laptop.mp4" type="video/mp4" />
-          </video>
-        </figure>
       </section>
 
       {/* <section className={`${styles.section} reveal`} id="tech-gcs">

@@ -22,7 +22,7 @@ const SECTIONS: readonly LegalSection[] = [
           </a>
           ), scheduling a live field trial, downloading technical brochures, or entering into a commercial deployment for
           our autonomous robotic platforms (including SAIBYA, ATM, NEXUS, ALTIUS), you acknowledge that you have read,
-          understood, and agreed to be legally bound by these Terms and Conditions.
+          understood, and agreed to be legally bound by these Terms and&nbsp;Conditions.
         </p>
         <p className="legal-text">
           If you represent a corporate body, defense agency, or academic institution, you warrant that you have full
@@ -101,7 +101,7 @@ const SECTIONS: readonly LegalSection[] = [
           All proprietary technology, mechanical chassis designs, PCB layouts, firmware, SLAM navigation software, SLAM
           laser visualization, logos, trademarks (including <strong>ARNOBOT™</strong>, <strong>SAIBYA™</strong>,{' '}
           <strong>ATM™</strong>, <strong>NEXUS™</strong>, <strong>ALTIUS™</strong>), and digital media are the exclusive
-          intellectual property of Arnobot Private Limited.
+          intellectual property of Arnobot Private&nbsp;Limited.
         </p>
         <ul className="legal-list">
           <li>

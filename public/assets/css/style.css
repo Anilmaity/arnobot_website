@@ -386,8 +386,15 @@ fieldset {
   padding: 0;
   margin: 0;
   list-style: none;
-  background: var(--line);
   border: 1px solid var(--line);
+}
+
+/* Each cell draws its own hairline into the 1px gap (neighbours overlap to a
+   single line, and the outer ring lands on the grid border). Drawn per cell
+   rather than as the grid ground so that a row the item count does not fill
+   leaves a blank cell, not a slab of line colour. */
+.card-grid > * {
+  outline: 1px solid var(--line);
 }
 
 .card-cell {
@@ -1777,28 +1784,9 @@ select.form-input,
   text-shadow: var(--shadow-hero-text);
 }
 
-.hero.hero-cinematic .hero-video-btn {
-  position: absolute;
-  right: var(--gutter);
-  bottom: 9vh;
-  z-index: 5;
-}
-
 @media (max-width: 1023px) {
   .hero.hero-cinematic .hero-content {
     max-width: min(100%, 640px);
-  }
-}
-
-@media (max-width: 768px) {
-  .hero.hero-cinematic .hero-content {
-    padding-bottom: calc(6vh + 72px);
-  }
-
-  .hero.hero-cinematic .hero-video-btn {
-    right: auto;
-    left: var(--gutter);
-    bottom: 6vh;
   }
 }
 
@@ -2001,6 +1989,15 @@ select.form-input,
   color: var(--slate-700);
   font-size: var(--fs-body-md);
   line-height: var(--lh-body);
+  /* Justified. Long words break at the soft hyphens written into the markup,
+     which keeps the word spacing even. Not `hyphens: auto`: that needs a
+     language dictionary Chrome fetches lazily, so on a fresh install it does
+     nothing and the lines fill with gaps. `text-wrap: wrap` overrides the
+     global `balance` on paragraphs: balance shortens lines on purpose, and
+     justify then has to stretch the spaces to fill what it left. */
+  text-align: justify;
+  text-wrap: wrap;
+  hyphens: manual;
 }
 
 @media (max-width: 900px) {
@@ -2247,7 +2244,7 @@ select.form-input,
 }
 
 .environment h2 {
-  max-width: 16ch;
+  max-width: 20ch;
   margin: 0;
   color: var(--ink);
   font-size: var(--fs-h2);
@@ -3743,8 +3740,7 @@ main:has(.hero-cinematic) .cta {
 
 @media (max-width: 600px) {
   .product-actions {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .product-actions .btn {
@@ -4148,6 +4144,19 @@ main:has(.hero-cinematic) .cta {
 
 .word-rotate-word.is-leaving {
   animation: word-out-right var(--t-slower) var(--ease-lift) both;
+}
+
+/* Typed rotation (`typing` on WordRotate): each word is typed over an
+   invisible copy of itself, so the block holds its final width and, on a
+   centred line, the letters land left to right from where the whole word
+   will sit. The cursor is `.typing-cursor`, shared with `.typing` above. */
+.word-rotate-typed {
+  position: relative;
+  display: inline-block;
+}
+
+.word-rotate-typed .typing-text {
+  text-align: left;
 }
 
 /* The rotating value's line: card-title scale by default, display scale
