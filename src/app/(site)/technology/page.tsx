@@ -147,7 +147,7 @@ export default function TechnologyPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        <BandMedia src="/assets/videos/Cantilever_Header.mp4" preload="auto" />
+        <BandMedia src="/assets/videos/technology-hero.mp4" preload="auto" />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">ARNOBOT Technology</span>
@@ -184,7 +184,7 @@ export default function TechnologyPage() {
         label="Built for critical missions"
         title="Critical Areas"
         body="Underground, inside a vessel, along a night perimeter, under a steel hull — the ground our robots work on takes away the satellite fix, the radio link and the operator's line of sight, usually all at once."
-        video="/assets/videos/Gecko_Showreel_Robots.mp4"
+        video="/assets/videos/Arnobot2.mp4"
       />
 
       {/* Hardware & Software — the architecture stack */}
@@ -210,13 +210,16 @@ export default function TechnologyPage() {
         </p>
       </section>
 
-      {/* Software Overview */}
+      {/* Software Overview. The band runs the GCS itself behind the words —
+          the live dashboard, a completed mission with its planned and actual
+          path, and a waypoint route on satellite. Real captures, drifted and
+          cross-faded, so the section names the software over a picture of it. */}
       <ChapterBand
         id="tech-software"
         label="Intelligence behind every mission"
         title="Software Overview"
         body="The software runs on our platform: the operator interface, where missions are planned and monitored; the autonomy engine, which executes missions on the robot with or without a live connection; and the mission record, which is retrieved when the robot reconnects to the operator system."
-        video="/assets/videos/products/altius/GroundStation_setup.mp4"
+        video="/assets/videos/gcs-software.mp4"
       />
 
       {/* The onboard loop — perceive, localise, decide. */}
@@ -237,10 +240,10 @@ export default function TechnologyPage() {
         </ol>
       </section>
 
-      {/* Analytics & Operations. Copy on the left, the laptop clip on the right —
-          the same split as the Origin section on About. The clip is already a
-          laptop standing on white, so it is shown whole on a white section: no
-          crop, no scrim, no knocked-back opacity. */}
+      {/* Analytics & Operations. Copy on the left, the GCS on a laptop on the
+          right — the same split as the Origin section on About. The laptop is
+          drawn in CSS rather than shot, so it stays sharp at every width and
+          the screen carries our own software instead of a stock desk. */}
       <section className={cn('section-screen', 'reveal')} id="tech-analytics">
         <div className={styles.showcaseSplit}>
           <div className={cn(styles.showcaseCopy, 'fade-up')}>
@@ -251,10 +254,32 @@ export default function TechnologyPage() {
               a desk, long after the robot has left the site.
             </p>
           </div>
+          {/* The screen runs the GCS itself: the live dashboard, then the
+              Mission Reports view of a completed run with its planned route
+              drawn against the path the robot actually drove — the section's
+              sentence in two pictures. Both are real captures at the screen's
+              own 1440x900, so the clip needs no crop. The poster is the second
+              of them, which is what a visitor sees before the file lands. */}
           <figure className={cn('fade-up', 'd1', styles.showcase)}>
-            <video autoPlay muted loop playsInline preload="metadata">
-              <source src="/assets/videos/Gecko_Software_on_Laptop.mp4" type="video/mp4" />
-            </video>
+            <div className={styles.laptop}>
+              <div className={styles.laptopLid}>
+                <span className={styles.laptopCam} aria-hidden="true" />
+                <div className={styles.laptopScreen}>
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster="/assets/images/gcs-mission-report.webp"
+                    aria-label="The ARNOBOT Ground Control Station: the live mission dashboard, then a completed mission reviewed afterwards — distance covered, time taken, waypoints reached, and the planned route drawn against the path actually driven."
+                  >
+                    <source src="/assets/videos/gcs-laptop.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+              <div className={styles.laptopBase} aria-hidden="true" />
+            </div>
           </figure>
         </div>
       </section>

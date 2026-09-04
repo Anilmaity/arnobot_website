@@ -69,12 +69,15 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       { icon: 'towing', label: 'Towing & surveillance' },
       { icon: 'disaster', label: 'Disaster response' },
     ],
-    /* 72 frames, one every 5 degrees, keyed out of the KeyShot studio render.
-       It opens on 44, the front-on pose. */
+    /* 72 frames, one every 5 degrees, rendered in Cycles from the Fusion OBJ
+       (ArnobotDoc `02-Products/turntable.py`) with the matte-gunmetal body.
+       No contact shadow is baked in — `.spin-frame` draws its own drop-shadow
+       off the alpha, so a rendered one would double up.
+       It opens on 18, the front-on pose. */
     spin: {
       dir: '/assets/renders/saibya-360',
       frames: 72,
-      startIndex: 44,
+      startIndex: 18,
       width: 720,
       height: 491,
     },
@@ -308,12 +311,18 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       { icon: 'surveillance', label: 'Industrial surveillance' },
       { icon: 'mapping', label: 'Critical asset mapping' },
     ],
-    /* 72 frames, one every 5 degrees, keyed out of the KeyShot studio render.
-       It opens on 63, the front-on pose. */
+    /* 72 frames, one every 5 degrees, rendered in Cycles from the Fusion OBJ
+       (ArnobotDoc `02-Products/turntable.py`, `--up y`) with the top plate and
+       shrouds on the same matte gunmetal as the Saibya deck, and the world HDRI
+       raised to 1.0 — at the pipeline default of 0.25 a metallic body has nothing
+       to reflect off these near-vertical surfaces and renders black.
+       `heroImage` above is cut from frame 0 of this same set, so the two must be
+       regenerated together.
+       It opens on 0, the front-on pose. */
     spin: {
       dir: '/assets/renders/altius-360',
       frames: 72,
-      startIndex: 63,
+      startIndex: 0,
       width: 720,
       height: 513,
     },

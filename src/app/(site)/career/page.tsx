@@ -236,7 +236,7 @@ export default async function CareerPage({ searchParams }: PageProps) {
     <main className={styles.page}>
       {/* 1 — Hero */}
       <section className={cn('on-dark', 'section-screen', styles.hero, 'reveal')} id="career-hero" data-cinematic-hero data-header-theme="dark">
-        <BandMedia src="/assets/videos/Gecko_Showreel_Robots.mp4" preload="auto" />
+        <BandMedia src="/assets/videos/careers-workshop.mp4" preload="auto" />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">Careers at {SITE.name}</span>
