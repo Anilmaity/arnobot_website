@@ -14,7 +14,7 @@ export const TECHNOLOGY: readonly InsightDraft[] = [
       'With a satellite fix, localisation is centimetre-grade. Without one — underground, indoors, under steel — the vehicle has to build and trust its own map.',
     date: 'August 18, 2026',
     isoDate: '2026-08-18',
-    image: '/assets/images/gcs_interface.png',
+    image: '/assets/images/hero-image-placeholder.webp',
     body: [
       {
         heading: 'Where the fix runs out',
@@ -173,7 +173,7 @@ export const TECHNOLOGY: readonly InsightDraft[] = [
       'Give the vehicle ground to cover rather than a path to follow, and it can replan around what it meets and resume the pass where it left off.',
     date: 'July 7, 2026',
     isoDate: '2026-07-07',
-    image: '/assets/images/ugv-platform-field.webp',
+    image: '/assets/images/hero-image-placeholder.webp',
     body: [
       {
         heading: 'Give it ground, not a path',

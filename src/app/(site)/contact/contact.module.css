@@ -273,26 +273,8 @@
   background: var(--wash);
 }
 
-/* The index over the icon, both centred: the markup keeps the icon first
-   for the reading order, so the column runs in reverse. */
-.channelTop {
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 14px;
-}
-
 .channelBody {
   align-self: start;
-}
-
-.channelIndex {
-  font-family: var(--font-display);
-  font-weight: var(--fw-display);
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: rgba(var(--ink-rgb), 0.55);
 }
 
 .channelIcon {

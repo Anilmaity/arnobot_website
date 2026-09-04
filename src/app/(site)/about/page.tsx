@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import Cta from '@/components/sections/Cta';
-import { AwardIcon, FileTextIcon, RocketIcon, RoverIcon, ShieldCheckIcon, TargetIcon } from '@/components/ui/Icons';
+import { FileTextIcon, LightbulbIcon, RocketIcon, RoverIcon, TargetIcon, TrophyIcon } from '@/components/ui/Icons';
 import TypingAnimation from '@/components/ui/TypingAnimation';
 import WordRotate from '@/components/ui/WordRotate';
 import { cn } from '@/lib/dom';
@@ -21,38 +21,33 @@ export const metadata: Metadata = {
 /**
  * The record, in the company's own published figures. This band is the only
  * place the site states the awards, filings and publication, and the platform
- * count matches the four on the products page. Each figure carries a mark in
- * the same framed style the careers steps and the statements below use.
+ * count matches the four on the products page. Each figure is a bare number
+ * under a large tinted mark: the label is the only line beneath it.
  */
 const RECORD: ReadonlyArray<{
   readonly icon: ReactNode;
   readonly value: string;
   readonly label: string;
-  readonly note: string;
 }> = [
   {
     icon: <RoverIcon />,
     value: '4',
     label: 'Robotic platforms',
-    note: 'SAIBYA, ATM, NEXUS and ALTIUS — from a 3\u00A0kg tactical scout to a 500\u00A0kg carrier.',
   },
   {
-    icon: <AwardIcon />,
+    icon: <TrophyIcon />,
     value: '2',
     label: 'Awards',
-    note: 'National and state recognition for engineering and innovation.',
   },
   {
-    icon: <ShieldCheckIcon />,
+    icon: <LightbulbIcon />,
     value: '4',
     label: 'IPs filed',
-    note: 'Protecting the drivetrain and climbing work developed in-house.',
   },
   {
     icon: <FileTextIcon />,
     value: '1',
     label: 'Publication',
-    note: 'Peer-reviewed work on autonomous ground mobility.',
   },
 ];
 
@@ -99,16 +94,18 @@ const VALUES = [
    -------------------------------------------------------------------------- */
 
 /**
- * Decorative looping background behind the hero. The hero is on screen at
- * load, so it preloads in full; a band further down the page would pass
- * `metadata` to keep it from pulling its payload before it is scrolled to.
+ * Temporary placeholder while the hero video is out — the same deliberately
+ * obvious "temp asset" card the home hero shows. Swap back to a looping
+ * <video> when the footage lands; `.media video` in the module still carries
+ * its rules.
  */
-function BandMedia({ src, preload = 'metadata' }: { readonly src: string; readonly preload?: 'metadata' | 'auto' }) {
+const HERO_PLACEHOLDER = '/assets/images/hero-placeholder.webp';
+
+/** Decorative background behind the hero, under the scrim the copy sits on. */
+function BandMedia({ image }: { readonly image: string }) {
   return (
     <div className={styles.media} aria-hidden="true">
-      <video autoPlay muted loop playsInline preload={preload}>
-        <source src={src} type="video/mp4" />
-      </video>
+      <img src={image} alt="" />
       <div className={styles.scrim} />
     </div>
   );
@@ -129,7 +126,7 @@ export default function AboutPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        <BandMedia src="/assets/videos/Arnobot2.mp4" preload="auto" />
+        <BandMedia image={HERO_PLACEHOLDER} />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">About ARNOBOT</span>
@@ -263,7 +260,6 @@ export default function AboutPage() {
                 <span className={cn('card-icon', styles.statIcon)}>{entry.icon}</span>
                 <strong className="stat-value">{entry.value}</strong>
                 <span className={cn('micro-label', styles.statLabel)}>{entry.label}</span>
-                <span className={styles.statNote}>{entry.note}</span>
               </li>
             ))}
           </ul>

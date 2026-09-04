@@ -100,8 +100,6 @@ export type HiringStepIcon = 'form' | 'call' | 'build' | 'visit';
 export interface HiringStep {
   readonly name: string;
   readonly icon: HiringStepIcon;
-  /** Where the step falls on the three-week axis — the tag on the card. */
-  readonly when: string;
   /** How long it takes, or how long until the answer — the one line a
    *  candidate scans for. Kept out of `detail` so it is not said twice. */
   readonly takes: string;
@@ -116,7 +114,6 @@ export const HIRING_PROCESS: readonly HiringStep[] = [
   {
     name: 'Apply',
     icon: 'form',
-    when: 'Day 1',
     takes: 'Yes or no in five business days',
     body: 'Visit ARNOBOT → Careers → Apply Now. Complete the step-by-step quiz + questionnaire.',
     detail: 'We read every one — no silent pipelines, no waiting on a portal.',
@@ -124,7 +121,6 @@ export const HIRING_PROCESS: readonly HiringStep[] = [
   {
     name: 'Intro call',
     icon: 'call',
-    when: 'Week 1',
     takes: '30 minutes',
     body: 'A conversation with your future manager.',
     detail: 'What you have built, what we are building, and whether the two meet.',
@@ -132,7 +128,6 @@ export const HIRING_PROCESS: readonly HiringStep[] = [
   {
     name: 'Technical round',
     icon: 'build',
-    when: 'Week 2',
     takes: 'One live session',
     body: 'Work through a real problem from our backlog.',
     detail: 'Worked through together — no puzzles, no whiteboard trivia, no take-home marathon.',
@@ -140,7 +135,6 @@ export const HIRING_PROCESS: readonly HiringStep[] = [
   {
     name: 'Workshop & offer',
     icon: 'visit',
-    when: 'Week 3',
     takes: 'Decision within a week',
     body: 'Visit the workshop, meet the team, and drive a robot.',
     detail: 'Nothing is decided over a call alone — you see the place and the people first.',

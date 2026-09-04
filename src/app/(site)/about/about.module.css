@@ -195,33 +195,29 @@
   text-align: center;
 }
 
-/* The mark over each figure: the global `card-icon` frame at the larger
-   56px the contact cards use, centred by the tile's text alignment. Compound
-   with the global so the size and margin win whichever stylesheet lands
-   first. */
+/* The mark over each figure. With no note under the label the mark carries
+   the tile, so it is set well above the global `card-icon` frame: an 80px
+   square on the pale accent tint with an accent hairline, and a 40px glyph
+   drawn at a heavier stroke. Compound with the global so the size, fill and
+   margin win whichever stylesheet lands first. */
 .statIcon:global(.card-icon) {
-  width: 56px;
-  height: 56px;
-  margin-bottom: 18px;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 22px;
+  background: var(--accent-tint);
+  border-color: rgba(var(--accent-rgb), 0.28);
 }
 
 .statIcon:global(.card-icon) svg {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
+  stroke-width: 2;
 }
 
 /* The figure is the global `stat-value`; the label under it holds ink rather
-   than the global muted, so the note beneath stays the quietest line. */
+   than the global muted, so it reads as the caption of the number. */
 .statLabel {
   color: var(--ink);
-}
-
-.statNote {
-  display: block;
-  margin-top: 12px;
-  font-size: var(--fs-xs);
-  line-height: var(--lh-body);
-  color: var(--muted);
 }
 
 /* --------------------------------------------------------------------------

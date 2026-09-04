@@ -208,35 +208,42 @@ export function RocketIcon(props: IconProps) {
 }
 
 /** Shield and check — the principles held to. */
-export function ShieldCheckIcon(props: IconProps) {
+/** Lightbulb — an idea protected: the IP filings on the record. */
+export function LightbulbIcon(props: IconProps) {
   return (
     <Icon strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M12 2.5 20 5.5v6c0 4.4-3.1 8.4-8 10-4.9-1.6-8-5.6-8-10v-6Z" />
-      <path d="m8.8 11.9 2.2 2.2 4.2-4.3" />
+      <path d="M9 15v-.6c0-1-.5-1.9-1.3-2.6A6 6 0 1 1 16.3 11.8c-.8.7-1.3 1.6-1.3 2.6v.6" />
+      <path d="M9 15h6" />
+      <path d="M9.5 18h5" />
+      <path d="M10.5 21h3" />
     </Icon>
   );
 }
 
-/** Medal — an award on the record. */
-export function AwardIcon(props: IconProps) {
+/** Trophy — an award on the record. */
+export function TrophyIcon(props: IconProps) {
   return (
     <Icon strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <circle cx="12" cy="8.5" r="5.5" />
-      <path d="m8.7 13.2-2.2 7.3 5.5-2.7 5.5 2.7-2.2-7.3" />
+      <path d="M7 3h10v6a5 5 0 0 1-10 0V3Z" />
+      <path d="M7 5H4.5a.5.5 0 0 0-.5.5V7a3.5 3.5 0 0 0 3.5 3.5" />
+      <path d="M17 5h2.5a.5.5 0 0 1 .5.5V7a3.5 3.5 0 0 1-3.5 3.5" />
+      <path d="M12 14v4" />
+      <path d="M8.5 21h7l-1-3h-5Z" />
     </Icon>
   );
 }
 
-/** Rover — a ground platform: deck, wheels, payload and a sensor mast. */
+/** Rover — a ground platform in profile: hull, two large wheels tucked under
+    it, and a sensor head on a mast. */
 export function RoverIcon(props: IconProps) {
   return (
     <Icon strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <rect x="3" y="12" width="18" height="4" rx="1" />
-      <circle cx="7.5" cy="18.5" r="2" />
-      <circle cx="16.5" cy="18.5" r="2" />
-      <rect x="5.5" y="8.5" width="6" height="3.5" rx="0.5" />
-      <path d="M16 12V7" />
-      <circle cx="16" cy="5.5" r="1.5" />
+      <rect x="2.5" y="9.5" width="19" height="5.5" rx="1.25" />
+      <circle cx="7" cy="18" r="3" />
+      <circle cx="17" cy="18" r="3" />
+      <path d="M14.5 9.5V4.5" />
+      <rect x="12" y="2" width="5" height="2.5" rx="0.6" />
+      <path d="M6.5 9.5V7" />
     </Icon>
   );
 }

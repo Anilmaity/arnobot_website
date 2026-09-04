@@ -152,14 +152,9 @@ export default async function ContactPage({ searchParams }: PageProps) {
           </div>
 
           <ul className={cn(styles.channels, styles.fadeUp, styles.d1)}>
-            {CHANNELS.map((channel, index) => (
+            {CHANNELS.map((channel) => (
               <li className={styles.channel} key={channel.name}>
-                <span className={styles.channelTop}>
-                  <span className={styles.channelIcon}>{channel.icon}</span>
-                  <span className={styles.channelIndex} aria-hidden="true">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                </span>
+                <span className={styles.channelIcon}>{channel.icon}</span>
                 <div className={styles.channelBody}>
                   <h3 className={styles.channelName}>{channel.name}</h3>
                   {channel.href ? (

@@ -759,27 +759,6 @@
   color: var(--ink);
 }
 
-/* The tag on the three-week axis: the `.tag` voice, on a dark ground. */
-.processWhen {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 10px;
-  border: 1px solid rgba(var(--white-rgb), 0.24);
-  border-radius: var(--radius-control);
-  font-size: var(--fs-2xs);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-label);
-  line-height: 1.2;
-  text-transform: uppercase;
-  color: rgba(var(--white-rgb), 0.8);
-  white-space: nowrap;
-}
-
-.isEntry .processWhen {
-  border-color: rgba(var(--white-rgb), 0.55);
-  color: var(--white);
-}
-
 .processName {
   display: flex;
   align-items: baseline;

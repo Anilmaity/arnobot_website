@@ -1,14 +1,14 @@
-const HERO_VIDEO = '/assets/videos/saibya-hero.mp4';
+// Temporary placeholder while the hero video is out. It is a deliberately
+// obvious "temp asset" card in the site's own type and colours. Swap back to a
+// <video className="hero-video"> when the new footage lands — the CSS layers
+// (.hero-bg z-0, ::after scrim z-2) are unchanged.
+const HERO_PLACEHOLDER = '/assets/images/hero-placeholder.webp';
 
 export default function HeroSection() {
   return (
     <section className="hero hero-cinematic" id="home" data-cinematic-hero data-header-theme="dark">
-      {/* Layer 0 — poster fallback, sits behind the video in case it never paints. */}
-      <img className="hero-bg" src="/assets/images/hero-bg.png" alt="ARNOBOT robot payload field test" />
-      {/* Layer 1 — the video is the hero background. */}
-      <video className="hero-video" autoPlay muted loop playsInline>
-        <source src={HERO_VIDEO} type="video/mp4" />
-      </video>
+      {/* Layer 0 — the placeholder is the hero background. */}
+      <img className="hero-bg" src={HERO_PLACEHOLDER} alt="" />
       {/* Layer 2 — the dark gradient scrim is `.hero-cinematic::after`. */}
 
       {/* Layer 3 — copy. */}

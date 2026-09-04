@@ -87,15 +87,33 @@ const RELIABILITY_POINTS: ReadonlyArray<{ readonly tag: string; readonly name: s
    -------------------------------------------------------------------------- */
 
 /**
- * Decorative looping background. `preload="metadata"` keeps the four chapter
- * markers from pulling their full payload before the visitor scrolls to them.
+ * Temporary stand-in while a band's footage is out — the same deliberately
+ * obvious "temp asset" card the home and About heroes show, with the card
+ * held to the right third so it clears the band's copy. Pass it as `image`
+ * in place of `video`; swap back when the clip lands.
  */
-function BandMedia({ src, preload = 'metadata' }: { readonly src: string; readonly preload?: 'metadata' | 'auto' }) {
+const BAND_PLACEHOLDER = '/assets/images/band-placeholder.webp';
+
+/** A band shows either a looping clip or a still; never both. */
+type BandSource =
+  | { readonly video: string; readonly image?: undefined }
+  | { readonly image: string; readonly video?: undefined };
+
+/**
+ * Decorative background — a looping clip, or a still while the clip is out.
+ * `preload="metadata"` keeps the chapter markers from pulling their full
+ * payload before the visitor scrolls to them.
+ */
+function BandMedia({ video, image, preload = 'metadata' }: BandSource & { readonly preload?: 'metadata' | 'auto' }) {
   return (
     <div className={styles.media} aria-hidden="true">
-      <video autoPlay muted loop playsInline preload={preload}>
-        <source src={src} type="video/mp4" />
-      </video>
+      {image ? (
+        <img src={image} alt="" />
+      ) : (
+        <video autoPlay muted loop playsInline preload={preload}>
+          <source src={video} type="video/mp4" />
+        </video>
+      )}
       <div className={styles.scrim} />
     </div>
   );
@@ -110,18 +128,17 @@ function ChapterBand({
   label,
   title,
   body,
-  video,
   id,
-}: {
+  ...source
+}: BandSource & {
   readonly label: string;
   readonly title: string;
   readonly body?: string;
-  readonly video: string;
   readonly id?: string;
 }) {
   return (
     <section className={cn('on-dark', styles.band, 'reveal')} id={id} data-header-theme="dark">
-      <BandMedia src={video} />
+      <BandMedia {...source} />
       <div className={styles.bandInner}>
         <div className="fade-up">
           <span className="eyebrow">{label}</span>
@@ -147,7 +164,7 @@ export default function TechnologyPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        <BandMedia src="/assets/videos/technology-hero.mp4" preload="auto" />
+        <BandMedia video="/assets/videos/technology-hero.mp4" preload="auto" />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">ARNOBOT Technology</span>
@@ -178,13 +195,14 @@ export default function TechnologyPage() {
         </div>
       </section>
 
-      {/* Critical Areas */}
+      {/* Critical Areas. The clip is out; the band runs the temp card until
+          the replacement footage lands. */}
       <ChapterBand
         id="tech-areas"
         label="Built for critical missions"
         title="Critical Areas"
         body="Underground, inside a vessel, along a night perimeter, under a steel hull — the ground our robots work on takes away the satellite fix, the radio link and the operator's line of sight, usually all at once."
-        video="/assets/videos/Arnobot2.mp4"
+        image={BAND_PLACEHOLDER}
       />
 
       {/* Hardware & Software — the architecture stack */}

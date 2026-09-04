@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import LogoMark from '@/components/ui/LogoMark';
 import { cn, prefersReducedMotion } from '@/lib/dom';
 import styles from './ArchitectureDiagram.module.css';
 
@@ -493,7 +492,6 @@ export default function ArchitectureDiagram() {
         {/* Column 3 — the two layers that run on the robot. */}
         <section className={cn(styles.node, styles.panel)} style={{ transitionDelay: '0.14s' }}>
           <header className={styles.panelHead}>
-            <LogoMark className={styles.panelLogo} />
             <span className="micro-label">Onboard core</span>
           </header>
           <div className={styles.panelGrid}>

@@ -225,7 +225,7 @@ export default function CareerPage() {
       >
         <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
           <span className="eyebrow">How to apply</span>
-          <h2 className="section-title is-editorial">Four steps, three weeks</h2>
+          <h2 className="section-title is-editorial">Four steps</h2>
           <p className="section-lead">
             The whole process, written down — so you know where you stand at every point in it.
           </p>
@@ -243,7 +243,6 @@ export default function CareerPage() {
                   <span className={cn('card-icon', styles.processIcon)}>
                     <StepIcon size={20} />
                   </span>
-                  <span className={styles.processWhen}>{step.when}</span>
                 </div>
                 <h3 className={styles.processName}>
                   <span className={styles.processNum} aria-hidden="true">

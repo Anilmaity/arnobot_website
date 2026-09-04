@@ -233,16 +233,7 @@
 .panelHead {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
   margin-bottom: 12px;
-}
-
-.panelLogo {
-  display: block;
-  width: auto;
-  height: 14px;
-  color: var(--ink);
 }
 
 .panelGrid {

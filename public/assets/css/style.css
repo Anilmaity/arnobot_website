@@ -3014,6 +3014,160 @@ main:has(.hero-cinematic) .cta {
   text-transform: uppercase;
 }
 
+/* Industry sheet — the industry detail opens as a full-screen page on white
+   rather than a floating dark panel, composed to fit one screen: the brief on
+   the left, the robots deployed stacked on the right. Scoped by
+   `.industry-modal-full` on the root so the demo scheduler, which shares the
+   classes above, keeps its panel. The doubled root selector outranks the
+   768px padding rule further down. */
+.industry-modal.industry-modal-full {
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.industry-modal-full .industry-modal-container {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+  background: var(--white);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  overscroll-behavior: contain;
+  transform: translateY(16px);
+}
+
+.industry-modal-full.active .industry-modal-container {
+  transform: none;
+}
+
+/* A zero-height sticky strip at the top of the scroller; the close control is
+   positioned inside it, so it holds the corner should the sheet ever scroll. */
+.industry-modal-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 0;
+}
+
+.industry-modal-full .industry-modal-close {
+  top: clamp(16px, 2.5vw, 28px);
+  right: var(--gutter);
+  background: var(--white);
+}
+
+/* The page: a four/eight split on the site measure, centred in the viewport.
+   The robots get the wider column so a card's copy runs to two lines and its
+   tags to one row; every vertical measure is in viewport height so three
+   cards fit one screen from a 657px laptop viewport up. The top clears the
+   close control. */
+.industry-modal-full .industry-modal-content {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  align-content: center;
+  align-items: start;
+  column-gap: var(--gap-grid);
+  width: min(100%, var(--measure));
+  min-height: 100%;
+  margin: 0 auto;
+  padding: clamp(48px, 7vh, 96px) var(--gutter) clamp(24px, 4vh, 56px);
+}
+
+.industry-modal-full .eyebrow {
+  color: var(--accent);
+}
+
+.industry-modal-full .modal-ind-title {
+  color: var(--ink);
+}
+
+.industry-modal-full .modal-ind-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-lead);
+}
+
+.industry-modal-full .label-robots-used {
+  margin-bottom: clamp(12px, 2vh, 24px);
+  color: var(--ink);
+}
+
+.industry-modal-full .modal-robots-container {
+  gap: clamp(12px, 2vh, 24px);
+  margin: 0;
+}
+
+/* The cards keep their landscape shape — picture left, copy right — but the
+   picture is sized by the viewport and the copy is set tighter, so a card is
+   a third of the column rather than a screen of its own. */
+.industry-modal-full .modal-robot-card {
+  gap: 24px;
+  padding: 16px;
+  background: var(--white);
+  border-color: var(--line);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--t-med) ease, box-shadow var(--t-med) ease;
+}
+
+.industry-modal-full .modal-robot-card:hover {
+  background: var(--white);
+  border-color: rgba(var(--accent-rgb), 0.4);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.industry-modal-full .modal-robot-img-wrap {
+  width: auto;
+  height: clamp(96px, 15vh, 145px);
+  aspect-ratio: 40 / 29;
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.industry-modal-full .modal-robot-info h5 {
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.industry-modal-full .modal-robot-info p {
+  margin-bottom: 10px;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.industry-modal-full .modal-robot-specs {
+  gap: 6px;
+}
+
+.industry-modal-full .modal-robot-specs span {
+  padding: 4px 8px;
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+/* Narrow screens stack everything and scroll; one view is a desktop promise. */
+@media (max-width: 900px) {
+  .industry-modal-full .industry-modal-content {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--head-gap);
+    align-content: start;
+    padding-top: 84px;
+  }
+
+  .industry-modal-full .modal-robot-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .industry-modal-full .modal-robot-img-wrap {
+    width: 100%;
+    height: clamp(140px, 24vh, 200px);
+    aspect-ratio: auto;
+  }
+}
+
 /* Demo modal specifics — the form lives on a dark panel. */
 .demo-modal-title {
   margin-bottom: 40px;

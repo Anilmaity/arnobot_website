@@ -14,7 +14,7 @@ export const INDUSTRY: readonly InsightDraft[] = [
       'ALTIUS holds a 30\u00A0kg vertical payload on steel by magnetic grip, with interchangeable tooling. What that changes about surveying a structure nobody wants to climb.',
     date: 'August 11, 2026',
     isoDate: '2026-08-11',
-    image: '/assets/images/industry-industrial.webp',
+    image: '/assets/images/hero-image-placeholder.webp',
     body: [
       {
         heading: 'What access actually costs',
@@ -226,7 +226,7 @@ export const INDUSTRY: readonly InsightDraft[] = [
       'Defence logistics, supply transport and ammunition carriage are what SAIBYA is built for. The case for moving mass by machine in contested ground.',
     date: 'June 16, 2026',
     isoDate: '2026-06-16',
-    image: '/assets/images/defence.webp',
+    image: '/assets/images/hero-image-placeholder.webp',
     body: [
       {
         heading: 'Two hundred kilograms',
