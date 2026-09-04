@@ -948,12 +948,6 @@ select.form-input,
   color: var(--danger);
 }
 
-/* The reCAPTCHA iframe has a fixed width; never let it push the form wider. */
-.form-captcha {
-  max-width: 100%;
-  overflow: hidden;
-}
-
 .field-error:empty {
   display: none;
 }
@@ -2445,13 +2439,21 @@ select.form-input,
   margin-top: 4px;
 }
 
+/* The dot is 10px of paint inside a 24px target. A 10x10 button is under the
+   24x24 minimum in WCAG 2.5.8 and is genuinely hard to hit on a phone, but
+   growing the dot itself would wreck the rhythm of the row — so the button
+   carries the target and `::before` carries the mark. `background-clip` keeps
+   the painted dot off the padding. */
 .industry-dot {
+  position: relative;
   width: 10px;
   height: 10px;
-  padding: 0;
+  padding: 7px;
   border: 0;
   border-radius: var(--radius-round);
   background: rgba(var(--accent-deep-rgb), 0.2);
+  background-clip: content-box;
+  box-sizing: content-box;
   cursor: pointer;
   transition:
     width var(--t-med) var(--ease-menu),
@@ -2459,14 +2461,20 @@ select.form-input,
     border-radius var(--t-med) ease;
 }
 
+/* Both of these set `background` as a shorthand, which resets background-clip
+   to border-box — and would paint the dot across the whole 24px target instead
+   of the 10px mark. Restate the clip rather than switching to
+   background-color, so the pair reads the same as the base rule. */
 .industry-dot:hover {
   background: rgba(var(--accent-deep-rgb), 0.45);
+  background-clip: content-box;
 }
 
 .industry-dot.active {
   width: 28px;
   border-radius: 5px;
   background: var(--accent-deep);
+  background-clip: content-box;
 }
 
 @media (max-width: 1023px) {
