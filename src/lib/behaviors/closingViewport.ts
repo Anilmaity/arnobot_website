@@ -3,7 +3,7 @@ import type { Cleanup } from '@/types';
 /**
  * Publishes the footer's rendered height as `--footer-height`.
  *
- * The home page closes on a single screen: the CTA band grows to fill whatever
+ * Every page closes on a single screen: the CTA band grows to fill whatever
  * the footer leaves over. The footer is content-sized — its height moves with
  * the breakpoint and with how the address wraps — so it is measured rather than
  * hard-coded, and re-measured whenever it reflows.

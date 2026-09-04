@@ -33,6 +33,20 @@
   overflow: hidden;
 }
 
+/* One full screen on desktop, the head and the strip centred in it, the same
+   frame the `section-screen` bands use. Below 900px it sizes to content. */
+@media (min-width: 901px) {
+  .band {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: var(--section-pad-top);
+    padding-bottom: var(--section-pad-bottom);
+  }
+}
+
 /* The centring and the head → content gap come from the global
    `section-head is-centered`; only the measure is set here. */
 .head {

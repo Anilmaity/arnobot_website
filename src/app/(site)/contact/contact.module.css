@@ -118,6 +118,15 @@
   margin-top: 40px;
 }
 
+/* Phones: the pair stacks with each button on the full column, as the CTA
+   band's actions and the product action pair already do. */
+@media (max-width: 600px) {
+  .heroActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* The facts a visitor scans for before they read anything else. */
 .heroMeta {
   display: grid;
@@ -584,6 +593,58 @@ a.visitRowValue:focus-visible {
 .visitFoot {
   margin-top: auto;
   padding-top: clamp(20px, 3.2vh, 32px);
+}
+
+/* --------------------------------------------------------------------------
+   Short desktop viewports.
+
+   Headless probes never render the reCAPTCHA (the API script is injected
+   after load), so the enquiry band measured as fitting 1440x804 while the
+   live 78px widget pushed it 68px past one screen in a real browser. On a
+   desktop that is not tall — 1440x804, 1366x768 — the form's vertical rhythm
+   gives way before the fields do: the row gap, the label gap, the message
+   box and the card padding all come in a little. Nothing changes at 1080
+   and above, where the band has room to spare, or on phones, which size to
+   content. The visit band takes the same trade at 720 tall: the card's own
+   padding and the bottom clearance give back the 25px it ran over.
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) and (max-height: 880px) {
+  .formCard {
+    padding: 20px 22px;
+  }
+
+  .formCard :global(.form) {
+    gap: 16px;
+  }
+
+  .formCard :global(.form-field) {
+    gap: 6px;
+  }
+
+  .formCard :global(textarea.form-input) {
+    min-height: 88px;
+    height: 88px;
+  }
+
+  .formCard :global(.form-actions) {
+    padding-top: 8px;
+  }
+}
+
+@media (min-width: 901px) and (max-height: 760px) {
+  .visit {
+    padding-bottom: 32px;
+  }
+
+  .visitCard {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .visitFoot {
+    padding-top: 16px;
+  }
 }
 
 /* --------------------------------------------------------------------------

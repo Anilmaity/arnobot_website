@@ -163,6 +163,15 @@
   margin-top: 40px;
 }
 
+/* Phones: the pair stacks with each button on the full column, as the CTA
+   band's actions and the product action pair already do. */
+@media (max-width: 600px) {
+  .heroActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* The global eyebrow, over footage. */
 .hero :global(.eyebrow) {
   text-shadow: var(--shadow-hero-text-soft);
@@ -325,14 +334,15 @@
 
 /* One screen for the whole section, weighted to the picture: the frame's
    height is what is left of the viewport after the section's padding and the
-   ~180px the compact head and its gap take, and its width follows at 3:2 —
+   ~200px the head and its gap take (the lead runs to two lines where the
+   frame is narrower than its sentence), and its width follows at 3:2 —
    the photographs' ratio (and the Insights frames') — centred on the page.
    The head is held to the same width so nothing above the picture is wider
    than it. */
 .facility {
   --frame-h: clamp(
     320px,
-    calc(100svh - var(--section-pad-top) - var(--section-pad-bottom) - 180px),
+    calc(100svh - var(--section-pad-top) - var(--section-pad-bottom) - 200px),
     calc(var(--measure) * 2 / 3)
   );
   --frame-w: min(calc(var(--frame-h) * 3 / 2), 100%);
@@ -668,6 +678,15 @@
 .processSection:global(.section-screen) {
   background: var(--ink);
   border-bottom: 0;
+  /* A little shallower than the token above and below, so the head, the
+     four cards and the roles row hold one 804px screen. */
+  padding-top: calc(var(--nav-height) + 12px);
+  padding-bottom: clamp(40px, 5vh, 72px);
+}
+
+/* The head sits a touch closer to the cards than the global gap. */
+.processSection .sectionHead {
+  margin-bottom: clamp(24px, 3.5vh, 48px);
 }
 
 /* The global section head is inked for light grounds. */
@@ -675,7 +694,10 @@
   color: var(--white);
 }
 
+/* The lead may run the head's full width rather than the text measure, so
+   its one sentence stays on one line, as the facility lead does. */
 .processSection :global(.section-lead) {
+  max-width: none;
   color: rgba(var(--white-rgb), 0.8);
 }
 
@@ -683,7 +705,7 @@
   composes: inner;
   /* Shared by the cards and the connectors drawn into the gaps between them. */
   --process-gap: clamp(20px, 2.5vw, 36px);
-  --process-pad: clamp(22px, 2.1vw, 30px);
+  --process-pad: clamp(20px, 1.8vw, 26px);
   /* The connector meets each card at the centre of its 44px icon frame. */
   --process-wire-y: calc(var(--process-pad) + 22px);
   display: grid;
@@ -740,7 +762,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 }
 
 /* The global `.card-icon` frame is drawn for light cards (ink hairline,
@@ -763,7 +785,7 @@
   display: flex;
   align-items: baseline;
   gap: 10px;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-family: var(--font-display);
   font-weight: var(--fw-display);
   font-size: var(--fs-h3);
@@ -781,7 +803,7 @@
 
 /* The step itself, in full white; the commitment under it steps back. */
 .processBody {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   color: var(--white);
@@ -797,7 +819,7 @@
   align-items: center;
   gap: 8px;
   margin: auto 0 0;
-  padding-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid var(--line-on-dark);
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
@@ -815,7 +837,7 @@
 }
 
 .processDetail {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-size: var(--fs-body-sm);
   line-height: var(--lh-body);
   color: rgba(var(--white-rgb), 0.7);
@@ -824,7 +846,7 @@
 /* The way in, at the foot of the first card. */
 .processCta {
   align-self: flex-start;
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 .rolesCta {
@@ -832,7 +854,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 16px;
-  margin-top: clamp(36px, 5vh, 56px);
+  margin-top: clamp(20px, 3vh, 40px);
 }
 
 /* --------------------------------------------------------------------------

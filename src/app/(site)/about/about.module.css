@@ -108,6 +108,15 @@
   margin-top: 40px;
 }
 
+/* Phones: the pair stacks with each button on the full column, as the CTA
+   band's actions and the product action pair already do. */
+@media (max-width: 600px) {
+  .heroActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Light content sections — the shell is the global `section-screen`; only the
    inner column and the head measure are the page's own.
@@ -313,6 +322,13 @@
 .signatory img.portrait {
   width: 100%;
   aspect-ratio: 4 / 3;
+  /* The card is the tallest thing on the screen, so on short desktop
+     viewports (1366x720, 1536x730) the 4:3 frame alone pushed the section
+     past one screen. Cap the picture at what is left of the viewport after
+     the section padding, the head and the signature block (about 290px)
+     so the crop widens only when the screen is short; at 1440x804 and
+     above the cap sits above the 4:3 height and nothing changes. */
+  max-height: max(200px, calc(100svh - var(--section-pad-top) - var(--section-pad-bottom) - 290px));
   object-fit: cover;
   object-position: center 26%;
   display: block;

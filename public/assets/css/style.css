@@ -2216,6 +2216,15 @@ select.form-input,
   overflow: hidden;
 }
 
+/* One full screen on desktop, like the bands either side of it; the aspect
+   ratio only sets the height once the viewport is released below 900px. */
+@media (min-width: 901px) {
+  .environment {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+}
+
 .environment::after {
   content: "";
   position: absolute;
@@ -2233,6 +2242,14 @@ select.form-input,
   height: 100%;
   object-fit: cover;
   object-position: 70% center;
+}
+
+/* The full-screen frame crops the 3:1 shot at the sides; anchor it further
+   right so the whole robot, rear wheel included, stays in the picture. */
+@media (min-width: 901px) {
+  .environment-bg {
+    object-position: 85% center;
+  }
 }
 
 .environment-content {
@@ -2261,6 +2278,12 @@ select.form-input,
 
   .environment h2 {
     max-width: 100%;
+  }
+
+  /* On a phone the three-line heading runs across the robot; carry the wash
+     further right so the last words stay legible over the dark body. */
+  .environment::after {
+    background: linear-gradient(90deg, rgba(var(--bg-rgb), 0.92) 0%, rgba(var(--bg-rgb), 0.84) 55%, rgba(var(--bg-rgb), 0.4) 100%);
   }
 }
 
@@ -2530,8 +2553,11 @@ select.form-input,
   gap: 12px;
 }
 
-/* On the home page the CTA and the footer share the last screen. */
-main:has(.hero-cinematic) .cta {
+/* The CTA and the footer share the last screen on every page: the band grows
+   to whatever the footer leaves of the viewport (`--footer-height` is
+   published by closingViewport), so the closing view is one screen at any
+   desktop height rather than a fixed padding that runs over on short ones. */
+.cta {
   display: flex;
   align-items: center;
   min-height: calc(100svh - var(--footer-height, 361px));
@@ -2548,7 +2574,7 @@ main:has(.hero-cinematic) .cta {
 }
 
 @media (max-width: 768px) {
-  main:has(.hero-cinematic) .cta {
+  .cta {
     min-height: 0;
     display: block;
   }
@@ -3339,11 +3365,11 @@ main:has(.hero-cinematic) .cta {
   transform: translate(-50%, -50%) scale(1.06);
 }
 
-/* Product hero carrying a render instead of a video: three quarters of a
-   screen, the machine keyed out and sitting to the right of the title. */
+/* Product hero carrying a render instead of a video: one full screen, the
+   machine keyed out and sitting to the right of the title. */
 .hero.product-hero.product-hero-still {
-  min-height: 75vh;
-  min-height: 75svh;
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 .product-hero-still .hero-bg {
@@ -3389,7 +3415,8 @@ main:has(.hero-cinematic) .cta {
 }
 
 .product-details,
-.product-specs-section {
+.product-specs-section,
+.product-showcase-section {
   min-height: 100vh;
   min-height: 100svh;
 }
@@ -3868,7 +3895,8 @@ main:has(.hero-cinematic) .cta {
   }
 
   .product-details,
-  .product-specs-section {
+  .product-specs-section,
+  .product-showcase-section {
     min-height: 0;
   }
 
