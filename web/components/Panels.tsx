@@ -25,9 +25,9 @@ export function PanelRuggedness() {
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/uploads/WhatsApp Image 2026-04-08 at 10.08.09 PM.jpeg"
-          alt="ALTIUS climbing ship hull"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+          src="/uploads/altius-hull.jpg"
+          alt="ALTIUS crawler climbing the hull of a ship at sea"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center' }}
         />
       </div>
       <div className="panel-grad" />
