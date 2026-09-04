@@ -211,9 +211,10 @@
   border-bottom: 0;
 }
 
-/* The frame is wider than any viewport, and the robot sits right of its
-   centre. Anchoring towards the left edge pushes the robot into the clear
-   right half, past the copy column. */
+/* The frame is a native 1920x1080 export, so it only has room to move on
+   viewports squarer than 16:9. Where it does, anchoring towards the left edge
+   pushes the crew and the hull into the clear right half, past the copy
+   column. */
 .why .media img {
   object-position: 25% 50%;
 }
@@ -873,8 +874,8 @@
     max-width: none;
   }
 
-  /* The copy covers the whole frame here, so bring the robot back to the
-     centre behind it. */
+  /* The copy covers the whole frame here, so bring the crawler back towards
+     the centre behind it. */
   .why .media img {
     object-position: 60% 50%;
   }

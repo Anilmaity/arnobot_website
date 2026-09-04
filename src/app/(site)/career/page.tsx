@@ -56,12 +56,12 @@ const ROOMS: ReadonlyArray<{ readonly image: string; readonly label: string; rea
     note: 'Boards, harnesses and the bench each sensor is brought up on.',
   },
   {
-    image: '/assets/images/proto.jpg',
+    image: '/assets/images/facility-prototyping.webp',
     label: 'Prototyping Lab',
     note: 'Fixtures, first articles and the parts that are still changing.',
   },
   {
-    image: '/assets/images/soft.jpg',
+    image: '/assets/images/facility-software.webp',
     label: 'Software Development',
     note: 'Autonomy, operator software and the report at the end of a mission.',
   },
@@ -81,18 +81,21 @@ const STEP_ICONS: Record<HiringStepIcon, typeof FileTextIcon> = {
 
 /**
  * Decorative media behind the hero and the pull stat, matching the treatment
- * on the technology page: looping footage (`video`) or a still (`image`), both
- * with the same slow drift. `scrim` is the gradient laid over it; the default
- * is the hero's left-weighted one.
+ * on the technology page: looping footage (`video`, with a `poster` cut from
+ * its own first frame) or a still (`image`), both with the same slow drift.
+ * `scrim` is the gradient laid over it; the default is the hero's
+ * left-weighted one.
  */
 function BandMedia({
   video,
   image,
+  poster,
   preload = 'metadata',
   scrim = styles.scrim,
 }: {
   readonly video?: string;
   readonly image?: string;
+  readonly poster?: string;
   readonly preload?: 'metadata' | 'auto';
   readonly scrim?: string;
 }) {
@@ -101,7 +104,7 @@ function BandMedia({
       {image ? (
         <img src={image} alt="" loading="lazy" decoding="async" />
       ) : (
-        <video autoPlay muted loop playsInline preload={preload}>
+        <video autoPlay muted loop playsInline preload={preload} poster={poster}>
           <source src={video} type="video/mp4" />
         </video>
       )}
@@ -128,7 +131,15 @@ export default function CareerPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        <BandMedia video="/assets/videos/careers-workshop.mp4" preload="auto" />
+        {/* A board being soldered at the bench, the camera easing back; the
+            loop runs forward then back, so it never cuts. The poster is its
+            own first frame, which is what carries the band while the file
+            arrives — so the clip is left on `preload="metadata"` rather than
+            being pulled down whole ahead of the first paint. */}
+        <BandMedia
+          video="/assets/videos/careers-workshop.mp4"
+          poster="/assets/images/careers-hero-poster.webp"
+        />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">Careers at {SITE.name}</span>
@@ -150,10 +161,12 @@ export default function CareerPage() {
       </section>
 
       {/* 2 — Why the work matters, told over a full-bleed frame from the
-          ALTIUS ship-hull trial at the Alang recycling yard (July 2025). The
-          same composition as the hero above and the technology page's
+          ALTIUS ship-hull trial at the Alang recycling yard: the crawler
+          working its way up the plate with the two operators stood on the
+          ground below it, which is the section's sentence in one picture.
+          The same composition as the hero above and the technology page's
           chapter bands: one column at the gutter, eyebrow → title → lead,
-          with the robot holding the right of the frame. */}
+          with the hull and the crew holding the clear right of the frame. */}
       <section
         className={cn('on-dark', 'section-screen', styles.why, 'reveal')}
         id="career-why"

@@ -14,7 +14,7 @@ export const INDUSTRY: readonly InsightDraft[] = [
       'ALTIUS holds a 30\u00A0kg vertical payload on steel by magnetic grip, with interchangeable tooling. What that changes about surveying a structure nobody wants to climb.',
     date: 'August 11, 2026',
     isoDate: '2026-08-11',
-    image: '/assets/images/hero-image-placeholder.webp',
+    image: '/assets/images/article-inspection-at-height.webp',
     body: [
       {
         heading: 'What access actually costs',
@@ -67,7 +67,7 @@ export const INDUSTRY: readonly InsightDraft[] = [
       'Maritime assets are steel, which suits a magnetic climber, and remote, which does not suit a survey crew. Where the two facts meet.',
     date: 'July 28, 2026',
     isoDate: '2026-07-28',
-    image: '/assets/images/industry-maritime.webp',
+    image: '/assets/images/article-maritime-steel.webp',
     body: [
       {
         heading: 'Maritime assets are steel',
@@ -120,7 +120,7 @@ export const INDUSTRY: readonly InsightDraft[] = [
       'Infrastructure inspection and asset mapping are listed capabilities on the same platform. What changes when a survey becomes repeatable rather than exceptional.',
     date: 'July 14, 2026',
     isoDate: '2026-07-14',
-    image: '/assets/images/industry-infra.webp',
+    image: '/assets/images/article-asset-mapping.webp',
     body: [
       {
         heading: 'Survey as a habit, not an event',
@@ -173,7 +173,7 @@ export const INDUSTRY: readonly InsightDraft[] = [
       'Power and solar assets are mostly distance. On area-based missions, real-time video feed, and inspection that fits around a plant that stays running.',
     date: 'June 30, 2026',
     isoDate: '2026-06-30',
-    image: '/assets/images/industry-power2.webp',
+    image: '/assets/images/article-generation-sites.webp',
     body: [
       {
         heading: 'Generation sites are mostly distance',
@@ -226,7 +226,7 @@ export const INDUSTRY: readonly InsightDraft[] = [
       'Defence logistics, supply transport and ammunition carriage are what SAIBYA is built for. The case for moving mass by machine in contested ground.',
     date: 'June 16, 2026',
     isoDate: '2026-06-16',
-    image: '/assets/images/hero-image-placeholder.webp',
+    image: '/assets/images/article-defence-logistics.webp',
     body: [
       {
         heading: 'Two hundred kilograms',

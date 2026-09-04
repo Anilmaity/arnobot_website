@@ -14,7 +14,16 @@ function heroSection(): void {
 
   const timeline = gsap.timeline();
 
-  timeline.from('.hero-bg', { scale: 1.12, duration: 1.8, ease: 'power3.out' });
+  /* The hero's backdrop layer. It is an `<img class="hero-bg">` on the product
+     pages and a `<video class="hero-video">` on the home page, so both are
+     resolved here — and, like `.hero-play` below, resolved up front and skipped
+     when nothing matches, because an empty selector is a GSAP console warning on
+     every page load rather than a silent no-op. */
+  const heroMedia = queryAll('.hero-bg, .hero-video');
+
+  if (heroMedia.length > 0) {
+    timeline.from(heroMedia, { scale: 1.12, duration: 1.8, ease: 'power3.out' });
+  }
   /* The logo is deliberately NOT in this timeline. The glyph tile paints
      itself through CSS (interactions.css) and the reference bar's mark just
      sits; a GSAP `.from` here re-captured a mid-animation opacity on
@@ -45,11 +54,13 @@ function heroSection(): void {
     );
   }
 
-  gsap.to('.hero-bg', {
-    yPercent: 15,
-    ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-  });
+  if (heroMedia.length > 0) {
+    gsap.to(heroMedia, {
+      yPercent: 15,
+      ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+    });
+  }
 
   gsap.to('.hero-content', {
     yPercent: -12,

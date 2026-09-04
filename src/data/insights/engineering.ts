@@ -14,7 +14,7 @@ export const ENGINEERING: readonly InsightDraft[] = [
       'SAIBYA carries 200\u00A0kg on a 4×4 drivetrain; ATM carries 500\u00A0kg on front and rear suspension. What changes structurally when the payload more than doubles.',
     date: 'August 21, 2026',
     isoDate: '2026-08-21',
-    image: '/assets/images/saibya-field.webp',
+    image: '/assets/images/article-payload-carriers.webp',
     body: [
       {
         heading: 'Two carriers, one job',
@@ -67,7 +67,7 @@ export const ENGINEERING: readonly InsightDraft[] = [
       'Magnetic grip has to carry the robot, its tooling and a 30\u00A0kg payload — and stay predictable across welds, coatings and the edge of the plate.',
     date: 'August 1, 2026',
     isoDate: '2026-08-01',
-    image: '/assets/images/product-altius.png',
+    image: '/assets/images/article-steel-wall.webp',
     body: [
       {
         heading: 'The load path',
@@ -120,7 +120,7 @@ export const ENGINEERING: readonly InsightDraft[] = [
       'NEXUS is fully invertible, so there is no wrong way to land it. Designing a scout where rapid deployment beats every other consideration.',
     date: 'July 18, 2026',
     isoDate: '2026-07-18',
-    image: '/assets/images/product-nexus.png',
+    image: '/assets/images/article-invertible-scout.webp',
     body: [
       {
         heading: 'No wrong way to land',
@@ -173,7 +173,7 @@ export const ENGINEERING: readonly InsightDraft[] = [
       'Lose the link, the satellite fix or a sensor, and the vehicle holds a safe state on its own while the layers above sort themselves out.',
     date: 'July 4, 2026',
     isoDate: '2026-07-04',
-    image: '/assets/images/saibya7.jpg',
+    image: '/assets/images/article-safe-state.webp',
     body: [
       {
         heading: 'Three things it can lose',
@@ -226,7 +226,7 @@ export const ENGINEERING: readonly InsightDraft[] = [
       'Enclosures, connectors and drivetrains chosen so a shift in the mud, the rain or the dark is an ordinary day rather than an exception.',
     date: 'June 20, 2026',
     isoDate: '2026-06-20',
-    image: '/assets/images/prototyping.jpg',
+    image: '/assets/images/article-dust-and-washdown.webp',
     body: [
       {
         heading: 'Ordinary conditions',

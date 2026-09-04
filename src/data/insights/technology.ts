@@ -14,7 +14,7 @@ export const TECHNOLOGY: readonly InsightDraft[] = [
       'With a satellite fix, localisation is centimetre-grade. Without one — underground, indoors, under steel — the vehicle has to build and trust its own map.',
     date: 'August 18, 2026',
     isoDate: '2026-08-18',
-    image: '/assets/images/hero-image-placeholder.webp',
+    image: '/assets/images/article-satellite-fix.webp',
     body: [
       {
         heading: 'Where the fix runs out',
@@ -67,7 +67,7 @@ export const TECHNOLOGY: readonly InsightDraft[] = [
       'Laser, camera and inertial data are fused onboard. Why perception stays on the vehicle when the link back is the least reliable part of the system.',
     date: 'August 4, 2026',
     isoDate: '2026-08-04',
-    image: '/assets/images/sofetware.webp',
+    image: '/assets/images/article-detection-onboard.webp',
     body: [
       {
         heading: 'The link is the weakest part',
@@ -173,7 +173,7 @@ export const TECHNOLOGY: readonly InsightDraft[] = [
       'Give the vehicle ground to cover rather than a path to follow, and it can replan around what it meets and resume the pass where it left off.',
     date: 'July 7, 2026',
     isoDate: '2026-07-07',
-    image: '/assets/images/hero-image-placeholder.webp',
+    image: '/assets/images/article-mission-area.webp',
     body: [
       {
         heading: 'Give it ground, not a path',

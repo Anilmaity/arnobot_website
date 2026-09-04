@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 /** The still behind the hero — the team mid-build, since these are notes from the workshop. */
-const HERO_IMAGE = '/assets/images/abt-full.jpg';
+const HERO_IMAGE = '/assets/images/article-insights-index.webp';
 
 /**
  * /insights — the article index.

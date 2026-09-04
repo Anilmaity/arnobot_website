@@ -75,13 +75,16 @@
   overflow: hidden;
 }
 
-/* The circuitry plate the contact hero has always carried, now behind the copy
-   rather than washed out under it. */
+/* The circuitry plate the contact hero has always carried — but our own bench
+   rather than a stock trace: a board being reworked in the Ahmedabad
+   electronics lab, shot close enough that it reads as texture. It sits under
+   the scrim at low opacity and is never the subject, so it is exported small
+   and soft (1920px, ~53KB) in place of the 4MB PNG it replaces. */
 .heroMedia {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url("/assets/images/circuitry-bg.png") center / cover no-repeat;
+  background: url("/assets/images/contact-bg.webp") center / cover no-repeat;
   opacity: 0.42;
 }
 

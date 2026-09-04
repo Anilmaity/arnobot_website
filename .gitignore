@@ -11,3 +11,9 @@ npm-debug.log*
 
 # Git Bash crash dumps
 *.stackdump
+
+# Editor settings
+.idea
+
+# Playwright MCP scratch output
+.playwright-mcp

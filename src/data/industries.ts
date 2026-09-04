@@ -13,19 +13,19 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       {
         name: 'ATM',
         desc: 'Any Terrain Machine. High-clearance heavy chassis designed to scale rocky industrial slopes.',
-        image: '/assets/images/ATM.png',
+        image: '/assets/images/card-atm-tile.webp',
         specs: ['All-Terrain', 'Chassis-Suspension', '4x4 Drive', 'Dual GPS'],
       },
       {
         name: 'SAIBYA',
         desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
-        image: '/assets/images/SAIBYA.png',
+        image: '/assets/images/card-saibya-tile.webp',
         specs: ['UGV', '200kg Load', '4x4 Drive', 'LiDAR SLAM'],
       },
       {
         name: 'NEXUS',
         desc: 'Tactical UGV platform optimized for perimeter patrol, tactical surveillance, and security integrations.',
-        image: '/assets/images/NEXUS.png',
+        image: '/assets/images/card-nexus-tile.webp',
         specs: ['Tactical UGV', 'LiDAR', 'Thermal Cam', 'Mesh Network'],
       },
     ],
@@ -39,7 +39,7 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       {
         name: 'ALTIUS',
         desc: 'Magnetic climbing robotic system designed for vertical steel wall inspection and cleaning.',
-        image: '/assets/images/ALTIUS.png',
+        image: '/assets/images/card-altius-tile.webp',
         specs: ['Climbing Robot', 'Magnetic', 'IP67 Waterproof', 'NDT Scan'],
       },
     ],
@@ -53,13 +53,13 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       {
         name: 'ATM',
         desc: 'Any Terrain Machine. High-clearance heavy chassis designed to scale rocky industrial slopes.',
-        image: '/assets/images/ATM.png',
+        image: '/assets/images/card-atm-tile.webp',
         specs: ['All-Terrain', 'Chassis-Suspension', '4x4 Drive', 'Dual GPS'],
       },
       {
         name: 'SAIBYA',
         desc: 'Rugged multi-mission ground platform carrying specialized sensor modules.',
-        image: '/assets/images/SAIBYA.png',
+        image: '/assets/images/card-saibya-tile.webp',
         specs: ['UGV', 'Modular Platform', 'Gas Sniffer', 'Thermal Engine'],
       },
     ],
@@ -73,7 +73,7 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       {
         name: 'SAIBYA',
         desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
-        image: '/assets/images/SAIBYA.png',
+        image: '/assets/images/card-saibya-tile.webp',
         specs: ['UGV', 'Heavy Load', 'IP65 Weatherproof', 'Auto-Charger'],
       },
     ],
@@ -87,13 +87,13 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       {
         name: 'SAIBYA',
         desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
-        image: '/assets/images/SAIBYA.png',
+        image: '/assets/images/card-saibya-tile.webp',
         specs: ['UGV', 'Heavy Load', 'IP65 Weatherproof', 'Auto-Charger'],
       },
       {
         name: 'ATM',
         desc: 'Any Terrain Machine. Heavy suspension chassis equipped with 3D LiDAR for spatial mapping.',
-        image: '/assets/images/ATM.png',
+        image: '/assets/images/card-atm-tile.webp',
         specs: ['All-Terrain', 'LiDAR Mapping', 'GPS-Denied Navigation', 'Obstacle Avoidance'],
       },
     ],
@@ -107,7 +107,7 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       {
         name: 'NEXUS',
         desc: 'Tactical surveillance UGV equipped with thermal imaging cameras, sirens, and obstacle avoidance.',
-        image: '/assets/images/NEXUS.png',
+        image: '/assets/images/card-nexus-tile.webp',
         specs: ['Tactical Patrol', 'Thermal Analytics', 'LiDAR Avoidance', 'IP65 Waterproof'],
       },
     ],
@@ -121,13 +121,13 @@ const INDUSTRIES: Readonly<Record<IndustryId, Industry>> = {
       {
         name: 'SAIBYA',
         desc: 'Rugged heavy-payload unmanned ground vehicle (UGV). Supports payloads up to 200\u00A0kg.',
-        image: '/assets/images/SAIBYA.png',
+        image: '/assets/images/card-saibya-tile.webp',
         specs: ['UGV', 'Heavy Load', 'IP65 Weatherproof', 'Auto-Charger'],
       },
       {
         name: 'ALTIUS',
         desc: 'Vertical climbing robot customized with panel track guidance and high-efficiency waterless brush arrays.',
-        image: '/assets/images/ALTIUS.png',
+        image: '/assets/images/card-altius-tile.webp',
         specs: ['Lightweight UGV', 'Waterless Cleaning', 'Solar Special', 'Fast Brush'],
       },
     ],
@@ -141,7 +141,17 @@ export function getIndustry(id: string | null | undefined): Industry | undefined
     : undefined;
 }
 
-/** The cards rendered in the home-page industries slider, in display order. */
+/**
+ * The cards rendered in the home-page industries slider, in display order.
+ *
+ * Every picture is a photograph of our own hardware on a real trial — the card
+ * art used to be generated imagery, including a weaponised turret vehicle we do
+ * not build. `alt` says what the frame actually shows rather than restating the
+ * label above it, so the two are not read as the same sentence twice.
+ *
+ * Note `power` and `asset` exist in INDUSTRIES (they are reachable from the
+ * modal) but have never had a card here.
+ */
 export const HOME_INDUSTRY_CARDS: ReadonlyArray<{
   readonly id: IndustryId;
   readonly label: string;
@@ -151,26 +161,31 @@ export const HOME_INDUSTRY_CARDS: ReadonlyArray<{
   {
     id: 'defence',
     label: 'Defence & Security',
-    image: '/assets/images/defence.webp',
-    alt: 'Defence & Security',
+    image: '/assets/images/card-industry-defence.webp',
+    alt: 'Saibya Max surveillance UGV in Indian Army markings driving towards the camera on a field trial',
   },
   {
     id: 'maritime',
     label: 'Maritime & Shipbuilding',
-    image: '/assets/images/industry-maritime.webp',
-    alt: 'Maritime & Shipbuilding',
+    image: '/assets/images/card-industry-maritime.webp',
+    alt: 'Two ARNOBOT engineers in hard hats watching an ALTIUS crawler climb a ship hull at the Alang yard',
   },
   {
     id: 'industrial',
     label: 'Industrial Operations',
-    image: '/assets/images/industry-industrial.webp',
-    alt: 'Industrial Operations',
+    image: '/assets/images/card-industry-industrial.webp',
+    alt: 'Gloved hands fitting a drive wheel to a UGV chassis in the ARNOBOT workshop',
   },
   {
     id: 'infrastructure',
     label: 'Critical Infrastructure',
-    image: '/assets/images/industry-infra.webp',
-    alt: 'Critical Infrastructure',
+    image: '/assets/images/card-industry-infra.webp',
+    alt: 'ATM Any Terrain Machine crossing open ground below a high-voltage transmission tower',
   },
-  { id: 'solar', label: 'Solar Projects', image: '/assets/images/industry-solar.webp', alt: 'Solar Projects' },
+  {
+    id: 'solar',
+    label: 'Solar Projects',
+    image: '/assets/images/card-industry-solar.webp',
+    alt: 'ATM Any Terrain Machine parked on open ground at a site survey',
+  },
 ];

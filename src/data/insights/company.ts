@@ -119,7 +119,7 @@ export const COMPANY: readonly InsightDraft[] = [
       'From a 3\u00A0kg tactical scout to a 500\u00A0kg carrier, the same core runs underneath — so a crew trained on one robot can keep the whole fleet moving.',
     date: 'July 25, 2026',
     isoDate: '2026-07-25',
-    image: '/assets/images/facility-prototyping.png',
+    image: '/assets/images/article-one-core.webp',
     body: [
       {
         heading: 'Three kilograms to five hundred',
@@ -172,7 +172,7 @@ export const COMPANY: readonly InsightDraft[] = [
       'Four platforms, four IPs filed and a peer-reviewed publication, engineered in-house from Ahmedabad. What indigenous development looks like in practice.',
     date: 'July 11, 2026',
     isoDate: '2026-07-11',
-    image: '/assets/images/designassmbly1.jpg',
+    image: '/assets/images/article-built-in-india.webp',
     body: [
       {
         heading: 'The record so far',

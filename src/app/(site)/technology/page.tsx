@@ -15,39 +15,6 @@ export const metadata: Metadata = {
    Content
    -------------------------------------------------------------------------- */
 
-/* Parked with the Ground Control Station section further down, which is
-   commented out for now. Restore both together. */
-/*
-const GCS_FEATURES: ReadonlyArray<{ readonly title: string; readonly body: string; readonly icon: ReactNode }> = [
-  {
-    title: 'Multi-Link Telemetry',
-    body: 'Streams live diagnostics and control signals over secure local WiFi, long-range mesh radio, or mobile internet links.',
-    icon: <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" />,
-  },
-  {
-    title: 'Real-Time Map Tracking',
-    body: 'Tracks active vehicles and plans autonomous coordinates on a high-fidelity topographical map overlay.',
-    icon: (
-      <>
-        <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
-        <line x1="9" y1="3" x2="9" y2="18" />
-        <line x1="15" y1="6" x2="15" y2="21" />
-      </>
-    ),
-  },
-  {
-    title: 'Geofencing & Safety Awareness',
-    body: 'Enforces safety boundaries, detects local obstacles, and provides a remote emergency stop switch.',
-    icon: (
-      <>
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-      </>
-    ),
-  },
-];
-*/
-
 /* The four-layer architecture — its copy, wiring and motion — lives with the
    diagram in src/components/sections/technology/ArchitectureDiagram.tsx. */
 
@@ -86,31 +53,26 @@ const RELIABILITY_POINTS: ReadonlyArray<{ readonly tag: string; readonly name: s
    Building blocks
    -------------------------------------------------------------------------- */
 
-/**
- * Temporary stand-in while a band's footage is out — the same deliberately
- * obvious "temp asset" card the home and About heroes show, with the card
- * held to the right third so it clears the band's copy. Pass it as `image`
- * in place of `video`; swap back when the clip lands.
- */
-const BAND_PLACEHOLDER = '/assets/images/band-placeholder.webp';
-
 /** A band shows either a looping clip or a still; never both. */
 type BandSource =
-  | { readonly video: string; readonly image?: undefined }
-  | { readonly image: string; readonly video?: undefined };
+  | { readonly video: string; readonly poster: string; readonly image?: undefined }
+  | { readonly image: string; readonly video?: undefined; readonly poster?: undefined };
 
 /**
- * Decorative background — a looping clip, or a still while the clip is out.
- * `preload="metadata"` keeps the chapter markers from pulling their full
- * payload before the visitor scrolls to them.
+ * Decorative background — a looping clip, or a still where a still says it
+ * better. Every clip carries a `poster` cut from its own first frame, so the
+ * band is already the right picture while the file is still arriving rather
+ * than a black rectangle. `preload="metadata"` keeps the chapter markers from
+ * pulling their full payload before the visitor scrolls to them; autoplay
+ * fetches the rest when the element actually starts.
  */
-function BandMedia({ video, image, preload = 'metadata' }: BandSource & { readonly preload?: 'metadata' | 'auto' }) {
+function BandMedia({ video, image, poster, preload = 'metadata' }: BandSource & { readonly preload?: 'metadata' | 'auto' }) {
   return (
     <div className={styles.media} aria-hidden="true">
       {image ? (
         <img src={image} alt="" />
       ) : (
-        <video autoPlay muted loop playsInline preload={preload}>
+        <video autoPlay muted loop playsInline preload={preload} poster={poster}>
           <source src={video} type="video/mp4" />
         </video>
       )}
@@ -164,7 +126,9 @@ export default function TechnologyPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        <BandMedia video="/assets/videos/technology-hero.mp4" preload="auto" />
+        {/* The wiring bay of a platform being built, shot close on a gloved
+            hand: the loop runs forward then back, so it never cuts. */}
+        <BandMedia video="/assets/videos/technology-hero.mp4" poster="/assets/images/tech-hero-poster.webp" />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">ARNOBOT Technology</span>
@@ -195,14 +159,20 @@ export default function TechnologyPage() {
         </div>
       </section>
 
-      {/* Critical Areas. The clip is out; the band runs the temp card until
-          the replacement footage lands. */}
+      {/* Critical Areas, over the Alang yard trial: ALTIUS holding the face of a
+          ship hull on its tether while the two operators work from the ground,
+          which is the section's point — they are down there, the robot is up
+          there, and neither has the other's view. Pairs with "under a steel
+          hull" in the body copy. A still rather than a clip: the band already
+          carries the slow drift, and the argument is the place, not the
+          movement. Cropped so the crawler and the operators hold the right of
+          the frame, past the copy column. */}
       <ChapterBand
         id="tech-areas"
         label="Built for critical missions"
         title="Critical Areas"
         body="Underground, inside a vessel, along a night perimeter, under a steel hull — the ground our robots work on takes away the satellite fix, the radio link and the operator's line of sight, usually all at once."
-        image={BAND_PLACEHOLDER}
+        image="/assets/images/tech-band.webp"
       />
 
       {/* Hardware & Software — the architecture stack */}
@@ -238,6 +208,7 @@ export default function TechnologyPage() {
         title="Software Overview"
         body="The software runs on our platform: the operator interface, where missions are planned and monitored; the autonomy engine, which executes missions on the robot with or without a live connection; and the mission record, which is retrieved when the robot reconnects to the operator system."
         video="/assets/videos/gcs-software.mp4"
+        poster="/assets/images/gcs-software-poster.webp"
       />
 
       {/* The onboard loop — perceive, localise, decide. */}
@@ -276,8 +247,9 @@ export default function TechnologyPage() {
               Mission Reports view of a completed run with its planned route
               drawn against the path the robot actually drove — the section's
               sentence in two pictures. Both are real captures at the screen's
-              own 1440x900, so the clip needs no crop. The poster is the second
-              of them, which is what a visitor sees before the file lands. */}
+              own 1440x900, so the clip needs no crop. The poster is its own
+              first frame, so the screen is already showing the dashboard
+              before the file lands. */}
           <figure className={cn('fade-up', 'd1', styles.showcase)}>
             <div className={styles.laptop}>
               <div className={styles.laptopLid}>
@@ -289,7 +261,7 @@ export default function TechnologyPage() {
                     loop
                     playsInline
                     preload="metadata"
-                    poster="/assets/images/gcs-mission-report.webp"
+                    poster="/assets/images/gcs-laptop-poster.webp"
                     aria-label="The ARNOBOT Ground Control Station: the live mission dashboard, then a completed mission reviewed afterwards — distance covered, time taken, waypoints reached, and the planned route drawn against the path actually driven."
                   >
                     <source src="/assets/videos/gcs-laptop.mp4" type="video/mp4" />
@@ -301,46 +273,6 @@ export default function TechnologyPage() {
           </figure>
         </div>
       </section>
-
-      {/* <section className={`${styles.section} reveal`} id="tech-gcs">
-        <div className={styles.split}>
-          <div className={`${styles.splitMedia} ${styles.fadeUp}`}>
-            <img src="/assets/images/gcs_interface.png" alt="ARNOBOT Ground Control Station (GCS) user interface" />
-          </div>
-          <div className={`${styles.fadeUp} ${styles.d1}`}>
-            <span className={styles.eyebrow}>Mission control cockpit</span>
-            <h3 className={styles.blockTitle}>Ground Control Station (GCS)</h3>
-            <p className={styles.blockBody}>
-              The operator&apos;s cockpit: live video, vehicles on a real-time map, mission planning, geofencing and a
-              one-click emergency stop — over WiFi, radio or the internet.
-            </p>
-            <ul className={styles.featureList}>
-              {GCS_FEATURES.map((feature) => (
-                <li className={styles.feature} key={feature.title}>
-                  <span className={styles.featureIcon}>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      {feature.icon}
-                    </svg>
-                  </span>
-                  <span>
-                    <span className={styles.featureTitle}>{feature.title}</span>
-                    <span className={styles.featureBody}>{feature.body}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section> */}
-
 
       {/* Robust & Reliable — the same card rhythm as the loop above, on light
           ground, so the argument sits above the spec table rather than behind

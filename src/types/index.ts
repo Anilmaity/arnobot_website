@@ -82,14 +82,24 @@ export interface Product {
   readonly heroBg: string;
   readonly heroVideo: string;
   /**
-   * A still that stands in for the hero video. Where one is set the hero plays
-   * nothing and offers no play button — the render is the hero — and the band
-   * drops to three quarters of the screen so the product below it is in view.
+   * A photograph that stands in for the hero video. Where one is set the hero
+   * plays nothing and offers no play button — the picture is the hero — and the
+   * band takes the full-bleed cinematic treatment, title over the image.
    */
   readonly heroImage?: string;
+  /**
+   * What `heroImage` actually depicts. The hero is the one image on the page a
+   * screen reader cannot infer from the product name, so it is described rather
+   * than labelled.
+   */
+  readonly heroImageAlt?: string;
+  /**
+   * The one image that stands for the product away from the page — and the last
+   * resort the details band falls back to if `spin` and `stillRender` are both
+   * absent.
+   */
   readonly mainImage: string;
   readonly brochure: string;
-  readonly gallery: readonly string[];
   readonly overview: string;
   readonly specs: ReadonlyArray<readonly [label: string, value: string]>;
   readonly features: readonly string[];
@@ -103,15 +113,15 @@ export interface Product {
   readonly applicationItems?: readonly ProductIconItem[];
   readonly showcase?: readonly ProductShowcaseItem[];
   /**
-   * A 360° render of the machine. Where one exists it replaces `mainImage` and
-   * `gallery` on the product page: a turntable a reader can actually turn says
-   * more about the geometry than a strip of photographs of it.
+   * A 360° render of the machine, and the details band's first choice: a
+   * turntable a reader can actually turn says more about the geometry than a
+   * strip of photographs of it.
    */
   readonly spin?: ProductSpin;
   /**
-   * One keyed render, shown on the same stage as `spin` but with nothing to
-   * drag — for a machine that has a render but no turntable frame set. Like
-   * `spin` it replaces `mainImage` and `gallery`; `spin` wins where both are set.
+   * One image — a keyed render or a photograph — shown on the same stage as
+   * `spin` but with nothing to drag, for a machine with no turntable frame set.
+   * `spin` wins where both are set, and `mainImage` stands in where neither is.
    */
   readonly stillRender?: string;
 }

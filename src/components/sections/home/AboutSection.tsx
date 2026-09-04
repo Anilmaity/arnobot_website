@@ -7,7 +7,13 @@ export default function AboutSection() {
       <div className="about-grid">
         <div className="about-images">
           <RadarRings />
-          <img className="about-img" src="/assets/images/abtt.png" alt="ARNOBOT robotics team" />
+          {/* Cut-out of the team around SAIBYA — the alpha is what lets the
+              radar rings read behind it, so this stays a transparent WebP. */}
+          <img
+            className="about-img"
+            src="/assets/images/about-team.webp"
+            alt="The ARNOBOT team assembling a SAIBYA unmanned ground vehicle"
+          />
         </div>
 
         <div className="about-copy">

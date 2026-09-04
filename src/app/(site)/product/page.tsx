@@ -3,7 +3,6 @@ import path from 'node:path';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Cta from '@/components/sections/Cta';
-import ProductGallery from '@/components/sections/product/ProductGallery';
 import ProductSpinViewer from '@/components/sections/product/ProductSpinViewer';
 import ProductStill from '@/components/sections/product/ProductStill';
 import { ProductIcon } from '@/components/ui/ProductIcons';
@@ -78,12 +77,19 @@ export default async function ProductPage({ searchParams }: PageProps) {
 
   return (
     <main>
+      {/* A product with a hero photograph takes the same full-bleed cinematic
+          treatment as the home and technology heroes: the machine fills the
+          screen and the title sits over it, bottom-left, under the scrim. The
+          clean keyed render still gets its moment on the turntable below.
+          Without a photograph the hero falls back to the video + play button,
+          which needs `product-hero`'s centred layout to place the button. */}
       <section
-        className={`hero product-hero${product.heroImage ? ' product-hero-still' : ''}`}
+        className={product.heroImage ? 'hero hero-cinematic' : 'hero product-hero'}
         id="product-hero"
         data-cinematic-hero
+        data-header-theme={product.heroImage ? 'dark' : undefined}
       >
-        {/* A product with a hero render shows it instead of playing anything. */}
+        {/* A product with a hero photograph shows it instead of playing anything. */}
         {product.heroImage ? null : (
           <video className="hero-video" autoPlay muted loop playsInline key={product.heroVideo}>
             <source src={product.heroVideo} type="video/mp4" />
@@ -92,7 +98,7 @@ export default async function ProductPage({ searchParams }: PageProps) {
         <img
           className="hero-bg"
           src={product.heroImage ?? product.heroBg}
-          alt={`${product.name} hero`}
+          alt={product.heroImageAlt ?? `${product.name} hero`}
         />
 
         <div className="hero-content">
@@ -118,18 +124,17 @@ export default async function ProductPage({ searchParams }: PageProps) {
 
       <section className="product-details reveal">
         <div className="container product-details-grid">
-          {/* A turntable where one has been rendered, a single render on the same
-              stage where there is one but no frame set, the photo gallery otherwise. */}
+          {/* A turntable where one has been rendered, one still on the same stage
+              otherwise. There used to be a third arm here — a thumbnail gallery —
+              but every product ships a turntable or a still, so it never rendered
+              on any of them, and the details band has one image column to give. */}
           {product.spin ? (
             <ProductSpinViewer key={product.id} name={product.name} spin={product.spin} />
-          ) : product.stillRender ? (
-            <ProductStill key={product.id} name={product.name} src={product.stillRender} />
           ) : (
-            <ProductGallery
+            <ProductStill
               key={product.id}
               name={product.name}
-              mainImage={product.mainImage}
-              gallery={product.gallery}
+              src={product.stillRender ?? product.mainImage}
             />
           )}
 

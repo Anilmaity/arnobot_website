@@ -1,14 +1,18 @@
-// Temporary placeholder while the hero video is out. It is a deliberately
-// obvious "temp asset" card in the site's own type and colours. Swap back to a
-// <video className="hero-video"> when the new footage lands — the CSS layers
-// (.hero-bg z-0, ::after scrim z-2) are unchanged.
-const HERO_PLACEHOLDER = '/assets/images/hero-placeholder.webp';
+/** The looping hero clip: six engineers working a UGV with its battery bay open,
+    shot in the Ahmedabad lab. The camera is locked off, so the loop seam reads as
+    a soft jitter rather than a jump.
+    The poster is the clip's own first frame, so nothing shifts when it starts. */
+const HERO_VIDEO = '/assets/videos/home-hero.mp4';
+const HERO_POSTER = '/assets/images/home-hero-poster.webp';
 
 export default function HeroSection() {
   return (
     <section className="hero hero-cinematic" id="home" data-cinematic-hero data-header-theme="dark">
-      {/* Layer 0 — the placeholder is the hero background. */}
-      <img className="hero-bg" src={HERO_PLACEHOLDER} alt="" />
+      {/* Layer 1 — the footage. `.hero.hero-cinematic` keeps a dark ground
+          beneath it, so the poster carries the frame until playback starts. */}
+      <video className="hero-video" autoPlay muted loop playsInline poster={HERO_POSTER}>
+        <source src={HERO_VIDEO} type="video/mp4" />
+      </video>
       {/* Layer 2 — the dark gradient scrim is `.hero-cinematic::after`. */}
 
       {/* Layer 3 — copy. */}

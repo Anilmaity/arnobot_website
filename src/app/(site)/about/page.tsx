@@ -94,12 +94,12 @@ const VALUES = [
    -------------------------------------------------------------------------- */
 
 /**
- * Temporary placeholder while the hero video is out — the same deliberately
- * obvious "temp asset" card the home hero shows. Swap back to a looping
- * <video> when the footage lands; `.media video` in the module still carries
- * its rules.
+ * The hero band: the team around a SAIBYA chassis in the Ahmedabad studio.
+ * `.media img` holds it at 0.9 opacity under the 24s `drift`, and `.scrim`
+ * weights the wash to the left where the copy sits, so the frame keeps its
+ * open right-hand side.
  */
-const HERO_PLACEHOLDER = '/assets/images/hero-placeholder.webp';
+const HERO_BAND = '/assets/images/about-band.webp';
 
 /** Decorative background behind the hero, under the scrim the copy sits on. */
 function BandMedia({ image }: { readonly image: string }) {
@@ -126,7 +126,7 @@ export default function AboutPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        <BandMedia image={HERO_PLACEHOLDER} />
+        <BandMedia image={HERO_BAND} />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">About ARNOBOT</span>
@@ -235,7 +235,9 @@ export default function AboutPage() {
             </div>
 
             <div className={cn(styles.signatory, 'fade-up', 'd1')}>
-              <img className={styles.portrait} src="/assets/images/ceo.jpg" alt="Anmol Shah" />
+              {/* Native 4:3, so `object-position` on `.portrait` is a no-op
+                  here and the frame lands as it was cropped. */}
+              <img className={styles.portrait} src="/assets/images/ceo.webp" alt="Anmol Shah" />
               <div className={styles.signatoryMeta}>
                 <img className={styles.signature} src="/assets/images/sign1.png" alt="Anmol Shah signature" />
                 <h3 className={styles.signatoryName}>Anmol Shah</h3>
