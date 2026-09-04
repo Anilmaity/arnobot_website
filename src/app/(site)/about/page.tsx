@@ -94,10 +94,12 @@ const VALUES = [
    -------------------------------------------------------------------------- */
 
 /**
- * The hero band: the team around a SAIBYA chassis in the Ahmedabad studio.
- * `.media img` holds it at 0.9 opacity under the 24s `drift`, and `.scrim`
- * weights the wash to the left where the copy sits, so the frame keeps its
- * open right-hand side.
+ * The hero band: a SAIBYA Max on the ground at a field trial, mast up and
+ * beacon lit, framed to hold the right of the picture — `.scrim` weights the
+ * wash to the left where the copy sits, so the machine stays in the open
+ * right-hand side rather than under the type. `.media img` holds it at 0.9
+ * opacity under the 24s `drift`, which crops a few per cent off every edge, so
+ * the robot is kept well inside them.
  */
 const HERO_BAND = '/assets/images/about-band.webp';
 

@@ -1,7 +1,13 @@
-/** The looping hero clip: six engineers working a UGV with its battery bay open,
-    shot in the Ahmedabad lab. The camera is locked off, so the loop seam reads as
-    a soft jitter rather than a jump.
-    The poster is the clip's own first frame, so nothing shifts when it starts. */
+/** The looping hero clip: a montage of all four platforms at work — SAIBYA
+    driving itself down a perimeter road, NEXUS crossing leaf litter, ALTIUS
+    magnetised to a ship hull at the Alang yard, ATM throwing dust on a river
+    bank — cross-dissolved, and dissolving back into the first shot so the loop
+    closes on a cut of the same kind as every other. No one is in frame in any
+    of the four.
+
+    The whole product line is in the footage, which is what lets the copy over
+    it stay to a single line. The poster is the clip's own first frame, so
+    nothing shifts when it starts. */
 const HERO_VIDEO = '/assets/videos/home-hero.mp4';
 const HERO_POSTER = '/assets/images/home-hero-poster.webp';
 

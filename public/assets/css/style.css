@@ -1790,6 +1790,21 @@ select.form-input,
   }
 }
 
+/* ── Home hero: the four-platform montage ───────────────────────────────
+   The hero clip cycles four locations, so its top band can no longer be vetted
+   per-clip the way a single fixed clip's could. The site header is transparent
+   by design and has no scrim of its own, and `.hero-cinematic::after` fades to
+   nothing above 78% — exactly where the white nav sits. Two of the four shots
+   are a sunlit road and a pale ship hull; without the third gradient below the
+   nav is unreadable over both. Scoped to the home hero, because the product
+   pages reuse `.hero.hero-cinematic`. */
+.hero.hero-cinematic#home::after {
+  background:
+    linear-gradient(to top, rgba(var(--ink-rgb), 0.88) 0%, rgba(var(--ink-rgb), 0.52) 22%, rgba(var(--ink-rgb), 0.16) 48%, rgba(var(--ink-rgb), 0) 78%),
+    linear-gradient(to right, rgba(var(--ink-rgb), 0.55) 0%, rgba(var(--ink-rgb), 0.16) 40%, rgba(var(--ink-rgb), 0) 72%),
+    linear-gradient(to bottom, rgba(var(--ink-rgb), 0.52) 0%, rgba(var(--ink-rgb), 0.16) calc(var(--nav-height) + 34px), rgba(var(--ink-rgb), 0) calc(var(--nav-height) + 96px));
+}
+
 /* ── Full-screen band rhythm shared by About, Products, Industries ─────── */
 .about,
 .products,
