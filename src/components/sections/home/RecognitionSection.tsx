@@ -61,14 +61,15 @@ export default function RecognitionSection() {
         <p className="section-lead">National and state recognition for engineering and innovation.</p>
       </div>
 
-      {/* The ids are the handles `recognitionMarquee` grabs to turn the CSS
-          marquee into a scroller you can drag. */}
-      <div className={styles.marquee} id="recognitionMarquee">
+      {/* `data-marquee` is the handle the `marquees` behaviour grabs to turn
+          the CSS marquee into a scroller you can drag; the speed is the pace
+          the keyframes run at, so the hand-over is invisible. */}
+      <div className={styles.marquee} data-marquee data-marquee-speed="75">
         {/* Four passes rather than two. The track slides by half its width, so
             that half has to be at least as wide as the viewport or a gap opens
             at the end of every cycle. Seven tiles make one pass ~1890px, short
             of a 1920px screen; four passes put 3780px in each half. */}
-        <div className={styles.track} id="recognitionTrack">
+        <div className={styles.track}>
           {[0, 1, 2, 3].map((pass) => (
             <RecognitionGroup key={pass} duplicate={pass > 0} />
           ))}

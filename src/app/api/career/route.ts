@@ -6,8 +6,9 @@ import { MAX_RESUME_BYTES, RESUME_EXTENSIONS } from '@/lib/resume';
 
 export const runtime = 'nodejs';
 
+/** Back to the form on /career/open-positions, with the outcome in the query. */
 function back(request: Request, query: string): NextResponse {
-  return NextResponse.redirect(new URL(`/career${query}`, request.url), 303);
+  return NextResponse.redirect(new URL(`/career/open-positions${query}`, request.url), 303);
 }
 
 function extensionOf(filename: string): string {
@@ -75,5 +76,5 @@ export async function POST(request: Request): Promise<NextResponse> {
 }
 
 export function GET(request: Request): NextResponse {
-  return NextResponse.redirect(new URL('/career?error=invalid_request', request.url));
+  return NextResponse.redirect(new URL('/career/open-positions?error=invalid_request', request.url));
 }

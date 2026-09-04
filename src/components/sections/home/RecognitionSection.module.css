@@ -86,7 +86,7 @@
 /* --------------------------------------------------------------------------
    Grab and drag
 
-   `recognitionMarquee` adds `is-interactive` once it runs, turning the strip
+   The `marquees` behaviour adds `is-interactive` once it runs, turning the strip
    into a real scroll container and taking the drift over from the keyframes.
    The state classes are global because the behaviour sets them from outside
    this module, where the hashed names are not available.

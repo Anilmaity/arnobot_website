@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import Cta from '@/components/sections/Cta';
-import { RocketIcon, TargetIcon } from '@/components/ui/Icons';
+import { AwardIcon, FileTextIcon, RocketIcon, RoverIcon, ShieldCheckIcon, TargetIcon } from '@/components/ui/Icons';
 import TypingAnimation from '@/components/ui/TypingAnimation';
 import WordRotate from '@/components/ui/WordRotate';
 import { cn } from '@/lib/dom';
@@ -21,21 +21,39 @@ export const metadata: Metadata = {
 /**
  * The record, in the company's own published figures. This band is the only
  * place the site states the awards, filings and publication, and the platform
- * count matches the four on the products page.
+ * count matches the four on the products page. Each figure carries a mark in
+ * the same framed style the careers steps and the statements below use.
  */
 const RECORD: ReadonlyArray<{
+  readonly icon: ReactNode;
   readonly value: string;
   readonly label: string;
   readonly note: string;
 }> = [
   {
+    icon: <RoverIcon />,
     value: '4',
     label: 'Robotic platforms',
     note: 'SAIBYA, ATM, NEXUS and ALTIUS — from a 3\u00A0kg tactical scout to a 500\u00A0kg carrier.',
   },
-  { value: '2', label: 'Awards', note: 'National and state recognition for engineering and innovation.' },
-  { value: '4', label: 'IPs filed', note: 'Protecting the drivetrain and climbing work developed in-house.' },
-  { value: '1', label: 'Publication', note: 'Peer-reviewed work on autonomous ground mobility.' },
+  {
+    icon: <AwardIcon />,
+    value: '2',
+    label: 'Awards',
+    note: 'National and state recognition for engineering and innovation.',
+  },
+  {
+    icon: <ShieldCheckIcon />,
+    value: '4',
+    label: 'IPs filed',
+    note: 'Protecting the drivetrain and climbing work developed in-house.',
+  },
+  {
+    icon: <FileTextIcon />,
+    value: '1',
+    label: 'Publication',
+    note: 'Peer-reviewed work on autonomous ground mobility.',
+  },
 ];
 
 /**
@@ -239,9 +257,10 @@ export default function AboutPage() {
             <h2 className="section-title is-editorial">What we have built so far</h2>
           </div>
 
-          <ul className={cn('card-grid', styles.stats)}>
+          <ul className={styles.stats}>
             {RECORD.map((entry, index) => (
               <li className={cn(styles.stat, 'fade-up', STAT_DELAY[index])} key={entry.label}>
+                <span className={cn('card-icon', styles.statIcon)}>{entry.icon}</span>
                 <strong className="stat-value">{entry.value}</strong>
                 <span className={cn('micro-label', styles.statLabel)}>{entry.label}</span>
                 <span className={styles.statNote}>{entry.note}</span>

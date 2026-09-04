@@ -1,16 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { OPEN_APPLICATION, OPEN_ROLES } from '@/data/careers';
 import ResumeUpload from './ResumeUpload';
 
+/** The listed roles in page order, then the catch-all. The value is what /api/career emails. */
 const ROLES: ReadonlyArray<{ readonly value: string; readonly label: string }> = [
-  { value: 'robotics-engineer', label: 'Robotics Engineer' },
-  { value: 'embedded-developer', label: 'Embedded Systems Developer' },
-  { value: 'computer-vision', label: 'Computer Vision Engineer' },
-  { value: 'autonomy-engineer', label: 'Autonomy Engineer' },
-  { value: 'ai-intern', label: 'AI Research Intern' },
-  { value: 'business-dev', label: 'Business Development Manager' },
-  { value: 'open-application', label: 'Open Application (Any Role)' },
+  ...OPEN_ROLES.map((role) => ({ value: role.slug, label: role.title })),
+  { value: OPEN_APPLICATION.slug, label: OPEN_APPLICATION.title },
 ];
 
 const EXPERIENCE: ReadonlyArray<{ readonly value: string; readonly label: string }> = [
@@ -26,9 +23,14 @@ const EXPERIENCE: ReadonlyArray<{ readonly value: string; readonly label: string
  *
  * Posts multipart data to /api/career, which redirects back with `?success=1`
  * or `?error=…`, so it keeps working without JavaScript.
+ *
+ * `defaultRole` is the slug a role's Apply link carries in `?role=`; the
+ * select opens on it when it names a listed role, and on the placeholder
+ * otherwise.
  */
-export default function CareerForm() {
+export default function CareerForm({ defaultRole }: { readonly defaultRole?: string }) {
   const [submitting, setSubmitting] = useState(false);
+  const preset = ROLES.some((role) => role.value === defaultRole) ? (defaultRole as string) : '';
 
   return (
     <form
@@ -62,7 +64,8 @@ export default function CareerForm() {
           <label htmlFor="car-role">
             Role Applying For <span className="required">*</span>
           </label>
-          <select id="car-role" name="role" required defaultValue="">
+          {/* Keyed on the preset so a new `?role=` remounts the uncontrolled select. */}
+          <select id="car-role" name="role" required defaultValue={preset} key={preset}>
             <option value="" disabled>
               Select a position
             </option>

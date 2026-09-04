@@ -1,44 +1,51 @@
-import { Disposer, prefersReducedMotion } from '@/lib/dom';
+import { Disposer, prefersReducedMotion, queryAll } from '@/lib/dom';
 import type { Cleanup } from '@/types';
 
-/** Matches the drift the CSS keyframes run at, so the hand-over is invisible. */
-const SPEED_PX_PER_SECOND = 75;
+/** The drift when the markup names none: the pace the awards strip runs at. */
+const DEFAULT_SPEED_PX_PER_SECOND = 75;
 
 /** A backgrounded tab resumes with a huge gap; without a ceiling it would jump. */
 const MAX_FRAME_SECONDS = 0.05;
 
 /**
- * Makes the home page "Rewards and Recognition" strip something you can grab.
+ * Makes every `[data-marquee]` strip something you can grab — the "Rewards
+ * and Recognition" awards on the home page, the workshop rooms on /career.
  *
- * The section ships as a pure CSS marquee so it still turns with JS disabled.
- * This behaviour takes over on load: the strip becomes a real scroll container
- * with a grab cursor, the keyframes are switched off, and the drift is driven
- * by `scrollLeft` instead — which is what lets a drag interrupt it and hand
- * control back afterwards.
+ * Each strip ships as a pure CSS marquee so it still turns with JS disabled.
+ * This behaviour takes over on load: the strip becomes a real scroll
+ * container with a grab cursor, the keyframes are switched off, and the drift
+ * is driven by `scrollLeft` instead — which is what lets a drag interrupt it
+ * and hand control back afterwards. `data-marquee-speed` is the drift in
+ * pixels per second, and should match what the keyframes ran at so the
+ * hand-over is invisible.
  *
- * The track holds four identical passes. Resting scroll is kept inside the
- * second one, so there is a whole pass of runway on either side to wrap into
- * and the seam never comes into view.
+ * The strip's first child is the track, and the track holds identical passes
+ * — at least three. Resting scroll is kept inside the second one, so there is
+ * a whole pass of runway on either side to wrap into and the seam never comes
+ * into view.
  *
  * Touch is left to the browser: an overflow-x container already flicks and
  * scrolls natively, and doing it by hand would only cost the momentum.
  */
-export function recognitionMarquee(): Cleanup {
-  const marquee = document.getElementById('recognitionMarquee');
-  const track = document.getElementById('recognitionTrack');
-  if (!marquee || !track) return () => {};
+export function marquees(): Cleanup {
+  const disposer = new Disposer();
+  for (const strip of queryAll<HTMLElement>('[data-marquee]')) disposer.add(marquee(strip));
+  return disposer.cleanup;
+}
 
-  const firstPass = track.firstElementChild;
+function marquee(strip: HTMLElement): Cleanup {
+  const firstPass = strip.firstElementChild?.firstElementChild;
   if (!(firstPass instanceof HTMLElement)) return () => {};
 
+  const speed = Number.parseFloat(strip.dataset.marqueeSpeed ?? '') || DEFAULT_SPEED_PX_PER_SECOND;
   const disposer = new Disposer();
 
   // Reduced motion keeps the strip still. It stays draggable — moving it
   // yourself is not the motion anyone asked to be spared.
   const drifts = !prefersReducedMotion();
 
-  marquee.classList.add('is-interactive');
-  disposer.add(() => marquee.classList.remove('is-interactive'));
+  strip.classList.add('is-interactive');
+  disposer.add(() => strip.classList.remove('is-interactive'));
 
   const passWidth = (): number => firstPass.getBoundingClientRect().width;
 
@@ -52,10 +59,10 @@ export function recognitionMarquee(): Cleanup {
     const width = passWidth();
     if (width <= 0) return 0;
 
-    const current = marquee.scrollLeft;
+    const current = strip.scrollLeft;
     const wrapped = width + (((current - width) % width) + width) % width;
     const shift = wrapped - current;
-    if (shift !== 0) marquee.scrollLeft = wrapped;
+    if (shift !== 0) strip.scrollLeft = wrapped;
     return shift;
   };
 
@@ -70,11 +77,11 @@ export function recognitionMarquee(): Cleanup {
     pointerHeld = false;
     if (!dragging) return;
     dragging = false;
-    if (marquee.hasPointerCapture(dragPointer)) marquee.releasePointerCapture(dragPointer);
-    marquee.classList.remove('is-dragging');
+    if (strip.hasPointerCapture(dragPointer)) strip.releasePointerCapture(dragPointer);
+    strip.classList.remove('is-dragging');
   };
 
-  disposer.on(marquee, 'pointerdown', (event) => {
+  disposer.on(strip, 'pointerdown', (event) => {
     pointerHeld = true;
     // Touch and pen scroll the container natively; only the mouse needs help.
     if (event.pointerType !== 'mouse') return;
@@ -82,33 +89,33 @@ export function recognitionMarquee(): Cleanup {
     dragging = true;
     dragPointer = event.pointerId;
     dragOriginX = event.clientX;
-    dragOriginScroll = marquee.scrollLeft;
-    marquee.setPointerCapture(event.pointerId);
-    marquee.classList.add('is-dragging');
+    dragOriginScroll = strip.scrollLeft;
+    strip.setPointerCapture(event.pointerId);
+    strip.classList.add('is-dragging');
   });
 
-  disposer.on(marquee, 'pointermove', (event) => {
+  disposer.on(strip, 'pointermove', (event) => {
     if (!dragging || event.pointerId !== dragPointer) return;
     event.preventDefault();
-    marquee.scrollLeft = dragOriginScroll - (event.clientX - dragOriginX);
+    strip.scrollLeft = dragOriginScroll - (event.clientX - dragOriginX);
     dragOriginScroll += wrap();
   });
 
-  disposer.on(marquee, 'pointerup', endDrag);
-  disposer.on(marquee, 'pointercancel', endDrag);
+  disposer.on(strip, 'pointerup', endDrag);
+  disposer.on(strip, 'pointercancel', endDrag);
 
   // Holding still to read is the other half of being able to grab it.
   let hovering = false;
-  disposer.on(marquee, 'mouseenter', () => {
+  disposer.on(strip, 'mouseenter', () => {
     hovering = true;
   });
-  disposer.on(marquee, 'mouseleave', () => {
+  disposer.on(strip, 'mouseleave', () => {
     hovering = false;
   });
-  disposer.on(marquee, 'focusin', () => {
+  disposer.on(strip, 'focusin', () => {
     hovering = true;
   });
-  disposer.on(marquee, 'focusout', () => {
+  disposer.on(strip, 'focusout', () => {
     hovering = false;
   });
 
@@ -131,13 +138,13 @@ export function recognitionMarquee(): Cleanup {
       if (!settled) {
         const width = passWidth();
         if (width <= 0) return;
-        marquee.scrollLeft = width;
+        strip.scrollLeft = width;
         settled = true;
         return;
       }
 
       if (hovering || dragging || pointerHeld) return;
-      marquee.scrollLeft += SPEED_PX_PER_SECOND * elapsed;
+      strip.scrollLeft += speed * elapsed;
       wrap();
     };
 

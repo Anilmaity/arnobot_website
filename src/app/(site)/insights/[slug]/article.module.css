@@ -1,59 +1,87 @@
 /* ==========================================================================
    /insights/[slug] — one article.
 
-   Same language as the index: dark hero band, light body, Space Grotesk for
-   display and Inter for text, on the tokens declared in
-   public/assets/css/theme.css. The measure is narrower than the index because
-   this page is read rather than scanned. The eyebrow, the back link and the
-   pager labels reuse the global classes in public/assets/css/style.css.
+   Same language as the index: a full-bleed photographic hero, then a light
+   body. Space Grotesk for display and Inter for text, on the tokens declared
+   in public/assets/css/theme.css. The reading measure is narrower than the
+   index because this page is read rather than scanned. The section shell,
+   heads, eyebrow, hero title and lead, meta line, buttons, read links and
+   micro-labels reuse the global classes in public/assets/css/style.css; what
+   is left here is the page's own layout.
    ========================================================================== */
 
 .page {
-  /* The reading column. Narrower than the global --measure the media, related
-     band and pager run to. */
+  /* The reading column. Narrower than the global --measure the related band
+     and pager run to. */
   --column: 760px;
+  /* The outline rail beside it on wide screens. */
+  --rail: 220px;
 
   background: var(--white);
   color: var(--ink);
 }
 
 /* --------------------------------------------------------------------------
-   Hero
+   Hero — the post's own image, full screen, with the title and the brief over
+   it. The shell is the global `section-screen`, which opts out of its white
+   ground and closing hairline here. The extra step of specificity is
+   deliberate: a CSS module can land before style.css, so a bare class would
+   not reliably win.
    -------------------------------------------------------------------------- */
 
-/* The band is sized to the title block, and the lead image below is pulled up
-   over its bottom edge by `--overlap`, so the first screen is the title and the
-   picture together. It used to be a full screen of navy with the title alone in
-   the middle and the photo under the fold, which read as an empty page.
-   `--section-pad-top` reserves the fixed header, which is transparent here
-   (`data-cinematic-hero`); the bottom padding is the overlap plus the air
-   between the meta line and the picture. */
-.hero {
-  --overlap: clamp(72px, 10vw, 128px);
+.hero:global(.section-screen) {
+  background: var(--footer);
+  border-bottom: 0;
+}
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: calc(var(--section-pad-top) + clamp(8px, 2vh, 24px)) 0
-    calc(var(--overlap) + clamp(40px, 6vh, 64px));
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
   background: var(--footer);
 }
 
-@media (max-width: 900px) {
-  /* Less dark on a phone: a shallower overlap and a tighter band, still clear
-     of the docked bar. */
-  .hero {
-    --overlap: clamp(34px, 5vw, 56px);
-
-    padding-block: calc(var(--nav-height) + clamp(24px, 4vh, 48px)) calc(var(--overlap) + clamp(28px, 4vh, 40px));
-  }
+/* The picture itself, whole and at full strength: no knocked-back opacity
+   and no drift. The navy on `.media` only shows while the file is loading.
+   The pictures are a mixed library of photographs and renders that a slow
+   zoom would not flatter equally. */
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.heroShell {
+/* Only as much cover as the type needs. Weighted to the left where the
+   words sit and clear on the right, so the picture stays the picture rather
+   than a dark texture behind a panel — lighter than the index hero's pass
+   because nothing else is dimming the frame here. The second, shallow pass
+   only darkens the top edge, where the header sits over the frame. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(var(--footer-rgb), 0.76) 0%,
+      rgba(var(--footer-rgb), 0.54) 34%,
+      rgba(var(--footer-rgb), 0.14) 64%,
+      rgba(var(--footer-rgb), 0) 100%
+    ),
+    linear-gradient(180deg, rgba(var(--footer-rgb), 0.32) 0%, rgba(var(--footer-rgb), 0) 30%);
+}
+
+/* The same 58rem column the index, careers and technology heroes hold. */
+.heroInner {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: var(--column);
-  margin: 0 auto;
-  padding-inline: var(--gutter);
+  max-width: 58rem;
 }
 
 /* The look is the global `link-arrow`; only the touch target and the on-dark
@@ -61,7 +89,8 @@
 .back:global(.link-arrow) {
   min-height: 44px;
   margin-bottom: 26px;
-  color: rgba(var(--white-rgb), 0.7);
+  color: rgba(var(--white-rgb), 0.72);
+  text-shadow: var(--shadow-hero-text-soft);
 }
 
 .back:global(.link-arrow):hover,
@@ -69,169 +98,308 @@
   color: var(--white);
 }
 
-/* The title is the global `hero-title is-compact` — the same compact display
-   size the index hero uses; nothing page-specific is left to declare. */
+/* The title is the global `hero-title`: the same size and shadow every hero
+   on the site uses. The global `hero-lead` carries the 28px gap under it. */
+.hero .heroLead {
+  text-shadow: var(--shadow-hero-text-soft);
+}
 
-.heroMeta {
+/* The global eyebrow and meta line, over a picture. */
+.hero :global(.eyebrow),
+.hero .heroMeta {
+  text-shadow: var(--shadow-hero-text-soft);
+}
+
+.hero .heroMeta {
+  margin-top: 28px;
+}
+
+/* The same action row the index, careers and company heroes close on. */
+.heroActions {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 22px;
-  margin-top: 22px;
-  font-size: var(--fs-xs);
-  color: rgba(var(--white-rgb), 0.6);
+  gap: 16px;
+  margin-top: 36px;
 }
 
-.heroMeta span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
+@media (max-width: 900px) {
+  /* `.section-screen` releases the screen height below 900px; this hero
+     keeps it, because the picture is the point of the screen and a
+     content-sized band would crop it to a strip. Nothing above the hero
+     reserves room for the docked bar, so the top padding clears it. */
+  .hero:global(.section-screen) {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: calc(var(--nav-height) + clamp(32px, 5vh, 56px));
+  }
 
-/* --------------------------------------------------------------------------
-   Lead image
-
-   Pulled up over the seam between the dark hero and the white body, so the
-   article opens on the picture rather than on a band of empty colour.
-   -------------------------------------------------------------------------- */
-
-.mediaShell {
-  width: 100%;
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding-inline: var(--gutter);
-}
-
-.media {
-  margin: calc(-1 * var(--overlap)) auto 0;
-  max-width: 960px;
-  overflow: hidden;
-  border-radius: var(--radius-card);
-  aspect-ratio: 16 / 9;
-  background: var(--surface-2);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  /* One column on a phone, so the text needs cover across the whole frame —
+     but the floor is kept low enough that the picture still shows through. */
+  .scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(var(--footer-rgb), 0.7) 0%,
+      rgba(var(--footer-rgb), 0.5) 55%,
+      rgba(var(--footer-rgb), 0.36) 100%
+    );
+  }
 }
 
 /* --------------------------------------------------------------------------
-   Body
+   Body — the reading column, with the outline rail beside it from 1100px.
+   The pair is centred as one block; below that width the rail is dropped
+   and the column stands alone in the middle of the page.
    -------------------------------------------------------------------------- */
 
 .article {
+  display: grid;
+  grid-template-columns: minmax(0, var(--column));
+  justify-content: center;
+  column-gap: clamp(40px, 5vw, 72px);
   width: 100%;
-  max-width: var(--column);
+  max-width: var(--measure);
   margin: 0 auto;
-  padding: clamp(40px, 5vw, 64px) var(--gutter) clamp(16px, 2vw, 24px);
+  padding: clamp(48px, 6vw, 80px) var(--gutter) clamp(16px, 2vw, 24px);
+  /* The hero's "Read the article" lands here, under the docked bar. */
+  scroll-margin-top: var(--nav-height);
 }
 
-.standfirst {
-  font-size: var(--fs-lead);
-  line-height: var(--lh-body);
+.body {
+  min-width: 0;
+}
+
+/* Outline ---------------------------------------------------------------- */
+
+.outline {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .article {
+    grid-template-columns: var(--rail) minmax(0, var(--column));
+  }
+
+  .outline {
+    display: block;
+    position: sticky;
+    top: calc(var(--nav-height) + 32px);
+    align-self: start;
+  }
+}
+
+/* A hairline spine, with the current entry's own accent stroke drawn over
+   it — the same left-edge language as the index's filter underline. */
+.outlineList {
+  display: grid;
+  gap: 2px;
+  margin-top: 14px;
+  border-left: 1px solid var(--line);
+}
+
+.outlineLink {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-left: -1px;
+  padding: 7px 0 7px 14px;
+  border-left: 2px solid transparent;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--muted);
+  transition:
+    color var(--t-fast) var(--ease-menu),
+    border-color var(--t-fast) var(--ease-menu);
+}
+
+.outlineLink:hover,
+.outlineLink:focus-visible {
   color: var(--ink);
-  padding-bottom: clamp(24px, 3vw, 34px);
-  border-bottom: 1px solid var(--line);
 }
 
-.section {
-  margin-top: clamp(28px, 3.4vw, 40px);
+.outlineActive {
+  color: var(--ink);
+  border-left-color: var(--accent);
 }
 
+.outlineIndex {
+  flex: none;
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* Sections --------------------------------------------------------------- */
+
+.section + .section {
+  margin-top: clamp(36px, 4.5vw, 56px);
+}
+
+/* The chapter index the About page's Direction cards carry, in the accent. */
+.sectionIndex {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* In-body headings sit at the h3 scale on purpose: the page title is the
+   one h2-scale heading here. The scroll margin keeps an anchored heading
+   clear of the docked header. */
 .sectionHeading {
   font-family: var(--font-display);
   font-weight: var(--fw-display);
   font-size: var(--fs-h3);
   line-height: var(--lh-heading);
   letter-spacing: var(--ls-display);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  scroll-margin-top: calc(var(--nav-height) + 32px);
 }
 
+/* `pretty`, not the global `balance`: balance evens out any paragraph of up
+   to six lines, so in a reading column the short paragraphs came out a
+   third narrower than the long ones and the right edge jumped about. */
 .sectionText {
   font-size: var(--fs-body-md);
   line-height: var(--lh-body);
   color: var(--slate-700);
+  text-wrap: pretty;
 }
 
-/* --------------------------------------------------------------------------
-   Related
-   -------------------------------------------------------------------------- */
+.sectionText + .sectionText {
+  margin-top: 1em;
+}
 
-.related {
-  margin-top: clamp(56px, 7vw, 88px);
-  padding: clamp(40px, 5vw, 64px) 0;
+/* Takeaways ------------------------------------------------------------- */
+
+/* A wash panel closing the article, on the same card treatment the index's
+   featured post and the pager use. */
+.summary {
+  margin-top: clamp(40px, 5vw, 64px);
+  padding: clamp(24px, 3vw, 36px);
   background: var(--wash);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  scroll-margin-top: calc(var(--nav-height) + 32px);
 }
 
-.relatedShell {
-  width: 100%;
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding-inline: var(--gutter);
-}
-
-.relatedHeading {
+.summaryHeading {
   font-family: var(--font-display);
   font-weight: var(--fw-display);
   font-size: var(--fs-h3);
   line-height: var(--lh-heading);
   letter-spacing: var(--ls-display);
-  margin-bottom: clamp(20px, 2.5vw, 30px);
+  margin-bottom: 18px;
+}
+
+.summaryList {
+  display: grid;
+  gap: 12px;
+}
+
+.summaryList li {
+  position: relative;
+  padding-left: 22px;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--slate-700);
+  text-wrap: pretty;
+}
+
+/* A square accent marker — the same square language as the buttons. */
+.summaryList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Related — the shell is the global `section-screen is-wash is-auto`; the
+   cards are the index grid's cards.
+   -------------------------------------------------------------------------- */
+
+.related {
+  margin-top: clamp(48px, 6vw, 80px);
+}
+
+.relatedShell {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
 }
 
 .relatedGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
-  gap: clamp(20px, 2.6vw, 32px);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: clamp(24px, 3vw, 40px);
 }
 
 .relatedCard {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
+/* The whole card is one link, so the layout lives on the anchor. */
+.relatedLink {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Same frame and same rule as the index cards: whole image, never cropped. */
 .relatedMedia {
   display: block;
   overflow: hidden;
-  /* The same thumbnail treatment as the index grid's cards. */
   border-radius: var(--radius-card);
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   background: var(--surface-2);
 }
 
 .relatedMedia img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform var(--t-slowest) var(--ease-lift);
 }
 
-.relatedCard:hover .relatedMedia img {
+.relatedLink:hover .relatedMedia img {
   transform: scale(1.04);
-}
-
-.relatedDate {
-  font-size: var(--fs-2xs);
-  color: var(--muted);
 }
 
 .relatedTitle {
   font-family: var(--font-display);
   font-weight: var(--fw-display);
-  font-size: var(--fs-body);
-  line-height: 1.35;
+  font-size: var(--fs-h3);
+  line-height: 1.25;
   letter-spacing: var(--ls-display);
   transition: color var(--t-fast) var(--ease-menu);
 }
 
-.relatedCard:hover .relatedTitle {
+.relatedLink:hover .relatedTitle {
   color: var(--accent);
+}
+
+.relatedExcerpt {
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--muted);
+}
+
+/* The affordance that says a card opens something. The look is the global
+   `link-arrow`; only the placement inside the card lives here. */
+.relatedRead {
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+/* The card, not the little link, is the hover target, so the arrow has to be
+   nudged from the anchor rather than by `.link-arrow:hover`. */
+.relatedLink:hover .relatedRead :global(.btn-arrow) {
+  transform: translateX(4px);
 }
 
 /* --------------------------------------------------------------------------
@@ -301,15 +469,21 @@
   letter-spacing: var(--ls-display);
 }
 
+/* --------------------------------------------------------------------------
+   Motion guard. Last in the file on purpose: every rule it cancels is
+   defined above it, and at equal specificity the later rule wins.
+   -------------------------------------------------------------------------- */
+
 @media (prefers-reduced-motion: reduce) {
   .relatedMedia img,
   .relatedTitle,
   .pagerLink,
+  .outlineLink,
   .back:global(.link-arrow) {
     transition: none;
   }
 
-  .relatedCard:hover .relatedMedia img {
+  .relatedLink:hover .relatedMedia img {
     transform: none;
   }
 

@@ -174,18 +174,40 @@
    here is how many columns each one runs.
    -------------------------------------------------------------------------- */
 
-.stats {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 /* --------------------------------------------------------------------------
-   Record — the numbers. A stat cell is not a `card-cell`: it takes a deeper
-   padding and no hover, because there is nothing under it to open.
+   Record — the numbers. Not a `card-grid`: there is nothing under a figure to
+   open, so the four sit straight on the section wash with no cells, fills or
+   hairlines, one quiet surface under the centred head. Columns are spaced by
+   the grid gap and each stat is centred to match the head above it.
    -------------------------------------------------------------------------- */
 
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(36px, 4vw, 56px) clamp(24px, 3vw, 48px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .stat {
-  background: var(--white);
-  padding: clamp(28px, 3vw, 44px);
+  padding: 0 clamp(8px, 1vw, 16px);
+  text-align: center;
+}
+
+/* The mark over each figure: the global `card-icon` frame at the larger
+   56px the contact cards use, centred by the tile's text alignment. Compound
+   with the global so the size and margin win whichever stylesheet lands
+   first. */
+.statIcon:global(.card-icon) {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+}
+
+.statIcon:global(.card-icon) svg {
+  width: 28px;
+  height: 28px;
 }
 
 /* The figure is the global `stat-value`; the label under it holds ink rather

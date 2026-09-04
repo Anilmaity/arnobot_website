@@ -105,6 +105,46 @@ export function PinIcon(props: IconProps) {
   );
 }
 
+export function ClockIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </Icon>
+  );
+}
+
+export function FileTextIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+      <path d="M10 9H8" />
+      <path d="M16 13H8" />
+      <path d="M16 17H8" />
+    </Icon>
+  );
+}
+
+export function WrenchIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+    </Icon>
+  );
+}
+
+export function FactoryIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
+      <path d="M17 18h1" />
+      <path d="M12 18h1" />
+      <path d="M7 18h1" />
+    </Icon>
+  );
+}
+
 export function CheckCircleIcon(props: IconProps) {
   return (
     <Icon strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -173,6 +213,30 @@ export function ShieldCheckIcon(props: IconProps) {
     <Icon strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M12 2.5 20 5.5v6c0 4.4-3.1 8.4-8 10-4.9-1.6-8-5.6-8-10v-6Z" />
       <path d="m8.8 11.9 2.2 2.2 4.2-4.3" />
+    </Icon>
+  );
+}
+
+/** Medal — an award on the record. */
+export function AwardIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="8.5" r="5.5" />
+      <path d="m8.7 13.2-2.2 7.3 5.5-2.7 5.5 2.7-2.2-7.3" />
+    </Icon>
+  );
+}
+
+/** Rover — a ground platform: deck, wheels, payload and a sensor mast. */
+export function RoverIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="12" width="18" height="4" rx="1" />
+      <circle cx="7.5" cy="18.5" r="2" />
+      <circle cx="16.5" cy="18.5" r="2" />
+      <rect x="5.5" y="8.5" width="6" height="3.5" rx="0.5" />
+      <path d="M16 12V7" />
+      <circle cx="16" cy="5.5" r="1.5" />
     </Icon>
   );
 }

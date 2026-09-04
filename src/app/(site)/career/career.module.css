@@ -1,16 +1,18 @@
 /* ==========================================================================
    Careers page.
 
-   Same editorial rhythm as the technology page: full-bleed dark media bands
-   (hero, chapter marker, hiring process) alternating with light sections that
-   carry the copy, one idea per screen. The facility gallery sits between the
-   people and the open roles, so the reader sees the floor before the list of
-   jobs based on it.
+   The case for working here, one idea per screen: a full-bleed video hero,
+   then why the work matters — the story over a frame from the ship-hull
+   trial, on the hero's own composition — then the light sections that carry
+   the rest: the four rooms as a framed carousel under a centred head, who is
+   on the floor — closing on how to apply, four steps on the dark ground the
+   page opened with. The roles and the form are the next page,
+   /career/open-positions.
 
    Everything here consumes the design tokens in public/assets/css/theme.css and
-   reuses the shared components in style.css — `btn`, `eyebrow`, `tag`,
-   `link-arrow`, `on-dark`, and the whole of the careers form (`.career-*`).
-   What is left in this file is only what is specific to this page's layout.
+   reuses the shared components in style.css — `btn`, `eyebrow`, `micro-label`,
+   `link-arrow`, `card-grid`, `card-cell`, `on-dark`. What is left in this file
+   is only what is specific to this page's layout.
    ========================================================================== */
 
 .page {
@@ -29,11 +31,10 @@
 /* --------------------------------------------------------------------------
    Shared type scale
 
-   The specs themselves are style.css's: `hero-title` for the two display
-   lines, `section-title is-editorial` for the headings, `section-lead` for the
-   leads, `micro-label` for every uppercase label and `rule` for the accent
-   bar under the hero. All that is left here is the
-   margin each one carries on this page.
+   The specs themselves are style.css's: `hero-title` for the display line,
+   `section-title is-editorial` for the headings, `section-lead` for the
+   leads, `micro-label` for every uppercase label. All that is left here is
+   the margin each one carries on this page.
    -------------------------------------------------------------------------- */
 
 .heroTitle {
@@ -56,15 +57,15 @@
    -------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------
-   Media bands (hero + chapter marker)
+   Media — the footage behind the hero, and the trial frame behind the story
+   in the band after it.
    -------------------------------------------------------------------------- */
 
-/* Both bands are full-screen `section-screen`s that opt out of its white
+/* The hero is a full-screen `section-screen` that opts out of its white
    ground and its closing hairline. The extra step of specificity is
    deliberate: a CSS module can land before style.css, so a bare class would
    not reliably win. */
-.hero:global(.section-screen),
-.band:global(.section-screen) {
+.hero:global(.section-screen) {
   background: var(--footer);
   border-bottom: 0;
 }
@@ -172,8 +173,8 @@
    -------------------------------------------------------------------------- */
 
 /* The sections themselves are style.css's `section-screen` — `is-wash` for the
-   tinted one, `is-auto` where a long list should size the section rather than
-   the screen.
+   tinted ones, `is-auto` where the content should size the section rather
+   than the screen.
 
    Every head on the page is the same three parts in the same order:
    eyebrow → heading → lead. No rules, no variants. `section-head is-centered`
@@ -186,85 +187,67 @@
 }
 
 /* --------------------------------------------------------------------------
-   Chapter marker — a full-screen video band that opens a part of the page.
+   "Why it matters" — the story over a full-bleed frame from the ship-hull
+   trial, on the hero's own composition: one column at the gutter, eyebrow →
+   title → lead, stopping short of the robot on the right. The frame is the
+   whole ground, so the section opts out of `section-screen`'s white and its
+   closing hairline the way the hero does, and the header stays in its dark
+   state across both.
    -------------------------------------------------------------------------- */
 
-.band {
+.why:global(.section-screen) {
   position: relative;
   overflow: hidden;
+  background: var(--footer);
+  border-bottom: 0;
 }
 
-/* The same column and composition as the hero above — eyebrow, title, rule,
-   lead — capped at 58rem and held to the left so the footage behind the band
-   stays readable as footage. */
-.bandInner {
+/* The frame is wider than any viewport, and the robot sits right of its
+   centre. Anchoring towards the left edge pushes the robot into the clear
+   right half, past the copy column. */
+.why .media img {
+  object-position: 25% 50%;
+}
+
+/* Heavier on the left than the hero's scrim, because the copy column sits
+   there; the right stays clear so the hull and the robot read as a
+   photograph. The second, shallow pass only darkens the top edge under the
+   docked header. */
+.whyScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(var(--footer-rgb), 0.88) 0%,
+      rgba(var(--footer-rgb), 0.66) 34%,
+      rgba(var(--footer-rgb), 0.18) 64%,
+      rgba(var(--footer-rgb), 0.06) 100%
+    ),
+    linear-gradient(180deg, rgba(var(--footer-rgb), 0.3) 0%, rgba(var(--footer-rgb), 0) 30%);
+}
+
+/* The same 58rem column the hero holds, left at the gutter, so the two dark
+   bands read as one treatment. The title caps itself at 22ch and the global
+   `hero-lead` at the text measure, which is what keeps the copy off the
+   robot at desktop widths. */
+.whyInner {
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: 58rem;
-  margin-right: auto;
 }
 
-.bandLabel {
-  text-shadow: var(--shadow-hero-text-soft);
-}
-
-/* Type and measure come from the global `hero-lead`; only the soft shadow over
-   footage is the band's own. */
-.bandBody {
+/* The title arrives with its own display shadow via `hero-title`; the lead
+   and the eyebrow take the softer one over the frame. The lead keeps the
+   global 28px under the title. */
+.whyLead,
+.why :global(.eyebrow) {
   text-shadow: var(--shadow-hero-text-soft);
 }
 
 /* --------------------------------------------------------------------------
-   "Why it matters" — copy beside a single pulled number.
-   -------------------------------------------------------------------------- */
-
-.split {
-  composes: inner;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: var(--gap-grid);
-  align-items: center;
-}
-
-.splitBody {
-  margin: 20px 0 0;
-}
-
-.pullStat {
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--accent);
-  background: var(--white);
-  padding: clamp(32px, 3vw, 48px);
-}
-
-.pullStatNumber {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: var(--fw-display);
-  font-size: clamp(56px, 11vw, 148px);
-  line-height: 0.9;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  margin-bottom: 20px;
-}
-
-.pullStatBody {
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  color: var(--muted);
-  margin: 0;
-}
-
-.pullStatBody strong {
-  display: block;
-  color: var(--ink);
-  font-weight: var(--fw-semibold);
-  margin-bottom: 6px;
-}
-
-/* --------------------------------------------------------------------------
-   Card grids — principles and the people.
+   Card grid — the people.
 
    One 1px-gap grid on a line-coloured background, so the cards read as a single
    ruled block rather than a row of floating boxes. Same construction as the
@@ -273,33 +256,14 @@
 
 /* The grid is style.css's `card-grid`; the measure and the centring are this
    page's, one step above the global's `margin: 0`. */
-.grid3:global(.card-grid),
-.grid4:global(.card-grid) {
+.grid3:global(.card-grid) {
   width: 100%;
   max-width: var(--measure);
   margin-inline: auto;
 }
 
-.grid4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .grid3 {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-}
-
-/* Four cells split evenly (2 x 2, then a single column) rather than auto-fit,
-   which left a lone fourth card beside two empty tracks on tablets. */
-@media (max-width: 1100px) {
-  .grid4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 560px) {
-  .grid4 {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 /* The cells are `card-cell` — ground, padding, hover wash, and the h3 and p
@@ -343,6 +307,320 @@
 }
 
 /* --------------------------------------------------------------------------
+   The facility — the four rooms as a framed carousel under the section head:
+   one 3:2 frame centred on the page, the photographs shown whole — never
+   cropped — on a track that slides one room to the next. The room's own
+   count, name and note sit over the foot of its slide; on desktop the
+   segments run across the top edge of the frame and the three round buttons
+   (the Insights pager's chevrons) sit in its bottom corner, so the picture
+   takes the whole height the head leaves; on a phone they drop into a row
+   beneath. `FacilityCarousel.tsx` moves the track, holds each room for
+   `--carousel-interval`, pauses under the pointer and behind the pause
+   button, and starts paused under reduced motion.
+   -------------------------------------------------------------------------- */
+
+.carouselReveal {
+  width: 100%;
+}
+
+/* One screen for the whole section, weighted to the picture: the frame's
+   height is what is left of the viewport after the section's padding and the
+   ~180px the compact head and its gap take, and its width follows at 3:2 —
+   the photographs' ratio (and the Insights frames') — centred on the page.
+   The head is held to the same width so nothing above the picture is wider
+   than it. */
+.facility {
+  --frame-h: clamp(
+    320px,
+    calc(100svh - var(--section-pad-top) - var(--section-pad-bottom) - 180px),
+    calc(var(--measure) * 2 / 3)
+  );
+  --frame-w: min(calc(var(--frame-h) * 3 / 2), 100%);
+}
+
+.facility .facilityHead {
+  max-width: min(var(--measure-narrow), var(--frame-w));
+}
+
+/* The lead may run the head's full width rather than the text measure, so
+   its one sentence stays on one line and the picture keeps the height. */
+.facility .facilityHead :global(.section-lead) {
+  max-width: none;
+}
+
+.carousel {
+  position: relative;
+  width: var(--frame-w);
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+/* Dark under the photographs so nothing white shows while they load. */
+.carouselFrame {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--radius-card);
+  background: var(--footer);
+  box-shadow: var(--shadow-card);
+}
+
+/* Every room side by side; the component moves the track by whole frames,
+   and that movement is the slide. */
+.carouselTrack {
+  display: flex;
+  height: 100%;
+  transition: transform 0.8s var(--ease-lift);
+}
+
+.slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  color: var(--white);
+}
+
+/* Two copies of each photograph. Underneath, a blurred, dimmed copy scaled
+   to cover the frame; on top, the photograph itself, whole. A picture a
+   little squarer than 3:2 then sits on a soft continuation of its own
+   colours rather than on bars, and nothing is ever cut. */
+.slideFill,
+.slideImg {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.slideFill {
+  object-fit: cover;
+  transform: scale(1.12);
+  filter: blur(28px) brightness(0.6);
+}
+
+.slideImg {
+  z-index: 1;
+  object-fit: contain;
+}
+
+/* Bottom-weighted, where the words are, with a shallow pass over the top
+   edge where the segments run; the room stays clear between. */
+.slideScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(var(--footer-rgb), 0.04) 0%,
+      rgba(var(--footer-rgb), 0.12) 40%,
+      rgba(var(--footer-rgb), 0.6) 72%,
+      rgba(var(--footer-rgb), 0.9) 100%
+    ),
+    linear-gradient(180deg, rgba(var(--footer-rgb), 0.38) 0%, rgba(var(--footer-rgb), 0) 18%);
+}
+
+/* Just the room's own content, over the foot of its slide. */
+.slideCopy {
+  position: absolute;
+  inset: auto clamp(20px, 3vw, 40px) clamp(20px, 3vw, 36px);
+  z-index: 3;
+  max-width: var(--measure-text);
+  margin: 0;
+  text-shadow: var(--shadow-hero-text-soft);
+}
+
+/* `micro-label` is muted by default; the accent marks the count, and the
+   figures are tabular so "01 / 04" sits the same on every slide. */
+.slideCopy .slideIndex {
+  margin-bottom: 10px;
+  color: var(--accent-light);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The card h3 spec — same face, size and leading as every card title. */
+.slideName {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: var(--fs-h3);
+  line-height: 1.25;
+  letter-spacing: var(--ls-display);
+  color: var(--white);
+}
+
+.slideNote {
+  margin: 0;
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: rgba(var(--white-rgb), 0.82);
+}
+
+/* Segments on the left, the three round buttons on the right, under the
+   frame and exactly as wide as it — the phone's arrangement. */
+.carouselControls {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 32px);
+  margin-top: 16px;
+}
+
+.segments {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 8px;
+}
+
+/* Each segment is a 44px-tall button around a 2px line, so the target is
+   reachable while the mark stays a hairline. On the light ground the line
+   is the hairline colour and the fill the accent. */
+.segment {
+  position: relative;
+  flex: 1 1 0;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.segment::before {
+  content: '';
+  position: absolute;
+  inset: 21px 0 auto;
+  height: 2px;
+  background: var(--line);
+  transition: background-color var(--t-fast) var(--ease-menu);
+}
+
+.segment:hover::before,
+.segment:focus-visible::before {
+  background: rgba(var(--ink-rgb), 0.3);
+}
+
+/* Rooms already shown this pass stay lit. */
+.segmentDone::before {
+  background: var(--accent);
+}
+
+/* The current segment fills over the interval; remounted on every turn so
+   it starts from zero, and held with the timer under the pointer. */
+.segmentFill {
+  position: absolute;
+  left: 0;
+  top: 21px;
+  height: 2px;
+  width: 0;
+  background: var(--accent);
+  animation: segmentFill var(--carousel-interval, 2.94s) linear forwards;
+}
+
+.isPaused .segmentFill {
+  animation-play-state: paused;
+}
+
+@keyframes segmentFill {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.carouselButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.carouselPause svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 900px) {
+  /* Full width on a phone, and the head keeps the page's own head measure. */
+  .carousel {
+    width: 100%;
+  }
+
+  .facility .facilityHead {
+    max-width: var(--measure-narrow);
+  }
+}
+
+@media (min-width: 901px) {
+  /* Onto the photograph. The row dissolves; the segments run across the top
+     edge of the frame and the buttons sit in the bottom-right corner, both
+     white over the frame's darkened edges. The caption stops short of the
+     buttons. */
+  .carouselControls {
+    display: contents;
+    color: var(--white);
+  }
+
+  .segments {
+    position: absolute;
+    inset: clamp(14px, 2vw, 20px) clamp(14px, 2vw, 20px) auto;
+    z-index: 4;
+  }
+
+  .segment {
+    height: 24px;
+  }
+
+  .segment::before {
+    inset: 11px 0 auto;
+    background: rgba(var(--white-rgb), 0.35);
+  }
+
+  .segment:hover::before,
+  .segment:focus-visible::before {
+    background: rgba(var(--white-rgb), 0.6);
+  }
+
+  .segmentDone::before,
+  .segmentFill {
+    background: var(--accent-light);
+  }
+
+  .segmentFill {
+    top: 11px;
+  }
+
+  .carouselButtons {
+    position: absolute;
+    right: clamp(20px, 3vw, 40px);
+    bottom: clamp(20px, 3vw, 36px);
+    z-index: 4;
+  }
+
+  /* The global round button's on-dark colours, keyed here because the
+     ground changes with the breakpoint rather than with a class. */
+  .carouselButtons :global(.icon-btn) {
+    border-color: rgba(var(--white-rgb), 0.22);
+    color: var(--white);
+  }
+
+  .carouselButtons :global(.icon-btn):hover,
+  .carouselButtons :global(.icon-btn):focus-visible {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+
+  .slideCopy {
+    right: 200px;
+  }
+}
+
+/* --------------------------------------------------------------------------
    The people — the same card, plus a footed note about what they last shipped.
    -------------------------------------------------------------------------- */
 
@@ -376,210 +654,13 @@
 }
 
 /* --------------------------------------------------------------------------
-   The facility. Photographs in the same hairline grid as the cards, each
-   under the name of the room it shows. Eyebrow and title above, nothing
-   below: the four labelled rooms are the whole statement.
-   -------------------------------------------------------------------------- */
-
-/* The grid is `card-grid`; the measure and the centring are this page's, the
-   same step above the global's `margin: 0` as the card grids above. */
-.rooms:global(.card-grid) {
-  width: 100%;
-  max-width: var(--measure);
-  margin-inline: auto;
-}
-
-.rooms {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.room {
-  position: relative;
-  background: var(--white);
-  overflow: hidden;
-}
-
-.room img {
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-  display: block;
-  /* Resting desaturation holds the four together as one facility; hovering one
-     returns it to full colour so the room can actually be looked at. */
-  filter: grayscale(0.55);
-  transform: scale(1);
-  transition:
-    filter var(--t-slower) var(--ease-lift),
-    transform var(--t-slowest) var(--ease-lift);
-}
-
-.room:hover img {
-  filter: grayscale(0);
-  transform: scale(1.04);
-}
-
-/* A `micro-label` over the foot of the photograph, in white rather than the
-   global muted. */
-.roomLabel {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  padding: 46px 28px 24px;
-  background: linear-gradient(to top, rgba(var(--ink-rgb), 0.9) 0%, rgba(var(--ink-rgb), 0) 100%);
-  color: var(--white);
-}
-
-/* --------------------------------------------------------------------------
-   Open roles — a ruled list, grouped by discipline.
-
-   A list rather than a card grid: the reader is scanning for one title, and a
-   single column of full-width rows is the fastest thing to scan.
-   -------------------------------------------------------------------------- */
-
-.roles {
-  composes: inner;
-}
-
-/* The same step the contact page's ruled steps open with. */
-.roleGroup + .roleGroup {
-  margin-top: clamp(28px, 4vh, 40px);
-}
-
-.roleGroupHead {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 4px;
-}
-
-.roleGroupHead .roleGroupName {
-  color: var(--ink);
-  white-space: nowrap;
-}
-
-.roleGroupLine {
-  flex: 1;
-  height: 1px;
-  background: var(--line);
-  border: 0;
-  margin: 0;
-}
-
-.roleGroupCount {
-  white-space: nowrap;
-}
-
-.roleList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.role {
-  border-bottom: 1px solid var(--line);
-}
-
-/* Rows sit at the contact page's 22px, flush with the discipline label above
-   them. The inline padding is cancelled by a matching negative margin, so the
-   text lines up with the label and only the hover wash bleeds past it. */
-.roleLink {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(16px, 2vw, 32px);
-  margin-inline: -16px;
-  padding: 22px 16px;
-  text-decoration: none;
-  color: inherit;
-  transition:
-    background-color var(--t-fast) var(--ease-menu),
-    padding-left var(--t-fast) var(--ease-menu);
-}
-
-.roleLink:hover,
-.roleLink:focus-visible {
-  background: var(--wash);
-  padding-left: 24px;
-}
-
-.roleTitle {
-  margin: 0 0 6px;
-  font-family: var(--font-display);
-  font-weight: var(--fw-display);
-  font-size: var(--fs-h3);
-  line-height: 1.25;
-  letter-spacing: var(--ls-display);
-  transition: color var(--t-fast) var(--ease-menu);
-}
-
-.roleLink:hover .roleTitle,
-.roleLink:focus-visible .roleTitle {
-  color: var(--accent);
-}
-
-.roleBody {
-  margin: 0 0 12px;
-  max-width: var(--measure-text);
-  font-size: var(--fs-body-sm);
-  line-height: var(--lh-body);
-  color: var(--muted);
-}
-
-.roleMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* The "Apply →" is the global `link-arrow`; only the wrap is page business. */
-.roleAction {
-  white-space: nowrap;
-}
-
-.roleLink:hover .roleAction,
-.roleLink:focus-visible .roleAction {
-  color: var(--accent-deep);
-}
-
-.roleLink:hover :global(.btn-arrow),
-.roleLink:focus-visible :global(.btn-arrow) {
-  transform: translateX(4px);
-}
-
-/* The closing line under the list, for anyone the list did not fit. */
-.rolesFoot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: clamp(28px, 4vh, 40px);
-  padding: clamp(20px, 2.4vw, 28px) clamp(20px, 2.6vw, 32px);
-  border: 1px solid var(--line);
-  background: var(--wash);
-}
-
-.rolesFootText {
-  margin: 0;
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  color: var(--muted);
-}
-
-.rolesFootText strong {
-  display: block;
-  margin-bottom: 4px;
-  font-family: var(--font-display);
-  font-weight: var(--fw-display);
-  font-size: var(--fs-h3);
-  letter-spacing: var(--ls-display);
-  color: var(--ink);
-}
-
-/* --------------------------------------------------------------------------
-   Hiring process — a dark band, so the page's last argument before the form
-   lands with the same weight as the hero.
+   How to apply — the four steps on a dark band, drawn as a process rather
+   than set as four columns of text: each step is a card with a pictogram, a
+   tag placing it on the three-week axis, its number, the one line about how
+   long it takes, and a wire with an arrowhead running into the next card.
+   The band is dark enough that white is the highlight: the cards are lifted
+   surfaces, every mark on them is white, and the first card is the brightest
+   and carries the way in, so the eye lands where the process starts.
    -------------------------------------------------------------------------- */
 
 /* One step above `.section-screen`, which paints white and closes with a
@@ -600,9 +681,14 @@
 
 .process {
   composes: inner;
+  /* Shared by the cards and the connectors drawn into the gaps between them. */
+  --process-gap: clamp(20px, 2.5vw, 36px);
+  --process-pad: clamp(22px, 2.1vw, 30px);
+  /* The connector meets each card at the centre of its 44px icon frame. */
+  --process-wire-y: calc(var(--process-pad) + 22px);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(20px, 2.5vw, 36px);
+  gap: var(--process-gap);
   padding: 0;
   list-style: none;
 }
@@ -610,48 +696,94 @@
 /* The reveal is `fade-up` with the `d1`/`d2`/`d3` delays from style.css. */
 .processStep {
   position: relative;
-  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--process-pad);
+  border: 1px solid rgba(var(--white-rgb), 0.18);
+  border-radius: var(--radius-card);
+  background: rgba(var(--white-rgb), 0.06);
 }
 
-/* The rail runs along the top of the row and the node sits on it, so the four
-   steps read as one sequence rather than four separate columns. */
-.processStep::before {
+/* The wire from the previous card, and its arrowhead against this one. */
+.processStep + .processStep::before {
   content: "";
   position: absolute;
-  top: 5px;
-  left: 0;
-  right: calc(clamp(20px, 2.5vw, 36px) * -1);
+  top: var(--process-wire-y);
+  left: calc(var(--process-gap) * -1 - 1px);
+  width: calc(var(--process-gap) + 1px);
   height: 1px;
-  background: var(--line-on-dark);
+  background: rgba(var(--white-rgb), 0.35);
 }
 
-.processStep:last-child::before {
-  right: 0;
-}
-
-.processStep::after {
+.processStep + .processStep::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 11px;
-  height: 11px;
-  border-radius: var(--radius-round);
-  background: var(--accent);
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.25);
+  top: calc(var(--process-wire-y) - 5px);
+  left: -13px;
+  width: 9px;
+  height: 9px;
+  border-top: 1.5px solid rgba(var(--white-rgb), 0.7);
+  border-right: 1.5px solid rgba(var(--white-rgb), 0.7);
+  transform: rotate(45deg);
 }
 
-.processNum {
-  margin-bottom: 14px;
+/* Where the process starts: a brighter frame, a lighter surface and a filled
+   icon, on the one card that also carries the button. No colour — the accent
+   wash and glow it had first read as a blue panel rather than a highlight. */
+.isEntry {
+  border-color: rgba(var(--white-rgb), 0.55);
+  background: rgba(var(--white-rgb), 0.1);
 }
 
-/* `.on-dark .micro-label` would take the number to white .55; this is the step
-   that keeps it on the light accent. */
-.processSection .processNum:global(.micro-label) {
-  color: var(--accent-light);
+.processTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+/* The global `.card-icon` frame is drawn for light cards (ink hairline,
+   accent glyph); on the dark band the line lifts and the glyph goes white.
+   Two classes so it wins over the single-class global. */
+.processStep .processIcon {
+  margin-bottom: 0;
+  border-color: rgba(var(--white-rgb), 0.32);
+  color: var(--white);
+}
+
+/* Filled, ink on white: the one solid mark in the row. */
+.isEntry .processIcon {
+  border-color: var(--white);
+  background: var(--white);
+  color: var(--ink);
+}
+
+/* The tag on the three-week axis: the `.tag` voice, on a dark ground. */
+.processWhen {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid rgba(var(--white-rgb), 0.24);
+  border-radius: var(--radius-control);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: rgba(var(--white-rgb), 0.8);
+  white-space: nowrap;
+}
+
+.isEntry .processWhen {
+  border-color: rgba(var(--white-rgb), 0.55);
+  color: var(--white);
 }
 
 .processName {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
   margin: 0 0 10px;
   font-family: var(--font-display);
   font-weight: var(--fw-display);
@@ -660,148 +792,139 @@
   letter-spacing: var(--ls-display);
 }
 
+/* The step number, in the display voice at the name's size, stepped back so
+   the name is what reads. */
+.processNum {
+  flex: none;
+  color: rgba(var(--white-rgb), 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The step itself, in full white; the commitment under it steps back. */
 .processBody {
-  margin: 0;
+  margin: 0 0 18px;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--white);
+}
+
+/* How long: one line on its own hairline, with the clock, so it can be read
+   across the row without reading the cards. It opens the card's foot — the
+   cards share a row height, so the foot is pushed to the bottom and the
+   hairlines line up across the row instead of leaving a void under the
+   shorter cards. */
+.processTakes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: auto 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-on-dark);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  line-height: 1.4;
+  color: var(--white);
+}
+
+.processTakes svg {
+  flex: none;
+  color: rgba(var(--white-rgb), 0.7);
+}
+
+.isEntry .processTakes svg {
+  color: var(--white);
+}
+
+.processDetail {
+  margin: 10px 0 0;
   font-size: var(--fs-body-sm);
   line-height: var(--lh-body);
   color: rgba(var(--white-rgb), 0.7);
 }
 
-/* --------------------------------------------------------------------------
-   Apply — the form section.
-
-   The form components carry the global form classes style.css already styles
-   (`.career-apply-form`, `.career-field`, `.career-upload-*`, `.btn`), so
-   nothing here re-skins them; this block is the two-column layout around them.
-   -------------------------------------------------------------------------- */
-
-.applyGrid {
-  composes: inner;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
-  gap: clamp(40px, 5vw, 80px);
-  align-items: start;
+/* The way in, at the foot of the first card. */
+.processCta {
+  align-self: flex-start;
+  margin-top: 24px;
 }
 
-.applyAside {
-  position: sticky;
-  top: calc(var(--nav-height) + 32px);
-}
-
-.applyTitle {
-  margin: 0 0 20px;
-}
-
-.applyBody {
-  margin: 0 0 36px;
-}
-
-.applyInfo {
+.rolesCta {
   display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--line);
-}
-
-.applyInfoItem {
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: var(--fs-body-sm);
-  line-height: var(--lh-body);
-  color: var(--ink);
-}
-
-.applyInfoItem svg {
-  color: var(--accent);
-  margin-top: 2px;
-}
-
-/* The grid cell the form (or its receipt) sits in. */
-.formShell {
-  min-width: 0;
-}
-
-/* The panel that replaces the form once an application is in. */
-.successPanel {
-  padding: clamp(32px, 4vw, 56px);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--accent);
-  background: var(--white);
-  text-align: center;
-}
-
-.successIcon {
-  display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 24px;
-  color: var(--accent);
-}
-
-.successTitle {
-  margin: 0 0 16px;
-}
-
-.successBody {
-  margin: 0 auto 32px;
+  gap: 16px;
+  margin-top: clamp(36px, 5vh, 56px);
 }
 
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
 
-/* Sticky rails release before the two-column splits do. */
-@media (max-width: 1023px) {
-  .applyAside {
-    position: static;
-  }
-}
-
 @media (max-width: 900px) {
   /* `.section-screen` releases the screen height and takes the block padding
-     down. Nothing above these two reserves room for the docked bar, so their
-     top padding has to once the viewport height no longer does. */
-  .hero:global(.section-screen),
-  .band:global(.section-screen) {
+     down. Nothing above the hero reserves room for the docked bar, so its top
+     padding has to once the viewport height no longer does. */
+  .hero:global(.section-screen) {
     padding-top: calc(var(--nav-height) + clamp(32px, 5vh, 56px));
   }
 
-  .split,
-  .applyGrid {
-    grid-template-columns: minmax(0, 1fr);
+  .whyInner {
+    max-width: none;
   }
 
-  .rooms {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* The copy covers the whole frame here, so bring the robot back to the
+     centre behind it. */
+  .why .media img {
+    object-position: 60% 50%;
   }
 
+  /* One column on a phone, so the copy needs cover across the whole frame,
+     kept low enough that the hull still shows through. */
+  .whyScrim {
+    background: linear-gradient(
+      180deg,
+      rgba(var(--footer-rgb), 0.82) 0%,
+      rgba(var(--footer-rgb), 0.6) 55%,
+      rgba(var(--footer-rgb), 0.5) 100%
+    );
+  }
+
+}
+
+/* The steps: two a row before they stack — four cards of a body, a line and
+   a button would be too narrow here. The wire only runs within a row; the
+   card that opens the second row has nothing to its left to run from. */
+@media (max-width: 1100px) and (min-width: 901px) {
   .process {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 40px;
   }
 
-  /* Stacked, the rail would be a stub above each step — drop it and let the
-     node carry the sequence on its own. */
-  .processStep::before {
+  .processStep:nth-child(2n + 1)::before,
+  .processStep:nth-child(2n + 1)::after {
     display: none;
   }
 }
 
-@media (max-width: 768px) {
-  .roleLink {
+/* Stacked, the wire turns: it drops from the card above into the top of
+   this one, arrowhead pointing down, on the centre line. */
+@media (max-width: 900px) {
+  .process {
+    --process-gap: 36px;
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
   }
-}
 
-@media (max-width: 480px) {
-  .rooms {
-    grid-template-columns: minmax(0, 1fr);
+  .processStep + .processStep::before {
+    top: calc(var(--process-gap) * -1 - 1px);
+    left: 50%;
+    width: 1px;
+    height: calc(var(--process-gap) + 1px);
+  }
+
+  .processStep + .processStep::after {
+    top: -13px;
+    left: calc(50% - 4.5px);
+    transform: rotate(135deg);
   }
 }
 
@@ -826,16 +949,15 @@
     transform: none;
   }
 
-  .roleLink,
-  .roleTitle {
+  /* The slide becomes an instant change, and the carousel starts paused
+     (the component reads the same query), so nothing moves unasked. The
+     fill shows the current room whole. */
+  .carouselTrack {
     transition: none;
   }
 
-  .room img {
-    transition: none;
-  }
-
-  .room:hover img {
-    transform: none;
+  .segmentFill {
+    animation: none;
+    width: 100%;
   }
 }

@@ -47,21 +47,21 @@ const CHANNELS: ReadonlyArray<{
   readonly note: string;
 }> = [
   {
-    icon: <PhoneIcon size={24} />,
+    icon: <PhoneIcon size={28} />,
     name: 'Call Us',
     value: SITE.phone,
     href: TEL_HREF,
     note: SITE.officeHours,
   },
   {
-    icon: <MailIcon size={24} />,
+    icon: <MailIcon size={28} />,
     name: 'Email Us',
     value: SITE.email,
     href: `mailto:${SITE.email}`,
     note: 'We reply within 24 hours',
   },
   {
-    icon: <PinIcon size={24} />,
+    icon: <PinIcon size={28} />,
     name: 'Visit Us',
     // City only. The postal address sits beside the map, which is where this jumps to.
     value: 'Ahmedabad, Gujarat',

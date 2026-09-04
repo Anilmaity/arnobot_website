@@ -1,7 +1,7 @@
 import type { Cleanup } from '@/types';
 import { revealOnScroll } from './revealOnScroll';
 import { industrySlider } from './industrySlider';
-import { recognitionMarquee } from './recognitionMarquee';
+import { marquees } from './marquee';
 import { pageAnimations } from './animations';
 import { closingViewport } from './closingViewport';
 import { legalToc } from './legalToc';
@@ -14,7 +14,7 @@ const BEHAVIORS: ReadonlyArray<() => Cleanup> = [
   revealOnScroll,
   pageAnimations,
   industrySlider,
-  recognitionMarquee,
+  marquees,
   closingViewport,
   legalToc,
 ];

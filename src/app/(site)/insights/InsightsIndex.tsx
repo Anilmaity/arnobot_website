@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { Route } from 'next';
 import { useMemo, useState } from 'react';
+import { ChevronLeftIcon, ChevronRightIcon } from '@/components/ui/Icons';
 import { INSIGHT_CATEGORIES, INSIGHTS_BY_DATE, type InsightCategory, type InsightPost } from '@/data/insights';
 import { cn } from '@/lib/dom';
 import styles from './insights.module.css';
@@ -13,20 +14,57 @@ const articleHref = (slug: string) => `/insights/${slug}` as Route;
 
 const FILTERS: readonly Filter[] = ['All', ...INSIGHT_CATEGORIES];
 
-/** How many cards the grid opens with, and how many each "Load more" adds. */
-const PAGE_SIZE = 6;
+/**
+ * Cards per archive page. Three is one row of the grid at desktop width, so a
+ * page of the archive is exactly one screen: the head, a row of cards, the
+ * pager.
+ */
+const PAGE_SIZE = 3;
 
-function Meta({ post }: { readonly post: InsightPost }) {
+/**
+ * How many slots the pager draws before it starts eliding: the first and last
+ * page, and a run of five around the current one.
+ */
+const PAGER_SLOTS = 7;
+
+/** One slot of the pager — a page number, or an ellipsis standing in for a run of them. */
+type PagerSlot = number | 'gap-start' | 'gap-end';
+
+const range = (from: number, to: number): number[] => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
+/**
+ * The page numbers to draw. Every page gets a button while they fit; past
+ * that, the first and last stay put and the run slides with the current page,
+ * so the reader can always jump to either end or step to a neighbour. Near an
+ * edge the run extends instead of eliding, which keeps the row the same width
+ * from page to page and stops the buttons shifting under the pointer.
+ */
+function pagerSlots(current: number, total: number): PagerSlot[] {
+  if (total <= PAGER_SLOTS) return range(1, total);
+  const run = PAGER_SLOTS - 2;
+  if (current < run) return [...range(1, run), 'gap-end', total];
+  if (current > total - run + 1) return [1, 'gap-start', ...range(total - run + 1, total)];
+  return [1, 'gap-start', current - 1, current, current + 1, 'gap-end', total];
+}
+
+/**
+ * The one line under a title: when it was published. The global `meta-line`
+ * with a single item, so it sits at the same size and colour as every other
+ * meta line on the site.
+ */
+function Dateline({ post }: { readonly post: InsightPost }) {
   return (
     <div className="meta-line">
-      <span className={styles.category}>{post.category}</span>
       <time dateTime={post.isoDate}>{post.date}</time>
-      <span>{post.readTime}</span>
     </div>
   );
 }
 
-/** Every post has a page, so the whole card is the link to it. */
+/**
+ * Every post has a page, so the whole card is the link to it. The card is
+ * the picture, the title and the date, and nothing else — the brief and the
+ * category are the article's to tell.
+ */
 function Card({ post }: { readonly post: InsightPost }) {
   return (
     <article className={styles.card}>
@@ -34,15 +72,8 @@ function Card({ post }: { readonly post: InsightPost }) {
         <span className={styles.cardMedia}>
           <img src={post.image} alt="" loading="lazy" />
         </span>
-        <Meta post={post} />
         <h3 className={styles.cardTitle}>{post.title}</h3>
-        <p className={styles.cardExcerpt}>{post.excerpt}</p>
-        <span className={cn('link-arrow', styles.cardRead)}>
-          Read article
-          <span className="btn-arrow" aria-hidden="true">
-            &rarr;
-          </span>
-        </span>
+        <Dateline post={post} />
       </Link>
     </article>
   );
@@ -51,7 +82,7 @@ function Card({ post }: { readonly post: InsightPost }) {
 /**
  * The two content screens under the hero. Both are rendered here rather than
  * in the page because one filter drives both: the newest of the selection
- * leads the first screen, the rest fill the second.
+ * leads the first screen, the rest fill the second, a page at a time.
  *
  * Both sections stay mounted whatever the filter yields. The scroll reveal
  * observes `.reveal` sections once, at page load — a section that unmounted
@@ -60,7 +91,12 @@ function Card({ post }: { readonly post: InsightPost }) {
  */
 export default function InsightsIndex() {
   const [filter, setFilter] = useState<Filter>('All');
-  const [visible, setVisible] = useState(PAGE_SIZE);
+  const [page, setPage] = useState(1);
+  // Whether the reader has turned a page since the filter was last set. The
+  // grid fades between pages, but not on first paint (the scroll reveal owns
+  // that) and not on a filter change (the archive may still be below the fold,
+  // hidden by the reveal, and an animation would flash it).
+  const [turned, setTurned] = useState(false);
 
   const posts = useMemo(
     () =>
@@ -70,14 +106,24 @@ export default function InsightsIndex() {
 
   // The newest of whatever is selected leads the page; the rest fill the grid.
   const [featured, ...rest] = posts;
-  const shown = rest.slice(0, visible);
-  const remaining = rest.length - shown.length;
+  const pageCount = Math.max(1, Math.ceil(rest.length / PAGE_SIZE));
+  const shown = rest.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const choose = (next: Filter): void => {
     setFilter(next);
-    // A new filter is a new list — carrying the old page depth into it would
-    // silently hide posts the visitor just asked to see.
-    setVisible(PAGE_SIZE);
+    // A new filter is a new list — its third page may not exist, and its
+    // newest posts are only on the first.
+    setPage(1);
+    setTurned(false);
+  };
+
+  // The viewport stays where it is: the cards swap in place under the reader's
+  // eye, the way the filter above swaps the lead. Scrolling the head back into
+  // view on every turn was tried and felt like a jolt.
+  const turnTo = (next: number): void => {
+    if (next < 1 || next > pageCount || next === page) return;
+    setPage(next);
+    setTurned(true);
   };
 
   return (
@@ -127,15 +173,8 @@ export default function InsightsIndex() {
                   <img src={featured.image} alt="" />
                 </span>
                 <span className={styles.featuredBody}>
-                  <Meta post={featured} />
                   <h3 className={styles.featuredTitle}>{featured.title}</h3>
-                  <p className={styles.featuredExcerpt}>{featured.excerpt}</p>
-                  <span className={cn('link-arrow', styles.cardRead)}>
-                    Read article
-                    <span className="btn-arrow" aria-hidden="true">
-                      &rarr;
-                    </span>
-                  </span>
+                  <Dateline post={featured} />
                 </span>
               </Link>
             </article>
@@ -143,7 +182,7 @@ export default function InsightsIndex() {
         </div>
       </section>
 
-      {/* 3 — The archive */}
+      {/* 3 — The archive, three cards a page */}
       <section className="section-screen is-wash reveal" id="articles">
         <div className={styles.shell}>
           <div className={cn('section-head is-centered', styles.sectionHead, 'fade-up')}>
@@ -154,7 +193,9 @@ export default function InsightsIndex() {
           </div>
 
           {shown.length > 0 ? (
-            <div className={cn(styles.grid, 'fade-up', 'd1')}>
+            // Keyed on the page so a turn remounts the grid and the fade plays
+            // again; a remount is the only way to restart a CSS animation.
+            <div key={`${filter}-${page}`} className={cn(styles.grid, 'fade-up', 'd1', turned && styles.pageIn)}>
               {shown.map((post) => (
                 <Card post={post} key={post.slug} />
               ))}
@@ -165,17 +206,58 @@ export default function InsightsIndex() {
             </p>
           )}
 
-          {remaining > 0 ? (
-            <div className={styles.loadMoreRow}>
+          {/* The steppers at either end stay in the tab order (`aria-disabled`,
+              not `disabled`), so focus does not fall off the page when the
+              last step lands on one. The status line is read out on every
+              turn; on a phone it also stands in for the numbers. */}
+          {pageCount > 1 ? (
+            <nav className={styles.pager} aria-label="Archive pages">
               <button
                 type="button"
-                className="btn btn-outline"
-                onClick={() => setVisible((n) => n + PAGE_SIZE)}
+                className={cn('icon-btn', styles.pagerStep)}
+                aria-label="Previous page"
+                aria-disabled={page === 1}
+                onClick={() => turnTo(page - 1)}
               >
-                Load more articles
-                <span className="btn-count">{remaining} left</span>
+                <ChevronLeftIcon size={20} />
               </button>
-            </div>
+
+              <ol className={styles.pagerList}>
+                {pagerSlots(page, pageCount).map((slot) =>
+                  typeof slot === 'number' ? (
+                    <li key={slot}>
+                      <button
+                        type="button"
+                        className={styles.pagerPage}
+                        aria-label={`Page ${slot}`}
+                        aria-current={slot === page ? 'page' : undefined}
+                        onClick={() => turnTo(slot)}
+                      >
+                        {slot}
+                      </button>
+                    </li>
+                  ) : (
+                    <li key={slot} className={styles.pagerGap} aria-hidden="true">
+                      &hellip;
+                    </li>
+                  ),
+                )}
+              </ol>
+
+              <p className={styles.pagerStatus} role="status">
+                Page {page} of {pageCount}
+              </p>
+
+              <button
+                type="button"
+                className={cn('icon-btn', styles.pagerStep)}
+                aria-label="Next page"
+                aria-disabled={page === pageCount}
+                onClick={() => turnTo(page + 1)}
+              >
+                <ChevronRightIcon size={20} />
+              </button>
+            </nav>
           ) : null}
         </div>
       </section>

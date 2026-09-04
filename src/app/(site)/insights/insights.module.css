@@ -6,7 +6,7 @@
    the category filter with the lead article, and the archive grid. Every
    colour, size, radius, shadow and duration below comes from the tokens in
    public/assets/css/theme.css; the section shell, heads, eyebrow, buttons,
-   read links, meta line and "load more" reuse the global classes in
+   dateline and the pager's round buttons reuse the global classes in
    public/assets/css/style.css. What is left here is the page's own layout.
    ========================================================================== */
 
@@ -170,17 +170,6 @@
   font-size: var(--fs-body-sm);
 }
 
-/* Shared meta line ------------------------------------------------------- */
-
-/* The row itself is the global `meta-line`, which also draws the separating
-   bullets; only the category's accent lives here. */
-.category {
-  color: var(--accent);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-}
-
 /* Featured --------------------------------------------------------------- */
 
 .featured {
@@ -242,20 +231,18 @@
   font-size: var(--fs-h2);
   line-height: var(--lh-heading);
   letter-spacing: var(--ls-display);
-}
-
-.featuredExcerpt {
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  color: var(--muted);
+  transition: color var(--t-fast) var(--ease-menu);
 }
 
 /* Grid ------------------------------------------------------------------- */
 
-/* Opens straight under the archive head; `section-head` carries the gap. */
+/* Opens straight under the archive head; `section-head` carries the gap.
+   A page is three cards, so the grid is three across rather than as many as
+   fit — auto-fill would leave a tablet with two and an orphan. It stacks
+   where the featured card does. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(24px, 3vw, 40px);
 }
 
@@ -295,36 +282,114 @@
   transition: color var(--t-fast) var(--ease-menu);
 }
 
-.card:hover .cardTitle {
+/* The card is the link, so the title is what answers the hover. */
+.card:hover .cardTitle,
+.featured:hover .featuredTitle {
   color: var(--accent);
 }
 
-.cardExcerpt {
-  font-size: var(--fs-body-sm);
-  line-height: var(--lh-body);
+/* Pager ------------------------------------------------------------------ */
+
+/* Centred under the grid. The arrows are the global `icon-btn`, as on the
+   home slider; the numbers are set like the category filter above — the same
+   label type, the current one in the accent with a 2px underline — so the two
+   controls on this page that pick from a list speak one language. */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.5vw, 20px);
+  margin-top: clamp(36px, 4.5vw, 60px);
+}
+
+.pagerList {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+}
+
+/* 44px targets, whatever the digit count. */
+.pagerPage,
+.pagerGap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 44px;
+  padding: 0 6px;
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
   color: var(--muted);
 }
 
-/* The affordance that says a card opens something. The look is the global
-   `link-arrow`; only the placement inside the card lives here. */
-.cardRead {
-  margin-top: auto;
-  padding-top: 4px;
+/* The underline is drawn transparent from the start, so the current page's
+   colour can fade in rather than snap. */
+.pagerPage {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition:
+    color var(--t-fast) var(--ease-menu),
+    text-decoration-color var(--t-fast) var(--ease-menu);
 }
 
-/* The card, not the little link, is the hover target, so the arrow has to be
-   nudged from the anchor rather than by `.link-arrow:hover`. */
-.cardLink:hover .cardRead :global(.btn-arrow),
-.featuredLink:hover .cardRead :global(.btn-arrow) {
-  transform: translateX(4px);
+.pagerPage:hover {
+  color: var(--ink);
 }
 
-/* Load more -------------------------------------------------------------- */
+.pagerPage[aria-current='page'] {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+  cursor: default;
+}
 
-.loadMoreRow {
-  display: flex;
-  justify-content: center;
-  margin-top: clamp(36px, 4.5vw, 60px);
+.pagerGap {
+  user-select: none;
+}
+
+/* A stepper at its end is `aria-disabled`, not `disabled`, so it keeps its
+   place in the tab order; this mirrors the global `icon-btn:disabled` look. */
+.pagerStep[aria-disabled='true'] {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Read out on every turn, but drawn only where the numbers are not: on a
+   phone it stands in for them between the arrows. */
+.pagerStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* A turned page rises in where the last one stood — a shorter run of the
+   scroll reveal's own move — so the swap reads as a turn, not a glitch. The
+   viewport itself does not move. */
+.pageIn {
+  animation: page-in var(--t-slower) var(--ease-lift) both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -350,8 +415,33 @@
     );
   }
 
-  .featuredLink {
+  .featuredLink,
+  .grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Seven numbers and two arrows do not fit a phone; the status line does,
+   set as the label it is. */
+@media (max-width: 600px) {
+  .pagerList {
+    display: none;
+  }
+
+  .pagerStatus {
+    position: static;
+    width: auto;
+    height: auto;
+    min-width: 7.5em;
+    overflow: visible;
+    clip-path: none;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--muted);
   }
 }
 
@@ -362,9 +452,15 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cardTitle,
+  .featuredTitle,
   .filter,
-  .featured {
+  .featured,
+  .pagerPage {
     transition: none;
+  }
+
+  .pageIn {
+    animation: none;
   }
 
   .featured:hover {
