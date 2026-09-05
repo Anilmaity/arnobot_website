@@ -18,11 +18,33 @@ export const metadata: Metadata = {
 /* The four-layer architecture — its copy, wiring and motion — lives with the
    diagram in src/components/sections/technology/ArchitectureDiagram.tsx. */
 
+/**
+ * A card that opens with a photograph. The picture is the evidence for the
+ * sentence under it — the sensor being described, the switch being described —
+ * so each one carries real alt text rather than `alt=""`.
+ */
+type CardImage = { readonly image: string; readonly alt: string };
+
 /** The onboard loop, in the order the robot runs it. One line each. */
-const PERCEPTION_STEPS: ReadonlyArray<{ readonly name: string; readonly body: string }> = [
-  { name: 'Perceive', body: 'Laser, camera and inertial data fused on the robot. Detection runs onboard, not in the cloud.' },
-  { name: 'Localise', body: 'Centimetre-grade with a satellite fix. Its own map without one — underground, indoors, under steel.' },
-  { name: 'Decide', body: 'Missions are an area, not a joystick input. It replans around obstacles and resumes the pass.' },
+const PERCEPTION_STEPS: ReadonlyArray<{ readonly name: string; readonly body: string } & CardImage> = [
+  {
+    name: 'Perceive',
+    body: 'Laser, camera and inertial data fused on the robot. Detection runs onboard, not in the cloud.',
+    image: '/assets/images/tech-loop-perceive.webp',
+    alt: 'The sensor head on a Saibya mast in the field: a camera housing on each side, the radio antennas, and the amber warning beacon above them.',
+  },
+  {
+    name: 'Localise',
+    body: 'Centimetre-grade with a satellite fix. Its own map without one — underground, indoors, under steel.',
+    image: '/assets/images/tech-loop-localise.webp',
+    alt: 'The scanning laser bolted to the Saibya deck — the sensor the robot builds its own map from when there is no satellite fix.',
+  },
+  {
+    name: 'Decide',
+    body: 'Missions are an area, not a joystick input. It replans around obstacles and resumes the pass.',
+    image: '/assets/images/tech-loop-decide.webp',
+    alt: 'The ARNOBOT Ground Control Station with five waypoints placed across satellite imagery: a mission is handed over as ground to cover, not steered by hand.',
+  },
 ];
 
 /**
@@ -30,21 +52,29 @@ const PERCEPTION_STEPS: ReadonlyArray<{ readonly name: string; readonly body: st
  * qualities rather than a sequence, so the small accent line carries a tag
  * instead of a step number.
  */
-const RELIABILITY_POINTS: ReadonlyArray<{ readonly tag: string; readonly name: string; readonly body: string }> = [
+const RELIABILITY_POINTS: ReadonlyArray<
+  { readonly tag: string; readonly name: string; readonly body: string } & CardImage
+> = [
   {
     tag: 'BUILT',
     name: 'Sealed for the site',
     body: 'Enclosures, connectors and drivetrains specified for dust, water and washdown — so a shift in the mud, the rain or the dark is an ordinary day rather than an exception.',
+    image: '/assets/images/tech-reliability-built.webp',
+    alt: 'The Saibya drivetrain: solid field tyres on steel rims under a bolted, sealed chassis enclosure.',
   },
   {
     tag: 'SAFE',
     name: 'Faults stay local',
     body: 'Lose the link, the satellite fix or a sensor and the vehicle falls back to a safe state on its own. The reflex layer holds it there while the layers above recover.',
+    image: '/assets/images/tech-reliability-safe.webp',
+    alt: 'The vehicle control panel: the red emergency stop beside the battery isolator, the fuse bank and a charge gauge.',
   },
   {
     tag: 'FIELD',
     name: 'Serviceable where it works',
     body: 'Attachments come off with standard tooling, and the same core runs on every platform — so a crew trained on one robot can keep the whole fleet moving.',
+    image: '/assets/images/tech-reliability-field.webp',
+    alt: 'The rear service panel between the wheels, closed with standard hex fasteners and marked “Caution Autonomous”.',
   },
 ];
 
@@ -126,9 +156,18 @@ export default function TechnologyPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        {/* The wiring bay of a platform being built, shot close on a gloved
-            hand: the loop runs forward then back, so it never cuts. */}
-        <BandMedia video="/assets/videos/technology-hero.mp4" poster="/assets/images/tech-hero-poster.webp" />
+        {/* A SAIBYA working three kinds of ground, and no one in any frame: it
+            comes up a scrub lot at the camera, crosses a rubble yard, then
+            holds a clearing. The old cut was a gloved hand in a wiring bay —
+            a picture of us building a robot, where the page promises a robot
+            doing its job. Four segments, 0.7s dissolves, and a return to the
+            opening shot so the loop closes on a dissolve rather than a cut.
+            Each segment is framed to hold the right of the picture, past the
+            copy column, where the scrim leaves the frame open. */}
+        <BandMedia
+          video="/assets/videos/technology-hero-field.mp4"
+          poster="/assets/images/tech-hero-field-poster.webp"
+        />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">ARNOBOT Technology</span>
@@ -218,9 +257,21 @@ export default function TechnologyPage() {
           <h2 className="section-title is-editorial">Perceive. Localise. Decide.</h2>
           <p className="section-lead">One loop, running onboard — with or without a link to the control room.</p>
         </div>
+        {/* Each step opens on the thing it describes — the sensors, the
+            scanner, the mission drawn on the map — so the loop is shown as
+            well as named. */}
         <ol className={cn('card-grid', 'fade-up', 'd1', styles.steps)}>
           {PERCEPTION_STEPS.map((step, i) => (
             <li className={cn('card-cell', styles.step)} key={step.name}>
+              <img
+                className={styles.stepFigure}
+                src={step.image}
+                alt={step.alt}
+                width={1120}
+                height={630}
+                loading="lazy"
+                decoding="async"
+              />
               <span className={cn('micro-label', styles.stepIndex)}>{String(i + 1).padStart(2, '0')}</span>
               <h3>{step.name}</h3>
               <p>{step.body}</p>
@@ -285,9 +336,22 @@ export default function TechnologyPage() {
             Hardware qualified for the ground it works on, and a control chain that keeps a fault local.
           </p>
         </div>
-        <ul className={cn('card-grid', 'fade-up', 'd1', styles.steps)}>
+        {/* The same figure as the loop above, letterboxed: these three
+            paragraphs are twice as long, and the section still has to land in
+            one screen. Each is the hardware the sentence is about — the sealed
+            drivetrain, the emergency stop, the service panel. */}
+        <ul className={cn('card-grid', 'fade-up', 'd1', styles.steps, styles.stepsWide)}>
           {RELIABILITY_POINTS.map((point) => (
             <li className={cn('card-cell', styles.step)} key={point.name}>
+              <img
+                className={styles.stepFigure}
+                src={point.image}
+                alt={point.alt}
+                width={1120}
+                height={480}
+                loading="lazy"
+                decoding="async"
+              />
               <span className={cn('micro-label', styles.stepIndex)}>{point.tag}</span>
               <h3>{point.name}</h3>
               <p>{point.body}</p>

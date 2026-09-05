@@ -9,7 +9,14 @@ import type { ProductId } from '@/types';
    image — a landscape frame would lose two thirds of the robot to the crop.
    `alt` describes what the photograph shows rather than repeating the product
    name: the SAIBYA frame is of the Saibya Max variant, which is the platform
-   we have field photography of. */
+   we have field photography of.
+
+   ALTIUS is the exception, and it is a render rather than a photograph: there
+   is no photograph of it anywhere in the vault. Its old card was a workshop
+   snap — the crawler clamped to a painted indoor wall with a folding chair in
+   shot — which showed the machine but not the job. This is the saved Cycles
+   ocean scene re-framed to portrait, so the card says what ALTIUS is for:
+   holding station on a ship's plating above the waterline. */
 const CARDS: ReadonlyArray<{
   readonly id: ProductId;
   readonly name: string;
@@ -19,8 +26,8 @@ const CARDS: ReadonlyArray<{
   {
     id: 'altius',
     name: 'ALTIUS',
-    image: '/assets/images/card-altius.webp',
-    alt: 'ALTIUS magnetic crawler holding position part-way up a vertical steel plate during a climb test',
+    image: '/assets/images/card-altius-v2.webp',
+    alt: 'ALTIUS magnetic crawler clamped to the plating of a ship hull above the waterline, open water below it',
   },
   {
     id: 'saibya',

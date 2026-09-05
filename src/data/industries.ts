@@ -149,6 +149,18 @@ export function getIndustry(id: string | null | undefined): Industry | undefined
  * not build. `alt` says what the frame actually shows rather than restating the
  * label above it, so the two are not read as the same sentence twice.
  *
+ * The image area is 190px tall and about 279px wide on a 1440px screen, and it
+ * sits under `grayscale(80%)` until the card is hovered. Two consequences the
+ * card art has to respect: lettering on the machine is a smudge at that size,
+ * so nothing legible can be claimed for it, and the frames have to separate on
+ * composition and tone rather than on colour.
+ *
+ * `defence` and `industrial` were both re-shot from the 60 MP Saibya Max set
+ * for that reason. Defence was a soft, distant frame against a blank overcast
+ * sky whose alt asserted "Indian Army markings" that are four pixels wide on
+ * the card; industrial was a pair of gloved hands fitting a wheel to a bare
+ * chassis on a studio sweep — a person, not a machine, and not a real place.
+ *
  * Note `power` and `asset` exist in INDUSTRIES (they are reachable from the
  * modal) but have never had a card here.
  */
@@ -161,8 +173,8 @@ export const HOME_INDUSTRY_CARDS: ReadonlyArray<{
   {
     id: 'defence',
     label: 'Defence & Security',
-    image: '/assets/images/card-industry-defence.webp',
-    alt: 'Saibya Max surveillance UGV in Indian Army markings driving towards the camera on a field trial',
+    image: '/assets/images/card-industry-defence-v2.webp',
+    alt: 'Saibya Max surveillance UGV working through dry scrub below a weathered compound wall, mast and beacon up',
   },
   {
     id: 'maritime',
@@ -173,8 +185,8 @@ export const HOME_INDUSTRY_CARDS: ReadonlyArray<{
   {
     id: 'industrial',
     label: 'Industrial Operations',
-    image: '/assets/images/card-industry-industrial.webp',
-    alt: 'Gloved hands fitting a drive wheel to a UGV chassis in the ARNOBOT workshop',
+    image: '/assets/images/card-industry-industrial-v2.webp',
+    alt: 'Saibya Max heavy-payload UGV standing on a compacted earth haul track at a site trial',
   },
   {
     id: 'infrastructure',

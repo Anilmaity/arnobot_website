@@ -22,10 +22,10 @@ const HERO_IMAGE = '/assets/images/article-insights-index.webp';
  * so both content screens live in `InsightsIndex`; the page itself stays
  * server-rendered.
  *
- * Note there is an older `/blog` index still in the tree, reachable only by
- * URL. This supersedes it. Nothing links to it now except a route list in
- * Header.tsx, so it can be retired or redirected here once someone decides
- * what happens to the three articles behind /blog-details.
+ * This supersedes the old `/blog` index and the `/blog-details?id=` articles
+ * behind it. Those routes are gone from the tree, and `next.config.ts` now
+ * redirects both — and their `.php` ancestors — here, so the addresses the
+ * site published before the change still land somewhere.
  */
 export default function InsightsPage() {
   return (

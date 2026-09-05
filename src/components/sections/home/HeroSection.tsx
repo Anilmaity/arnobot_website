@@ -5,11 +5,18 @@
     closes on a cut of the same kind as every other. No one is in frame in any
     of the four.
 
+    The SAIBYA segment plays backwards. Shot forwards, the machine recedes down
+    the avenue and is smallest by the dissolve, which opens the site on a robot
+    leaving. Reversed, it comes up the road towards the camera and is largest at
+    the cut — the same footage, read as an arrival. Nothing is mirrored: the
+    hull and deck decals still read left to right, checked at native pixels.
+
     The whole product line is in the footage, which is what lets the copy over
     it stay to a single line. The poster is the clip's own first frame, so
-    nothing shifts when it starts. */
-const HERO_VIDEO = '/assets/videos/home-hero.mp4';
-const HERO_POSTER = '/assets/images/home-hero-poster.webp';
+    nothing shifts when it starts — it moved with the in-point when the segment
+    was reversed. */
+const HERO_VIDEO = '/assets/videos/home-hero-v2.mp4';
+const HERO_POSTER = '/assets/images/home-hero-v2-poster.webp';
 
 export default function HeroSection() {
   return (

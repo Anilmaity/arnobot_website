@@ -39,8 +39,24 @@
   height: 100%;
   object-fit: cover;
   opacity: 0.9;
+  /* The machine holds the right of the frame, so bias the cover crop that
+     way. On a 16:9 viewport there is no horizontal excess and this does
+     nothing; on the 16:10 and 3:2 laptops that crop about 5% off each side it
+     takes that off the left, where the frame is only foliage, instead of off
+     the rear wheels. */
+  object-position: 68% center;
   /* A slow drift keeps a short loop from reading as a still frame. */
   animation: drift 24s ease-in-out infinite alternate;
+}
+
+/* Phones crop the 16:9 frame down to a strip about a quarter of its width, so
+   the centre of the picture is foliage and the machine is off the edge. Move
+   the strip over it. */
+@media (max-width: 700px) {
+  .media video,
+  .media img {
+    object-position: 76% center;
+  }
 }
 
 @keyframes drift {
@@ -270,6 +286,22 @@
   max-width: var(--measure-narrow);
   margin-inline: auto;
   text-align: center;
+}
+
+/* The standing "Made in India" line under the rotator: the global
+   `micro-label`, laid out as a row so the mark sits on the cap height of the
+   words rather than above them. Compound with the global so the display and
+   the colour win whichever stylesheet lands first. */
+.origin:global(.micro-label) {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(32px, 5vh, 56px);
+  color: rgba(var(--white-rgb), 0.72);
+}
+
+.originMark {
+  flex: none;
 }
 
 /* --------------------------------------------------------------------------

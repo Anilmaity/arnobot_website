@@ -306,8 +306,8 @@
 /* --------------------------------------------------------------------------
    Perceive / Localise / Decide — and the same rhythm for Robust & Reliable.
 
-   Both are the global `card-grid` / `card-cell`; the tracks, the measure and
-   the staggered reveal are the page's own.
+   Both are the global `card-grid` / `card-cell`; the tracks, the measure, the
+   picture at the top of each cell and the staggered reveal are the page's own.
    -------------------------------------------------------------------------- */
 
 .steps {
@@ -343,6 +343,33 @@
 
 :global(.visible) .step:nth-child(3) {
   transition-delay: 0.24s;
+}
+
+/* The picture that opens each cell — the sensor, the switch, the map the
+   sentence under it is about. Same frame as the media on an insights card:
+   rounded to `--radius-card`, cropped to fill, on the deeper surface tint so a
+   slow connection shows a block of the page's own grey rather than a hole.
+
+   Held inside the cell's padding rather than bled to its edges: `card-grid`
+   draws the cells with hairlines and no shadow, and a photograph running into
+   that 1px rule reads as a seam. */
+.stepFigure {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 24px;
+  border-radius: var(--radius-card);
+  /* 16:9 by default; the wide grid below overrides it through the property. */
+  aspect-ratio: var(--step-figure-ratio, 16 / 9);
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
+/* Robust & Reliable: the same figure, letterboxed. Its three paragraphs run to
+   roughly twice the length of the loop's, so the pictures give back the height
+   the copy takes and the section still resolves in one screen. */
+.stepsWide {
+  --step-figure-ratio: 21 / 9;
 }
 
 /* Set as a `micro-label`; the accent is the page's own, because this line is a

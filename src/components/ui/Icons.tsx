@@ -247,3 +247,50 @@ export function RoverIcon(props: IconProps) {
     </Icon>
   );
 }
+
+/** Newspaper — a folded sheet with a column of type and the roll behind it:
+    press coverage, as against the page of a publication `FileTextIcon` marks. */
+export function NewspaperIcon(props: IconProps) {
+  return (
+    <Icon strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M4 5h13a1 1 0 0 1 1 1v13H6a2 2 0 0 1-2-2Z" />
+      <path d="M18 8.5h1.5A1.5 1.5 0 0 1 21 10v7a2 2 0 0 1-2 2h-1" />
+      <path d="M7.5 8.5h6" />
+      <path d="M7.5 12h6" />
+      <path d="M7.5 15.5h4" />
+    </Icon>
+  );
+}
+
+/**
+ * "Made in India" — ARNOBOT's own three-bar mark, the stack of skewed
+ * parallelograms from the wordmark at public/assets/logos/logotm.png, set in
+ * the national colours: saffron, the ground colour, and India green.
+ *
+ * It is deliberately NOT the Government of India "Make in India" lion, which
+ * is a GoI mark carrying usage conditions, and deliberately not any reading of
+ * the State Emblem, whose use is restricted by the State Emblem of India
+ * (Prohibition of Improper Use) Act 2005. This one is the company's own
+ * artwork, so it can ship without anybody's permission. See the note in
+ * about/page.tsx where it is used.
+ *
+ * The middle bar takes `currentColor`, so the mark sits on a dark band or a
+ * light one without a second version.
+ */
+export function MadeInIndiaMark({ size = 26, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={(size * 22) / 30}
+      viewBox="0 0 30 22"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <path fill="#FF9933" d="M14 0h16l-6 6H8Z" />
+      <path fill="currentColor" d="M10 8h16l-6 6H4Z" />
+      <path fill="#138808" d="M6 16h16l-6 6H0Z" />
+    </svg>
+  );
+}

@@ -12,9 +12,11 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     heroTitleLines: ['Robots for ', 'the Future'],
     heroBg: '/assets/images/hero-bg.png',
     heroVideo: '/assets/videos/products/saibya/saibya_hero_full.mp4',
-    /* The front-on pose the turntable opens on, at the render's full resolution;
-       see the note on ALTIUS below. The hero plays no video here; the clip it
-       used to autoplay is the first card in the showcase band. */
+    /* A frame of the Max on a field trial, not the turntable render — the hero
+       draws across the whole screen and a keyed studio render has no environment
+       to fill it. The clean render still gets its moment on the turntable below.
+       The hero plays no video here; the clip it used to autoplay is the first
+       card in the showcase band. */
     heroImage: '/assets/images/products/saibya/saibya_hero.webp',
     heroImageAlt:
       'Saibya Max standing on a dirt track during a field trial, surveillance mast and amber beacon raised, out-of-focus greenery behind it',
@@ -109,7 +111,7 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     subtitle: '(High-Payload UGV)',
     heroTitleLines: ['Any Terrain ', 'Machine'],
     heroBg: '/assets/images/hero-bg.png',
-    heroVideo: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
+    heroVideo: '/assets/videos/products/atm/atm_dust_run_clean.mp4',
     // The loaded render is the hero, as on the other three products. The demo
     // clip above is no longer played here — it stays reachable from the Heavy
     // Load Transport card in Product Showcase & Operations below.
@@ -168,10 +170,24 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
        rushes — the machine towing a loaded SUV, which is the only footage that
        answers for "Heavy Load Transport". It lives at the site-root demo1.mp4
        because that file was already committed for ATM and this is what it now
-       holds; the name is legacy, the content is not. Cards 2 and 3 share
-       atm_vehicle_demo.mp4, the official demo reel, cut to the riverbed dust run
-       — the reel is captioned in-picture by Arnobot, and this segment carries
-       only the product name, not the two later cards that misspell "active". */
+       holds; the name is legacy, the content is not. Its stills were already
+       clean crops; only the clips behind cards 2 and 3 were not.
+
+       Those two used to share atm_vehicle_demo.mp4 verbatim. That file is a
+       finished marketing edit and it was published here watermark and all: an
+       "ARNOBOT ™" bug sits top-right on every frame and a captioned title runs
+       across the picture throughout — including the two later captions that
+       misspell "active". Both cards now play their own re-cut from the 3840x2160
+       master (ArnobotDoc `02-Products/ATM-Any-Terrain-Machine/Videos/ATM_Vehicle
+       Demo.mp4`), cropped below the graphics at native resolution. The crop
+       offset differs per segment because the captions do: the title band over the
+       dust run sits higher than the lower-third over the grass runs, so the dust
+       cut takes `crop=3022:1700:400:460` (the same crop the home hero uses) and
+       the suspension cut has to go to `crop=2702:1520:569:640`.
+       Card 3 also stops borrowing card 2's footage: it plays the grass-and-
+       hummock run the "Suspension & Drivetrain" title actually claims, framed to
+       avoid the bystanders who walk through the later half of that segment.
+       atm_vehicle_demo.mp4 stays in place, unreferenced. */
     showcase: [
       {
         title: 'Heavy Load Transport',
@@ -181,12 +197,12 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       {
         title: 'All-Terrain Field Operations',
         img: '/assets/images/products/atm/atm_dust_run.webp',
-        video: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
+        video: '/assets/videos/products/atm/atm_dust_run_clean.mp4',
       },
       {
         title: 'Suspension & Drivetrain',
         img: '/assets/images/products/atm/atm_drivetrain.webp',
-        video: '/assets/videos/products/atm/atm_vehicle_demo.mp4',
+        video: '/assets/videos/products/atm/atm_suspension_run.mp4',
       },
     ],
   },
@@ -198,9 +214,12 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     heroTitleLines: ['Rapid Tactical ', 'Reconnaissance'],
     heroBg: '/assets/images/hero-bg.png',
     heroVideo: '/assets/videos/products/nexus/nexus_trial_1.mp4',
-    /* The front-on pose the turntable opens on, at the render's full resolution;
-       see the note on ALTIUS below. The hero plays no video here — the clip it
-       used to autoplay is the first card in the showcase band. */
+    /* A frame of the WHEELED build straddling a tree root, not the turntable
+       render — the hero draws across the whole screen and a keyed studio render
+       has no environment to fill it. The turntable below is the TRACKED Mark-3,
+       so the two are visibly different machines; see the note on the showcase
+       titles. The hero plays no video here — the clip it used to autoplay is the
+       first card in the showcase band. */
     heroImage: '/assets/images/products/nexus/nexus_hero.webp',
     heroImageAlt:
       'The wheeled NEXUS straddling a split tree root with both headlights lit, rocker arms articulated over the bark',
@@ -253,8 +272,8 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     /* Card 1 used to show a green four-wheeled buggy on blue-spoked RC wheels —
        a render of an older machine altogether, not this product. Both cards now
        carry photographs of Nexus in the field.
-       Those photographs are of the WHEELED build; the hero and the turntable
-       above are the TRACKED Mark-3. The two are visibly different machines, so
+       Those photographs are of the WHEELED build, as is the hero; the turntable
+       above is the TRACKED Mark-3. The two are visibly different machines, so
        the titles name the build rather than leaving a reader to assume the
        tracks in the viewer and the wheels in the cards are the same thing. */
     showcase: [
@@ -277,16 +296,21 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     subtitle: '(Vertical Climbing Robot)',
     heroTitleLines: ['Vertical Climbing ', 'Robotics'],
     heroBg: '/assets/images/hero-bg.png',
-    heroVideo: '/assets/videos/products/altius/cleaning-attachment.mp4',
-    /* The front-on pose the spin below opens on, cut from the same turntable at
-       the full resolution the render carries — the hero draws it across most of
-       the screen, far larger than the turntable ever draws a frame, so it gets a
-       still of its own rather than the set being encoded at hero size. It is
-       the hero photograph is the Alang hull trial — the only footage that
-       exists of this machine at work. The hero plays no video here. */
-    heroImage: '/assets/images/products/altius/altius_hero.webp',
+    heroVideo: '/assets/videos/products/altius/altius_hull_cleaning.mp4',
+    /* The hero was a frame of the Alang hull trial in which two hard-hatted
+       operators fill the bottom half of the picture — the exact image-to-message
+       mismatch the hero-imagery brief was raised about, on the one page whose
+       headline is "Vertical Climbing Robotics". It is now the Cycles still from
+       the saved ocean scene (ArnobotDoc `02-Products/Altius/Ocean-Scene/`), the
+       asset that brief nominates for this slot: the machine on a hull at sea,
+       nobody in frame, and legible as a ship rather than as a grey wall. It is a
+       render and the alt says so — the showcase band below carries the real
+       footage. The hero plays no video here; `heroVideo` is the fallback for any
+       consumer that only knows about video.
+       The previous file stays at altius_hero.webp, unreferenced. */
+    heroImage: '/assets/images/products/altius/altius_hero_ocean.webp',
     heroImageAlt:
-      'ALTIUS magnetised part-way up a ship hull on its tether at the Alang yard, two ARNOBOT operators in hard hats watching from the ground below',
+      "Rendered view of ALTIUS magnetised to the flank of a ship's hull at sea, its two track belts gripping the painted steel above the black waterline band, open water and the horizon beyond the bow",
     /* The turntable below replaces the still gallery on the page; this stays as
        the fallback any consumer that only knows about images still gets. */
     mainImage: '/assets/renders/altius-hero.webp',
@@ -340,34 +364,39 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       width: 720,
       height: 513,
     },
-    /* Two of these cards used to caption a flat CG orthographic view on white as
-       a field trial, and the third captioned the Alang hull climb — the one
-       genuinely photographic image on the product pages — as a payload test.
-       Each title now describes what its still actually shows, and each still is
-       a frame from Arnobot's own trial footage.
-       The clips have since been cut and now match those titles too: card 1 is
-       the branded climber running the wall in "Vertical Drive Check Phase 2"
-       (shot portrait, cropped to landscape on the same framing as its still),
-       card 2 is the Alang yard hull climb, card 3 is the operators working the
-       tether and controller at the foot of that hull. The `cleaning-attachment`
-       and `payload-capacity` filenames are legacy and describe footage that does
-       not exist — Arnobot has never filmed a cleaning head or a payload test.
-       The titles describe the clips; the filenames do not. */
+    /* All three cards are re-cut from the ship-hull trial Arnobot filmed at the
+       Leela Group ship-recycling yard, Alang, on 26 July 2025 — the footage that
+       lives in ArnobotDoc as `02-Products/Altius/Videos/Arnobot (With
+       Courtsey).mp4`. It is the only material anywhere that shows this machine
+       doing the job the page describes: climbing a hull and washing it down.
+       It supersedes what these cards used to carry — an indoor wall climb beside
+       a folding chair, and two clips in which hard-hatted operators, not the
+       robot, fill the frame. Those three files (`cleaning-attachment`,
+       `payload-capacity`, `GroundStation_setup`) are left in place, unreferenced.
+
+       That master is a finished edit: an iCreate / ProtoQuik logo sits top-right
+       on every frame, a "COURTESY : LEELA GROUP OF SHIP RECYCLING YARDS" bar runs
+       bottom-left, and a testimonial card cuts in and out bottom-right.
+       `crop=1500:844:0:80` clears all three at native resolution, and cards 1 and
+       2 use it. Card 3 does not: it IS the iCreate feature, so its branding and
+       its yard credit are the point and stay in frame. The yard is named in the
+       card titles as well, so the credit survives the crop in the copy even where
+       it does not survive it in the picture. */
     showcase: [
       {
-        title: 'Magnetic Climb — Vertical Drive Trial',
-        img: '/assets/images/products/altius/altius_wall_climb.webp',
-        video: '/assets/videos/products/altius/cleaning-attachment.mp4',
+        title: 'Hull Climb — Alang Ship-Recycling Yard',
+        img: '/assets/images/products/altius/altius_hull_climb.webp',
+        video: '/assets/videos/products/altius/altius_hull_climb.mp4',
       },
       {
-        title: 'Ship Hull Climb — Alang Yard Trial',
-        img: '/assets/images/products/altius/altius_alang_climb.webp',
-        video: '/assets/videos/products/altius/payload-capacity.mp4',
+        title: 'Hull Cleaning — High-Pressure Water Jet',
+        img: '/assets/images/products/altius/altius_hull_cleaning.webp',
+        video: '/assets/videos/products/altius/altius_hull_cleaning.mp4',
       },
       {
-        title: 'Ground Station Setup & Control',
-        img: '/assets/images/products/altius/altius_groundstation.webp',
-        video: '/assets/videos/products/altius/GroundStation_setup.mp4',
+        title: "ALTIUS on iCreate's ProtoQuik Launchpad",
+        img: '/assets/images/products/altius/altius_icreate.webp',
+        video: '/assets/videos/products/altius/altius_icreate_protoquik.mp4',
       },
     ],
   },
