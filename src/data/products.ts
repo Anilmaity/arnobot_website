@@ -16,10 +16,27 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
        draws across the whole screen and a keyed studio render has no environment
        to fill it. The clean render still gets its moment on the turntable below.
        The hero plays no video here; the clip it used to autoplay is the first
-       card in the showcase band. */
-    heroImage: '/assets/images/products/saibya/saibya_hero.webp',
+       card in the showcase band.
+
+       Now a photograph rather than a frame lifted from the trial clip. The two
+       cuts before this were both video stills, and a still off a moving camera
+       shows it at full-bleed: soft edges, motion smear on the wheels, and a
+       crop that ran out of machine at the top. This is from the 2026-08 product
+       shoot (`Saibya-Surveillance/Photos/saibya-surveillance-field-03.jpg`,
+       8847x5898), so the chassis holds up across the whole screen.
+
+       Cropped from the left of the frame, not centred: the title sits
+       bottom-left over the scrim, so the machine is carried into the right half
+       and the tree and shade fall behind the words. Wide enough to keep the
+       whole platform and the ground it is standing on — the version before this
+       was pushed in so close that the frame stopped being a place. Still a
+       deliberately different look from the company-page band
+       (`about-band-saibya-v2.webp`), which is the same platform standing wide
+       against a treeline — the two should not read as one photograph used
+       twice. */
+    heroImage: '/assets/images/products/saibya/saibya_hero_v3.webp',
     heroImageAlt:
-      'Saibya Max standing on a dirt track during a field trial, surveillance mast and amber beacon raised, out-of-focus greenery behind it',
+      'Saibya standing in dry scrub against a shaded wall on a field trial, sensor mast and beacon up, light bars across its deck',
     mainImage: '/assets/renders/saibya-hero.webp',
     brochure: '/assets/brochures/Saibya_Brochure.pdf',
     overview:
@@ -94,7 +111,7 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       },
       {
         title: 'Saibya Max — Surveillance Fit Trials',
-        img: '/assets/images/products/saibya/saibya_max_surveillance.webp',
+        img: '/assets/images/products/saibya/saibya_max_surveillance_v2.webp',
         video: '/assets/videos/products/saibya/saibya_diadem_demo.mp4',
       },
       {
@@ -112,15 +129,21 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     heroTitleLines: ['Any Terrain ', 'Machine'],
     heroBg: '/assets/images/hero-bg.png',
     heroVideo: '/assets/videos/products/atm/atm_dust_run_clean.mp4',
-    // The loaded render is the hero, as on the other three products. The demo
-    // clip above is no longer played here — it stays reachable from the Heavy
-    // Load Transport card in Product Showcase & Operations below.
-    // The loaded render, re-keyed off its own RGB: the shipped file left the
-    // studio backdrop's grey under every transparent pixel, which WebP's chroma
-    // subsampling then bled back out as a halo tracing the whole silhouette.
-    heroImage: '/assets/images/products/atm/atm_hero.webp',
+    /* The desert exercise: the ATM on trackway matting laid over sand, an army
+       transport parked in the trees on the left and more vehicles up the ridge.
+       It replaces the car-pull frame, which was a good demonstration but a poor
+       hero — shot at dusk in a parking area, so the machine sat dark against
+       dark and the setting said "residential street" under a title that says
+       Any Terrain Machine. This is the terrain, and the customer is in it.
+
+       The full frame rather than a crop, which is also what keeps it apart from
+       the home page's ATM card: that one is cropped portrait and close on the
+       machine, this one is the whole scene. Left at its native 1600x900 — the
+       source is a phone photograph and upscaling to match the other heroes'
+       1920x1080 would only invent detail. */
+    heroImage: '/assets/images/products/atm/atm_hero_field.webp',
     heroImageAlt:
-      'The camouflaged ATM towing a Honda CR-V across gravel at dusk, dust hanging in the SUV\'s headlights, ARNOBOT lettering legible along its flank',
+      'The camouflaged ATM standing on trackway matting over desert sand during a field exercise, an army transport truck parked under trees behind it',
     // ATM has no turntable, so the details band shows one image on the same
     // stage. It is a photograph of the machine working rather than the hero
     // render again — the render already fills the band above it, and showing it
@@ -196,12 +219,12 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       },
       {
         title: 'All-Terrain Field Operations',
-        img: '/assets/images/products/atm/atm_dust_run.webp',
+        img: '/assets/images/products/atm/atm_dust_run_v2.webp',
         video: '/assets/videos/products/atm/atm_dust_run_clean.mp4',
       },
       {
         title: 'Suspension & Drivetrain',
-        img: '/assets/images/products/atm/atm_drivetrain.webp',
+        img: '/assets/images/products/atm/atm_drivetrain_v2.webp',
         video: '/assets/videos/products/atm/atm_suspension_run.mp4',
       },
     ],
@@ -270,12 +293,18 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
       height: 526,
     },
     /* Card 1 used to show a green four-wheeled buggy on blue-spoked RC wheels —
-       a render of an older machine altogether, not this product. Both cards now
-       carry photographs of Nexus in the field.
+       a render of an older machine altogether, not this product. All three cards
+       now carry photographs of Nexus in the field.
        Those photographs are of the WHEELED build, as is the hero; the turntable
        above is the TRACKED Mark-3. The two are visibly different machines, so
        the titles name the build rather than leaving a reader to assume the
-       tracks in the viewer and the wheels in the cards are the same thing. */
+       tracks in the viewer and the wheels in the cards are the same thing.
+
+       Card 3 is the strongest footage on this page and it is deliberately last:
+       card 1's clip is the one the hero used to autoplay, and the note on
+       `heroImage` above says so, which only stays true while that clip opens the
+       band. Worth revisiting — leading with the drop would sell the platform
+       harder — but it is a two-place edit, not a reorder. */
     showcase: [
       {
         title: 'Wheeled Nexus — Invertible Drive Trial',
@@ -287,6 +316,23 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
         img: '/assets/images/products/nexus/nexus_root_traverse.webp',
         video: '/assets/videos/products/nexus/nexus_trial_2.mp4',
       },
+      {
+        /* Nine seconds cut from the middle of the trial: Nexus drives the top
+           edge of a concrete water tank, goes over it, falls the full height of
+           the wall, lands, and drives off. Two of the five claims in
+           `featureItems` are on screen here rather than asserted — the drop is
+           the "rapid deployment" case, and it comes to rest inverted and keeps
+           driving, which is the invertible one.
+           The still is the free-fall frame, the robot clear of the wall with
+           nothing touching it. It is the only picture on the product pages where
+           the machine is mid-air, so the card reads at a glance in the band.
+           The 26s original runs on either side of this: eight seconds of
+           approach along the top of the tank before, and a long drive-away
+           after, neither of which shows anything the other two cards do not. */
+        title: 'Wheeled Nexus — Wall Drop & Drive-Away',
+        img: '/assets/images/products/nexus/nexus_wall_drop_v2.webp',
+        video: '/assets/videos/products/nexus/nexus_wall_drop.mp4',
+      },
     ],
   },
 
@@ -297,20 +343,26 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
     heroTitleLines: ['Vertical Climbing ', 'Robotics'],
     heroBg: '/assets/images/hero-bg.png',
     heroVideo: '/assets/videos/products/altius/altius_hull_cleaning.mp4',
-    /* The hero was a frame of the Alang hull trial in which two hard-hatted
-       operators fill the bottom half of the picture — the exact image-to-message
-       mismatch the hero-imagery brief was raised about, on the one page whose
-       headline is "Vertical Climbing Robotics". It is now the Cycles still from
-       the saved ocean scene (ArnobotDoc `02-Products/Altius/Ocean-Scene/`), the
-       asset that brief nominates for this slot: the machine on a hull at sea,
-       nobody in frame, and legible as a ship rather than as a grey wall. It is a
-       render and the alt says so — the showcase band below carries the real
-       footage. The hero plays no video here; `heroVideo` is the fallback for any
-       consumer that only knows about video.
-       The previous file stays at altius_hero.webp, unreferenced. */
-    heroImage: '/assets/images/products/altius/altius_hero_ocean.webp',
+    /* Third hero on this page, and the first one that carries the headline.
+       The original was a frame of the Alang hull trial with two hard-hatted
+       operators filling the bottom half — machine incidental. The ocean render
+       that replaced it went too far the other way: at hero scale the crawler is
+       a dark speck on a near-white hull, so a page headlined "Vertical Climbing
+       Robotics" opened on an empty wall. This is a frame of the hull-climb
+       footage at Alang, upscaled from the 1440p clip: a real machine on real
+       plating, nobody in frame, the crawler right of centre and clear of the
+       bottom-left scrim where `.hero-cinematic` lays the title. It is cut from
+       the same clip showcase card 1 plays, which is deliberate: that clip is the
+       only footage of this machine doing the job the page describes, and the
+       hero states the claim the band then shows moving. The frame comes from the
+       already-cropped 1440x810 derivative, so the master's iCreate logo and
+       courtesy bar are gone before the upscale. The hero plays no video here;
+       `heroVideo` remains the fallback for consumers that only know video.
+       `altius_hero.webp` and `altius_hero_ocean.webp` are left in place,
+       unreferenced. */
+    heroImage: '/assets/images/products/altius/altius_hero_hull.webp',
     heroImageAlt:
-      "Rendered view of ALTIUS magnetised to the flank of a ship's hull at sea, its two track belts gripping the painted steel above the black waterline band, open water and the horizon beyond the bow",
+      'ALTIUS climbing the weathered steel plating of a ship hull at Alang, its two magnetic track belts gripping the vertical surface, tether and umbilical trailing down behind it',
     /* The turntable below replaces the still gallery on the page; this stays as
        the fallback any consumer that only knows about images still gets. */
     mainImage: '/assets/renders/altius-hero.webp',
@@ -388,15 +440,33 @@ const PRODUCTS: Readonly<Record<ProductId, Product>> = {
         img: '/assets/images/products/altius/altius_hull_climb.webp',
         video: '/assets/videos/products/altius/altius_hull_climb.mp4',
       },
+      /* The Alang trial as it was actually run, restored at the client's
+         direction: two ARNOBOT operators on the ground working the tether and
+         the controller while ALTIUS holds the hull above them.
+
+         This is the frame the hero-imagery brief objected to, and the reversal
+         is deliberate. The brief's rule — machines at work, people only where
+         the team is the subject — was written for hero-scale imagery, and it
+         still governs the heroes. Here the subject IS the trial: a card
+         captioned "Alang Yard Trial" showing the crew who ran it is a record,
+         not a mismatch. The machine reads small against the hull, which is the
+         honest scale of that job.
+
+         Cards 1 and 3 both show the machine close on the plating, so this is
+         also the only frame in the row that gives the work a setting. */
       {
-        title: 'Hull Cleaning — High-Pressure Water Jet',
-        img: '/assets/images/products/altius/altius_hull_cleaning.webp',
-        video: '/assets/videos/products/altius/altius_hull_cleaning.mp4',
+        title: 'Ship Hull Climb — Alang Yard Trial',
+        img: '/assets/images/products/altius/altius_alang_climb.webp',
+        video: '/assets/videos/products/altius/payload-capacity.mp4',
       },
+      /* The iCreate cut, trimmed from 14.4s to the 10s of hull footage: the
+         ProtoQuik title card that opened it is gone. The iCreate identity is
+         not lost with it — the logo bug is burned into every frame of the
+         source, so it still reads on the footage itself. */
       {
         title: "ALTIUS on iCreate's ProtoQuik Launchpad",
-        img: '/assets/images/products/altius/altius_icreate.webp',
-        video: '/assets/videos/products/altius/altius_icreate_protoquik.mp4',
+        img: '/assets/images/products/altius/altius_icreate_v2.webp',
+        video: '/assets/videos/products/altius/altius_icreate_protoquik_v2.mp4',
       },
     ],
   },

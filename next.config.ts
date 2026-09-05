@@ -1,4 +1,12 @@
 import type { NextConfig } from 'next';
+import { INSIGHTS_ENABLED } from './src/lib/flags';
+
+/**
+ * Everything that used to be a blog or a press release points at `/insights`.
+ * While that section is switched off it would be a redirect into a 404, so the
+ * home page stands in until the flag goes back to `true`.
+ */
+const INSIGHTS_OR_HOME = INSIGHTS_ENABLED ? '/insights' : '/';
 
 /**
  * Every page of the original PHP site was a flat `*.php` file at the web root.
@@ -17,9 +25,9 @@ const LEGACY_PHP_ROUTES: ReadonlyArray<readonly [php: string, destination: strin
   ['/industries.php', '/#market'],
   ['/career.php', '/career'],
   ['/contact.php', '/contact'],
-  ['/blog.php', '/insights'],
-  ['/blog-details.php', '/insights'],
-  ['/press-release.php', '/insights'],
+  ['/blog.php', INSIGHTS_OR_HOME],
+  ['/blog-details.php', INSIGHTS_OR_HOME],
+  ['/press-release.php', INSIGHTS_OR_HOME],
   ['/media-kit.php', '/about'],
   ['/privacy-policy.php', '/privacy-policy'],
   ['/terms-conditions.php', '/terms-conditions'],
@@ -46,9 +54,9 @@ const LEGACY_PHP_ROUTES: ReadonlyArray<readonly [php: string, destination: strin
 const DROPPED_ROUTES: ReadonlyArray<readonly [source: string, destination: string]> = [
   ['/intro', '/'],
   ['/industries', '/#market'],
-  ['/blog', '/insights'],
-  ['/blog-details', '/insights'],
-  ['/press-release', '/insights'],
+  ['/blog', INSIGHTS_OR_HOME],
+  ['/blog-details', INSIGHTS_OR_HOME],
+  ['/press-release', INSIGHTS_OR_HOME],
   ['/media-kit', '/about'],
 ];
 

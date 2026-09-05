@@ -73,8 +73,8 @@ const RELIABILITY_POINTS: ReadonlyArray<
     tag: 'FIELD',
     name: 'Serviceable where it works',
     body: 'Attachments come off with standard tooling, and the same core runs on every platform — so a crew trained on one robot can keep the whole fleet moving.',
-    image: '/assets/images/tech-reliability-field.webp',
-    alt: 'The rear service panel between the wheels, closed with standard hex fasteners and marked “Caution Autonomous”.',
+    image: '/assets/images/tech-reliability-field-v2.webp',
+    alt: 'An ARNOBOT engineer in a branded polo refitting a drive wheel to a UGV chassis on the bench, the battery pack open on the deck behind.',
   },
 ];
 
@@ -95,12 +95,29 @@ type BandSource =
  * than a black rectangle. `preload="metadata"` keeps the chapter markers from
  * pulling their full payload before the visitor scrolls to them; autoplay
  * fetches the rest when the element actually starts.
+ *
+ * `priority` is for the one band that is above the fold. The hero's still is
+ * the page's largest paint, and an `img` deep in the markup is fetched at
+ * default priority behind whatever the browser found first; the bands below it
+ * stay lazy, since they are a scroll away.
  */
-function BandMedia({ video, image, poster, preload = 'metadata' }: BandSource & { readonly preload?: 'metadata' | 'auto' }) {
+function BandMedia({
+  video,
+  image,
+  poster,
+  preload = 'metadata',
+  priority = false,
+}: BandSource & { readonly preload?: 'metadata' | 'auto'; readonly priority?: boolean }) {
   return (
     <div className={styles.media} aria-hidden="true">
       {image ? (
-        <img src={image} alt="" />
+        <img
+          src={image}
+          alt=""
+          fetchPriority={priority ? 'high' : 'auto'}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+        />
       ) : (
         <video autoPlay muted loop playsInline preload={preload} poster={poster}>
           <source src={video} type="video/mp4" />
@@ -156,18 +173,16 @@ export default function TechnologyPage() {
         data-cinematic-hero
         data-header-theme="dark"
       >
-        {/* A SAIBYA working three kinds of ground, and no one in any frame: it
-            comes up a scrub lot at the camera, crosses a rubble yard, then
-            holds a clearing. The old cut was a gloved hand in a wiring bay —
-            a picture of us building a robot, where the page promises a robot
-            doing its job. Four segments, 0.7s dissolves, and a return to the
-            opening shot so the loop closes on a dissolve rather than a cut.
-            Each segment is framed to hold the right of the picture, past the
-            copy column, where the scrim leaves the frame open. */}
-        <BandMedia
-          video="/assets/videos/technology-hero-field.mp4"
-          poster="/assets/images/tech-hero-field-poster.webp"
-        />
+        {/* A SAIBYA holding a scrub lot on its own — the machine at work, which
+            is what the page goes on to explain, and nothing of how it is built.
+            A still rather than the field loop: the clip's later segments cut in
+            close enough to read hardware off the deck, and an earlier cut opened
+            on a gloved hand in an opened wiring bay. What the platform carries
+            inside is not the site's to publish, and a single frame cannot drift
+            into showing it. The subject sits right of centre, past the copy
+            column, where the scrim leaves the frame open; the slow drift on
+            `.media img` keeps it from reading as a flat backdrop. */}
+        <BandMedia image="/assets/images/tech-hero-field-poster.webp" priority />
         <div className={styles.heroInner}>
           <div className="fade-up">
             <span className="eyebrow">ARNOBOT Technology</span>

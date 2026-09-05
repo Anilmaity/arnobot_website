@@ -11,12 +11,15 @@ import type { ProductId } from '@/types';
    name: the SAIBYA frame is of the Saibya Max variant, which is the platform
    we have field photography of.
 
-   ALTIUS is the exception, and it is a render rather than a photograph: there
-   is no photograph of it anywhere in the vault. Its old card was a workshop
-   snap — the crawler clamped to a painted indoor wall with a folding chair in
-   shot — which showed the machine but not the job. This is the saved Cycles
-   ocean scene re-framed to portrait, so the card says what ALTIUS is for:
-   holding station on a ship's plating above the waterline. */
+   ALTIUS went through two wrong cards before this one. The workshop snap showed
+   the machine but not the job (painted indoor wall, folding chair in shot); the
+   Cycles ocean render showed the job but not the machine — at card size the
+   crawler was a speck on a flat grey hull, and `.product-card img` desaturates
+   85% by default, so it read as an empty tile beside three robot photographs.
+   This is the Alang hull-climb frame cropped to portrait around the crawler: a
+   real photograph, machine filling the frame, on the plating it works on. The
+   `h3` pill sits at the top of the card, which is why the crop leaves clean
+   plating up there and carries the machine in the lower two thirds. */
 const CARDS: ReadonlyArray<{
   readonly id: ProductId;
   readonly name: string;
@@ -26,8 +29,8 @@ const CARDS: ReadonlyArray<{
   {
     id: 'altius',
     name: 'ALTIUS',
-    image: '/assets/images/card-altius-v2.webp',
-    alt: 'ALTIUS magnetic crawler clamped to the plating of a ship hull above the waterline, open water below it',
+    image: '/assets/images/card-altius-hull.webp',
+    alt: 'ALTIUS magnetic crawler climbing the steel plating of a ship hull, tether and umbilical trailing behind it',
   },
   {
     id: 'saibya',
@@ -44,8 +47,15 @@ const CARDS: ReadonlyArray<{
   {
     id: 'atm',
     name: 'ATM',
-    image: '/assets/images/card-atm.webp',
-    alt: 'ATM Any Terrain Machine driving through loose dirt, throwing up dust',
+    /* The desert exercise, cropped portrait around the machine: sand and the
+       trackway matting it is standing on, army vehicles up the ridge behind.
+       It replaces a frame lifted from the dust-run clip — soft, and a wall of
+       dust that read as grey haze once `.product-card img` took 85% of the
+       colour out. This crop no longer collides with anything: the Defence &
+       Security card in the industries slider was the same photograph, landscape
+       and wide, but that card has since been swapped to a supplied render. */
+    image: '/assets/images/card-atm-v2.webp',
+    alt: 'The camouflaged ATM standing on trackway matting over desert sand, army vehicles parked on the ridge behind it',
   },
 ];
 

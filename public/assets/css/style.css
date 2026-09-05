@@ -2366,7 +2366,9 @@ select.form-input,
 .industry-img-wrap {
   position: relative;
   width: 100%;
-  height: 190px;
+  /* 190px cropped the machine out of the taller frames — `cover` was taking the
+     middle band and losing the wheels. 20% more height gives the subject room. */
+  height: 228px;
   overflow: hidden;
   background: var(--surface-2);
 }
@@ -2375,6 +2377,9 @@ select.form-input,
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* A resting zoom, so the machine reads at card size rather than sitting small
+     in the middle of its terrain. The taller box above is what pays for it. */
+  transform: scale(1.08);
   filter: grayscale(80%) contrast(105%);
   transition: filter var(--t-slower) ease, transform var(--t-slowest) var(--ease-lift);
 }
@@ -2382,7 +2387,7 @@ select.form-input,
 .industry:hover .industry-img-wrap img,
 .industry:focus-visible .industry-img-wrap img {
   filter: grayscale(0%) contrast(110%);
-  transform: scale(1.08);
+  transform: scale(1.16);
 }
 
 .industry-info {
@@ -4408,6 +4413,89 @@ p.value-current.is-display {
   to {
     opacity: 0;
     transform: translateX(40px);
+  }
+}
+
+/* ==========================================================================
+   Touch sizing — phones and small tablets only.
+
+   Everything here is gated at max-width: 767px, so the desktop and laptop
+   layouts (1440 and 1024, both measured clean) are untouched by design. The
+   rules raise controls to a 44px touch target; they do not restyle anything.
+
+   Deliberately NOT included: links that sit inside running prose — the
+   "careers" link in the founder's letter, the address and email inside a
+   sentence on Contact, and `.legal-link` in the legal copy. Padding an inline
+   link to 44px breaks the line box it lives in, and a reader taps those from
+   the flow of a sentence rather than hunting for them in a list.
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  /* Footer. Every page carries it, and it was the bulk of the small targets:
+     twelve stacked links at 25px each. The padding now supplies the rhythm,
+     so the list gap comes down to stop the column doubling in height. */
+  .footer-links,
+  .footer-contact {
+    gap: 2px;
+  }
+
+  .footer-links a,
+  .footer-contact a,
+  .footer-bottom a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 4px 0;
+  }
+
+  /* The contact rows lead with an icon that is top-aligned for multi-line
+     addresses; with a 44px link beside it the icon needs to come back to the
+     middle or it floats above the text. */
+  .footer-contact li {
+    align-items: center;
+  }
+
+  .footer-contact svg {
+    margin-top: 0;
+  }
+
+  /* The social marks stay 37px; only the hit area grows around them. */
+  .socials a {
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* The carousel dots are drawn with `background-clip: content-box`, so the
+     padding is invisible — the target grows to 44px tall while the dot itself
+     stays 10px. Horizontal padding is left alone: the dots sit in a row, and
+     44px-wide targets would overlap each other, which mis-taps worse than a
+     small target does. */
+  .industry-dot {
+    padding: 17px 7px;
+  }
+
+  /* The legal page's table of contents: a real list of links, so these do get
+     the full target. */
+  .legal-toc-link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* The values rotator is display type on one nowrap line. "Client-Centric
+   Innovation" is wider than a 320px screen, so below the small-phone break the
+   line is allowed to wrap and the sizer that reserves its box wraps with it. */
+@media (max-width: 420px) {
+  p.value-current.is-display {
+    font-size: var(--fs-h2);
+  }
+
+  .word-rotate-sizer,
+  .word-rotate-word {
+    white-space: normal;
   }
 }
 

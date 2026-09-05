@@ -4,11 +4,10 @@ import type { ReactNode } from 'react';
 import Cta from '@/components/sections/Cta';
 import {
   FileTextIcon,
-  LightbulbIcon,
-  MadeInIndiaMark,
-  NewspaperIcon,
   RocketIcon,
+  ShieldIdeaIcon,
   TargetIcon,
+  TelevisionIcon,
   TrophyIcon,
 } from '@/components/ui/Icons';
 import TypingAnimation from '@/components/ui/TypingAnimation';
@@ -53,12 +52,18 @@ const RECORD: ReadonlyArray<{
     label: 'Awards',
   },
   {
-    icon: <LightbulbIcon />,
+    /* A filing is protection bought for an invention, so the mark is a shield
+       holding an idea rather than the lightbulb that was here — the bulb said
+       "idea", which is the thing before the filing. */
+    icon: <ShieldIdeaIcon />,
     value: '4',
     label: 'IPs filed',
   },
   {
-    icon: <NewspaperIcon />,
+    /* Media coverage, so a television rather than a newspaper: the newspaper
+       sat two columns from `FileTextIcon` and the two read as the same ruled
+       sheet at 40px. */
+    icon: <TelevisionIcon />,
     value: '1',
     label: 'Spotlight',
   },
@@ -112,25 +117,30 @@ const VALUES = [
    -------------------------------------------------------------------------- */
 
 /**
- * The hero band: a SAIBYA Max driving out of a treeline, mast up and beacon
- * lit, shot low against open sky.
+ * The hero band: a SAIBYA Max standing on open ground against a bright
+ * treeline, mast up and beacon on, shot from ground level.
  *
- * The frame is doing three things the one before it could not. It holds the
- * machine from 54% to 91% of the width, clear of the copy column and clear of
- * the heavy end of `.scrim`, which weights the wash to the left — the previous
- * frame sat the robot across the middle, so a black machine went under a navy
- * wash and disappeared, the same dark-on-dark failure the hero brief raised
- * against the old `abt-hero.png`. It backs the machine with bright sky instead
- * of a wall in shade, so the silhouette reads at 0.9 opacity under the scrim.
- * And the deck's "Indian Army" marking, fully legible in the old frame, is
- * occluded here by the light bars down to the fragment "ndian" — the shoot's
- * own notes flag that marking as something to clear before client-facing use.
+ * Every constraint here is set by `.scrim` and `.media img` in the module CSS,
+ * and a replacement frame has to satisfy all of them:
  *
- * `.media img` runs the 24s `drift`, which at full scale crops about 7% off
- * the left, 4% off the right and 6% off the top and bottom; the machine and
- * its beacon are inside that on every edge.
+ *  - `.scrim` washes 0.86 at the left edge down to 0 at the right, so the
+ *    machine has to sit right of centre or it goes under the wash and
+ *    disappears — the dark-on-dark failure the hero brief raised against the
+ *    old `abt-hero.png`. This frame holds it from about 60% to 87%, inside the
+ *    band `object-position: 68%` is aimed at.
+ *  - The backing has to be bright, not a wall in shade, because the image runs
+ *    at 0.9 opacity under that wash and a black machine needs something behind
+ *    it to cut against. Here it is open sky and a sunlit treeline.
+ *  - `.media img` runs the 24s `drift`, which at full scale crops about 7% off
+ *    the left, 4% off the right and 6% off the top and bottom. The machine and
+ *    its beacon are inside that on every edge.
+ *
+ * The previous frame met all three but was shot long, with the machine small
+ * and the background thrown out of focus, so the band read as a snapshot
+ * rather than as the opening statement of the company page. This one is from
+ * the same field trial, closer and level with the ground.
  */
-const HERO_BAND = '/assets/images/about-band-saibya.webp';
+const HERO_BAND = '/assets/images/about-band-saibya-v2.webp';
 
 /** Decorative background behind the hero, under the scrim the copy sits on. */
 function BandMedia({ image }: { readonly image: string }) {
@@ -230,8 +240,13 @@ export default function AboutPage() {
         </section>
       ))}
 
-      {/* Values */}
-      <section className={cn('on-dark', 'section-screen', styles.valuesSection, 'reveal')} id="values" data-header-theme="dark">
+      {/* Values. The same light wash the mission statement sits on, so the
+          three statement screens — mission, vision, values — read as one run
+          rather than the last one arriving as a dark band. `is-wash` is the
+          global that paints it, and with the ground light the section no
+          longer declares a dark header theme: the header probes what is under
+          it and draws in ink by itself. */}
+      <section className={cn('section-screen', 'is-wash', styles.valuesSection, 'reveal')} id="values">
         <div className={cn(styles.values, 'fade-up')}>
           <span className="eyebrow">Our Values</span>
           <p className="value-current is-display">
@@ -244,12 +259,24 @@ export default function AboutPage() {
               positioned words inside a sizer, so a sibling beneath it cannot
               disturb the cycle.
 
-              The mark is ARNOBOT's own three-bar device in the national
-              colours, not the Government of India "Make in India" lion. See
-              MadeInIndiaMark. */}
+              This is the Government of India "Make in India" lion, taken
+              unaltered from makeinindia.com. It carries its own wordmark
+              knocked out of the lion's body, so the image is the whole lockup
+              and no text sits beside it. It is dark line work, and now that the
+              band is light it sits straight on the wash — the white chip it
+              needed over the old dark ground is gone. It is never recoloured;
+              a government mark is not ours to restyle.
+
+              Usage of this mark is conditional on DPIIT permission — that is a
+              business matter, not a technical one. */}
           <p className={cn('micro-label', styles.origin)}>
-            <MadeInIndiaMark className={styles.originMark} />
-            Made in India
+            <img
+              className={styles.originMark}
+              src="/assets/logos/make-in-india.png"
+              alt="Make in India"
+              width={122}
+              height={57}
+            />
           </p>
         </div>
       </section>

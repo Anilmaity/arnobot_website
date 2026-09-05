@@ -276,8 +276,9 @@
    white; `on-dark` in the markup carries the white type.
    -------------------------------------------------------------------------- */
 
+/* The ground comes from the global `is-wash`, the same one the mission screen
+   uses — this only drops the closing hairline, since the CTA band follows. */
 .valuesSection:global(.section-screen) {
-  background: var(--ink);
   border-bottom: 0;
 }
 
@@ -297,11 +298,20 @@
   align-items: center;
   gap: 12px;
   margin-top: clamp(32px, 5vh, 56px);
-  color: rgba(var(--white-rgb), 0.72);
+  color: var(--slate-600);
 }
 
+/* The Make in India artwork is dark line work with its wordmark knocked out of
+   the lion. The band is now the same light wash as the mission screen, so the
+   mark sits straight on it — the white chip it needed over the old dark ground
+   is gone. It is never recoloured: a government mark is not ours to restyle.
+
+   Drawn 20% larger than it first shipped — clamp(34px, 4.4vh, 46px) scaled
+   through. */
 .originMark {
   flex: none;
+  width: auto;
+  height: clamp(41px, 5.28vh, 55px);
 }
 
 /* --------------------------------------------------------------------------

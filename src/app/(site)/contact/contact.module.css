@@ -667,3 +667,21 @@ a.visitRowValue:focus-visible {
     transition: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Touch sizing — phones and small tablets only, so the desktop layout above
+   is untouched. Both of these are the sole tappable thing in their row (a
+   phone number, an address, an email in a contact card), so they take the
+   full 44px target rather than the 22-25px their line box gives them.
+   Inline links inside running sentences elsewhere on this page are left
+   alone; padding those would break the line they sit in.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+  a.channelValue,
+  a.visitRowValue {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

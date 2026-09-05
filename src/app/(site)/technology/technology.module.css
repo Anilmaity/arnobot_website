@@ -104,7 +104,12 @@
   overflow: hidden;
 }
 
-.hero .media video {
+/* The hero sits a stop darker than the chapter markers — the title is the
+   largest type on the page and carries the most words over the picture.
+   Applies to the still as well as to a clip: the hero is a photograph now, and
+   without the `img` half it would come back 0.9 and wash the title out. */
+.hero .media video,
+.hero .media img {
   opacity: 0.72;
 }
 
