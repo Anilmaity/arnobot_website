@@ -321,12 +321,19 @@ export default function TechnologyPage() {
               <div className={styles.laptopLid}>
                 <span className={styles.laptopCam} aria-hidden="true" />
                 <div className={styles.laptopScreen}>
+                  {/* The capture runs at desk pace — real time for the operator,
+                      but a slow read on a page nobody stops at. At 1.75x the
+                      dashboard and the mission review both land inside the time
+                      the section holds attention. `videoRate` applies it:
+                      playbackRate is a property, not an attribute, so it cannot
+                      be set from server-rendered markup alone. */}
                   <video
                     autoPlay
                     muted
                     loop
                     playsInline
                     preload="metadata"
+                    data-playback-rate="1.75"
                     poster="/assets/images/gcs-laptop-poster.webp"
                     aria-label="The ARNOBOT Ground Control Station: the live mission dashboard, then a completed mission reviewed afterwards — distance covered, time taken, waypoints reached, and the planned route drawn against the path actually driven."
                   >
@@ -334,6 +341,7 @@ export default function TechnologyPage() {
                   </video>
                 </div>
               </div>
+              <div className={styles.laptopHinge} aria-hidden="true" />
               <div className={styles.laptopBase} aria-hidden="true" />
             </div>
           </figure>

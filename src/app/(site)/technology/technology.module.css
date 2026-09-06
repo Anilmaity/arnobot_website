@@ -253,14 +253,29 @@
 }
 
 /* The lid: an aluminium edge around the screen, squarer at the bottom where it
-   meets the hinge than at the top two corners. The inset hairline keeps the
-   silver off a white background, where a drop shadow alone leaves the top edge
-   undefined. */
+   meets the hinge than at the top two corners.
+
+   Anodised aluminium is not a flat grey — it is a curved surface picking up a
+   bright line where it faces the light and going dark where it rolls away. The
+   vertical gradient does the top-to-bottom fall; the horizontal one darkens
+   both outer edges so the lid reads as a panel with thickness rather than a
+   rectangle of paint. The inset hairline keeps the silver off a white
+   background, where a drop shadow alone leaves the top edge undefined. */
 .laptopLid {
   position: relative;
   padding: var(--rim);
   border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xs) var(--radius-xs);
-  background: linear-gradient(180deg, var(--alu-hi), var(--alu-lo) 45%, var(--alu-mid));
+  background:
+    linear-gradient(
+      90deg,
+      var(--alu-edge) 0,
+      var(--alu-lo) 1.6%,
+      transparent 5%,
+      transparent 95%,
+      var(--alu-lo) 98.4%,
+      var(--alu-edge) 100%
+    ),
+    linear-gradient(180deg, #fbfcfc 0, var(--alu-hi) 2%, var(--alu-lo) 46%, var(--alu-mid) 100%);
   box-shadow:
     inset 0 0 0 1px rgba(var(--ink-rgb), 0.16),
     var(--shadow-card);
@@ -322,29 +337,72 @@
   object-fit: cover;
 }
 
+/* The hinge: the dark gap under the lid where it meets the deck. Narrower than
+   the base and sat between the two, it is what stops the lid and the base
+   reading as one flat slab — on the real machine you see straight through to
+   the shadow behind. */
+.laptopHinge {
+  position: relative;
+  height: calc(var(--bezel) * 0.34);
+  margin-inline: 2.5%;
+  border-radius: 0 0 var(--radius-xs) var(--radius-xs);
+  background: linear-gradient(180deg, #6f767f 0, #4a5058 55%, #3a3f47 100%);
+}
+
 /* The base overhangs the lid on both sides, as a real one does, and carries
    the thumb notch in the middle of its front edge. Front-on this is the only
    broad face of aluminium in view, so it carries most of the silver.
 
-   The bands are the edge turning through the light: a dark line at the very
-   top where the lid throws a shadow onto the deck, the bright crown just
-   below it, then the face falling away to the underside. */
+   The bands are the edge turning through the light: the shadow the lid throws
+   onto the deck, the bright crown just below it, then the face falling away to
+   a dark underside. The horizontal gradient rolls both ends off, so the slab
+   ends in rounded metal rather than a cut edge — front-on, that curvature is
+   most of what separates a laptop from a rectangle. */
 .laptopBase {
   position: relative;
   height: calc(var(--bezel) * 1.2);
   margin-inline: -3.4%;
   border-radius: 0 0 calc(var(--radius-md) + 6px) calc(var(--radius-md) + 6px);
-  background: linear-gradient(
-    180deg,
-    var(--alu-dark) 0 7%,
-    var(--alu-hi) 7% 34%,
-    var(--alu-lo) 34% 64%,
-    var(--alu-mid) 64% 86%,
-    var(--alu-edge) 86%
-  );
+  background:
+    linear-gradient(
+      90deg,
+      rgba(var(--ink-rgb), 0.22) 0,
+      rgba(var(--ink-rgb), 0.06) 1.2%,
+      transparent 4%,
+      transparent 96%,
+      rgba(var(--ink-rgb), 0.06) 98.8%,
+      rgba(var(--ink-rgb), 0.22) 100%
+    ),
+    linear-gradient(
+      180deg,
+      var(--alu-dark) 0 6%,
+      #fdfdfe 6% 13%,
+      var(--alu-hi) 13% 34%,
+      var(--alu-lo) 34% 62%,
+      var(--alu-mid) 62% 84%,
+      var(--alu-edge) 84% 95%,
+      var(--alu-dark) 95%
+    );
   box-shadow:
     inset 0 0 0 1px rgba(var(--ink-rgb), 0.13),
     0 26px 34px -14px rgba(var(--ink-rgb), 0.3);
+}
+
+/* The contact shadow. The card shadow on the lid lights the machine but leaves
+   it floating; this is the darker, tighter pool directly under the front edge
+   that sets it down on the surface. Narrower than the base and blurred wide, so
+   it reads as contact rather than a second object. */
+.laptopBase::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 6%;
+  right: 6%;
+  bottom: -6px;
+  height: 14px;
+  border-radius: var(--radius-round);
+  background: rgba(var(--ink-rgb), 0.26);
+  filter: blur(9px);
 }
 
 /* The thumb scoop: the shallow dish milled into the front edge so a finger can
