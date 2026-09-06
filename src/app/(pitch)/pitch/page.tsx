@@ -18,9 +18,9 @@ export default function PitchPage() {
               <li><a href="#overview"><span className="idx">00</span> Overview</a></li>
               <li><a href="#company"><span className="idx">01</span> Company</a></li>
               <li><a href="#products"><span className="idx">02</span> Products</a></li>
-              <li><a href="#market"><span className="idx">03</span> Market</a></li>
-              <li><a href="#traction"><span className="idx">04</span> Traction</a></li>
-              <li><a href="#financials"><span className="idx">05</span> Financials</a></li>
+              <li><a href="#technology"><span className="idx">03</span> Technology</a></li>
+              <li><a href="#market"><span className="idx">04</span> Market</a></li>
+              <li><a href="#traction"><span className="idx">05</span> Traction</a></li>
               <li><a href="#ask"><span className="idx">06</span> The Ask</a></li>
               <li><a href="#recognition"><span className="idx">07</span> Recognition</a></li>
               <li><a href="#contact"><span className="idx">08</span> Contact</a></li>
@@ -45,9 +45,9 @@ export default function PitchPage() {
             </div>
             <div className="hero-stats">
               <div className="stat"><div className="num">2024</div><div className="lbl">Founded, Ahmedabad</div></div>
-              <div className="stat"><div className="num">4</div><div className="lbl">Robotic platforms in production</div></div>
-              <div className="stat"><div className="num">60+</div><div className="lbl">Competition wins since 2021</div></div>
-              <div className="stat"><div className="num">3H / 5L</div><div className="lbl">Units/month in-house capacity</div></div>
+              <div className="stat"><div className="num">4</div><div className="lbl">Platforms built and field-tested</div></div>
+              <div className="stat"><div className="num">4</div><div className="lbl">Completed field pilots</div></div>
+              <div className="stat"><div className="num">3 + 5</div><div className="lbl">Heavy + light units / month, in-house</div></div>
               <div className="stat"><div className="num">₹4 Cr</div><div className="lbl">Current raise — Project Sentinel</div></div>
             </div>
             <div className="scroll-cue"><div className="ln" />SCROLL</div>
@@ -56,8 +56,8 @@ export default function PitchPage() {
           {/* COMPANY */}
           <section id="company">
             <div className="eyebrow">01 — Company &amp; Mission</div>
-            <h2 className="sec-title">Engineering excellence, built from the competition floor up.</h2>
-            <p className="sec-lede">Arnobot Private Limited was founded on a foundation laid during the founders&apos; academic years — a focused commitment to robotics and autonomous systems that has since scaled into a full-stack robotics company serving defence and industry.</p>
+            <h2 className="sec-title">Full-stack robotics, engineered end-to-end in India.</h2>
+            <p className="sec-lede">Arnobot Private Limited designs, fabricates and integrates its own machines under one roof in Ahmedabad — chassis and drivetrain, electronics and power, the autonomy stack and the ground-control software. Nothing core is outsourced, so a mission requirement can be answered with a change to the robot rather than a change of supplier.</p>
 
             <div className="grid-2">
               <div className="cell">
@@ -86,12 +86,24 @@ export default function PitchPage() {
               </div>
             </div>
 
-            <div className="reg-strip">
-              <div className="reg-item"><div className="k">CIN</div><div className="v">U28199GJ2024PTC148328</div></div>
-              <div className="reg-item"><div className="k">Registered</div><div className="v">RoC Gujarat &amp; Dadra Nagar Haveli</div></div>
-              <div className="reg-item"><div className="k">DPIIT Startup Reg.</div><div className="v">D1PP190026</div></div>
-              <div className="reg-item"><div className="k">GST</div><div className="v">24ABACA1106F1ZJ</div></div>
-              <div className="reg-item"><div className="k">Registered Office</div><div className="v">G-2, Parul Apartments, Satellite Road, Ahmedabad – 380015</div></div>
+            {/* The in-house claim above is the one an investor will test, so it
+                is shown rather than asserted: design, fabrication, integration. */}
+            <div style={{ marginTop: '56px' }}>
+              <div className="eyebrow" style={{ marginBottom: '20px' }}>Under one roof, Ahmedabad</div>
+              <div className="grid-3">
+                <figure className="proof-figure">
+                  <img src={`${A}/facility-cad.jpg`} alt="An ARNOBOT engineer modelling the Nexus assembly in CAD at the Ahmedabad design desk" />
+                  <figcaption>Design — full CAD and mechanical revision in-house</figcaption>
+                </figure>
+                <figure className="proof-figure">
+                  <img src={`${A}/facility-print.jpg`} alt="Freshly printed polymer parts being lifted off a 3D printer bed by a gloved hand" />
+                  <figcaption>Fabrication — printing, machining and prototyping</figcaption>
+                </figure>
+                <figure className="proof-figure">
+                  <img src={`${A}/facility-integration.jpg`} alt="Four ARNOBOT engineers working into the opened electronics bay of a Saibya chassis" />
+                  <figcaption>Integration — electronics, power and autonomy build-up</figcaption>
+                </figure>
+              </div>
             </div>
 
             <div style={{ marginTop: '60px' }}>
@@ -116,7 +128,13 @@ export default function PitchPage() {
                   <div className="cred">B.Com, LLB, D.L.P, D.T.P — Interior Designer</div>
                 </div>
               </div>
-              <p style={{ color: 'var(--text-3)', fontSize: '12.5px', marginTop: '14px' }}>Backed by an 8-professional core team spanning robotics engineering, product design, system integration and strategic management.</p>
+              {/* The team photograph does the work the sentence used to do
+                  alone. It is a cut-out on white, so it sits on the deck's own
+                  paper without a crop or a frame. */}
+              <div className="team-band">
+                <img src={`${A}/team-assembly.jpg`} alt="Five ARNOBOT engineers around a Saibya chassis on the bench — one fitting a drive wheel, the others working the deck and taking notes" />
+                <p>Backed by an <strong>8-professional core team</strong> spanning robotics engineering, product design, system integration and strategic management.</p>
+              </div>
             </div>
           </section>
 
@@ -126,7 +144,7 @@ export default function PitchPage() {
           <section id="products" className="alt">
             <div className="eyebrow">02 — Product Range</div>
             <h2 className="sec-title">Four platforms. One mission-ready fleet.</h2>
-            <p className="sec-lede">Every platform is designed, fabricated and integrated in-house. Click a unit to expand its verified specification, use case and target industries.</p>
+            <p className="sec-lede">Every platform is designed, fabricated and integrated in-house, and every one has been run on a real site. Click a unit to expand its specification, use case and target industries.</p>
 
             <div className="grid-2" id="productGrid">
               <div className="bracket product" data-p="1"><span className="bl" /><span className="br" />
@@ -242,18 +260,94 @@ export default function PitchPage() {
                 </div>
                 <div className="video-slot">
                   <button className="yt" data-drive="1-cVEB8JkxcN3BBFlSW9r0QFixCi6jm3r" aria-label="Play: ATM vehicle demonstration">
-                    <img src={`${A}/video-atm-demo.jpg`} alt="ATM all-terrain vehicle demonstration ground" />
+                    <img src={`${A}/atm-hero-field.jpg`} alt="The camouflaged ATM standing on trackway matting over desert sand during a field exercise, an army transport truck parked under trees behind it" />
                     <span className="play" />
-                    <span className="yt-cap">ATM — vehicle demonstration</span>
+                    <span className="yt-cap">ATM — desert field exercise</span>
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* Which vehicle answers which job — the matrix a buyer actually
+                reads the product range through. Platform and mission only; the
+                named customers behind them sit in section 05. */}
+            <div style={{ marginTop: '56px' }}>
+              <div className="eyebrow" style={{ marginBottom: '20px' }}>Vehicle Use Cases</div>
+              <p className="sec-lede" style={{ marginBottom: '24px' }}>Every deployment starts as a job on a site, not a robot on a spec sheet. This is how the four platforms divide that work.</p>
+              <table className="uc-table">
+                <thead>
+                  <tr><th scope="col">Vehicle</th><th scope="col">Use case</th><th scope="col">Operating environment</th><th scope="col">Sector</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td className="uc-veh">SAIBYA</td><td>Night perimeter surveillance — autonomous patrol, thermal and day optics, intrusion alerting to a control room</td><td>Open solar fields, plant perimeters, unlit sites</td><td>Renewables, industrial</td></tr>
+                  <tr><td className="uc-veh">SAIBYA</td><td>Sub-surface cable mapping — GPR and active-EM survey heads over utility-scale ground</td><td>Buried trench routes, no satellite fix underground</td><td>Renewables, EPC, utilities</td></tr>
+                  <tr><td className="uc-veh">SAIBYA</td><td>Mine dispensing and defence logistics — payload carriage to and across a laying line</td><td>Desert and broken cross-country terrain</td><td>Defence</td></tr>
+                  <tr><td className="uc-veh">SAIBYA</td><td>Vegetation and weed cutting under panel rows, and general payload carriage on the modular deck</td><td>Solar arrays, worksites</td><td>Renewables, construction</td></tr>
+                  <tr><td className="uc-veh">ALTIUS</td><td>Ship-hull cleaning and inspection — climbs the plate under tether, removing rope access and staging</td><td>Vertical ferromagnetic steel, at height, over water</td><td>Maritime, ship recycling</td></tr>
+                  <tr><td className="uc-veh">ALTIUS</td><td>Storage-tank, silo and boiler-wall inspection with live cloud monitoring of the pass</td><td>Confined and elevated assets, no man-entry</td><td>Oil &amp; gas, power generation</td></tr>
+                  <tr><td className="uc-veh">NEXUS</td><td>Pre-entry reconnaissance — invertible, drives on either face, scouts a space before a team commits to it</td><td>Culverts, rubble, indoor and tight approaches</td><td>Defence, police, disaster response</td></tr>
+                  <tr><td className="uc-veh">NEXUS</td><td>Indoor security and border-post monitoring on a repeated route</td><td>Buildings, posts, fence lines</td><td>Homeland security</td></tr>
+                  <tr><td className="uc-veh">ATM</td><td>Heavy payload carriage, anti-drone system carriage and weapon-station mounting</td><td>Sand, trackway, unprepared ground</td><td>Defence, heavy construction</td></tr>
+                </tbody>
+              </table>
+              <p className="fin-note">Configurations are defined per mission profile. Detailed specifications and BOMs issued on request.</p>
+            </div>
           </section>
 
+          {/* TECHNOLOGY */}
+          <section id="technology">
+            <div className="eyebrow">03 — Technology</div>
+            <h2 className="sec-title">One autonomy core. Every platform.</h2>
+            <p className="sec-lede">For a new environment we change the body, not the intelligence. The same four-layer stack runs on all four vehicles, from remote control through semi-autonomous to fully autonomous — which is why a new mission is an integration job measured in weeks, not a new product programme.</p>
+
+            <div className="grid-4">
+              <div className="cell svc"><div className="n">L1</div><div><h4>Reflex</h4><p>Motor control, power management and the safety interlocks. Emergency stop is wired here, not to the autonomy computer — so it works even when everything above it is fully loaded.</p></div></div>
+              <div className="cell svc"><div className="n">L2</div><div><h4>Perception</h4><p>Laser, camera and inertial data fused onboard. Detection runs on the robot, not in the cloud, so a lost link does not blind it.</p></div></div>
+              <div className="cell svc"><div className="n">L3</div><div><h4>Autonomy</h4><p>Mapping, localisation and mission execution. Missions are handed over as an area to cover; the vehicle replans around obstacles and resumes the pass.</p></div></div>
+              <div className="cell svc"><div className="n">L4</div><div><h4>Operations</h4><p>The GCS, the mission record and the reporting layer — where a run is planned, watched and afterwards audited.</p></div></div>
+            </div>
+
+            <div style={{ marginTop: '56px' }}>
+              <div className="eyebrow" style={{ marginBottom: '20px' }}>The onboard loop</div>
+              <div className="grid-3">
+                <div className="cell tcard">
+                  <img src={`${A}/tech-perceive.jpg`} alt="The sensor head on a Saibya mast in the field: a camera housing on each side, the radio antennas, and the amber warning beacon above them" />
+                  <div className="n">01</div>
+                  <h4>Perceive</h4>
+                  <p>Laser, camera and inertial data fused on the robot. Detection runs onboard, not in the cloud.</p>
+                </div>
+                <div className="cell tcard">
+                  <img src={`${A}/tech-localise.jpg`} alt="The scanning laser bolted to the Saibya deck — the sensor the robot builds its own map from when there is no satellite fix" />
+                  <div className="n">02</div>
+                  <h4>Localise</h4>
+                  <p>Centimetre-grade with a satellite fix. Its own map without one — underground, indoors, under steel.</p>
+                </div>
+                <div className="cell tcard">
+                  <img src={`${A}/tech-decide.jpg`} alt="The ARNOBOT Ground Control Station with five waypoints placed across satellite imagery" />
+                  <div className="n">03</div>
+                  <h4>Decide</h4>
+                  <p>Missions are an area, not a joystick input. It replans around obstacles and resumes the pass.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* The operations layer, on its own — the picture is the software
+                itself, so the card runs wide with the capture beside the copy. */}
+            <div className="cell tcard tcard-wide" style={{ marginTop: '56px' }}>
+              <img src={`${A}/tech-gcs.jpg`} alt="The ARNOBOT Ground Control Station live mission dashboard: the route drawn on a map beside heading, speed, odometer and battery readouts, with the camera feeds along the bottom" />
+              <div className="tcard-body">
+                <div className="n">GCS</div>
+                <h4>Ground Control &amp; mission record</h4>
+                <p>Live video, sensor telemetry, SLAM maps and mission control in one operator interface. Every pass comes back as data — the map, the route actually driven, what was seen and when — exported as a field-usable mission report and reviewed at a desk long after the robot has left the site.</p>
+              </div>
+            </div>
+          </section>
+
+          <div className="hazard-rule" />
+
           {/* MARKET */}
-          <section id="market">
-            <div className="eyebrow">03 — Market Opportunity</div>
+          <section id="market" className="alt">
+            <div className="eyebrow">04 — Market Opportunity</div>
             <h2 className="sec-title">A policy-backed shift toward remote, unmanned operations.</h2>
             <p className="sec-lede">Extreme hazards — toxins, explosions, radiation, confined spaces — across power, shipbuilding, defence and maritime operations are driving structural demand for reliable, standardised unmanned platforms.</p>
 
@@ -261,7 +355,7 @@ export default function PitchPage() {
               <div className="cell mstat"><div className="lbl">Industrial Robotics — India</div><div className="val">$4.86<small>Bn</small> → $13.47<small>Bn</small></div><div className="ctx">By 2033 · CAGR ≈ 13%</div></div>
               <div className="cell mstat"><div className="lbl">Defence / Deep-Tech — India</div><div className="val">$30<small>Bn</small></div><div className="ctx">Deep-tech market by 2030</div></div>
               <div className="cell mstat"><div className="lbl">UGV Market — Global</div><div className="val">$3.2<small>Bn</small> → $5.9<small>Bn</small></div><div className="ctx">By 2035 · CAGR ≈ 6–9%</div></div>
-              <div className="cell mstat"><div className="lbl">Shipbuilding — India</div><div className="val">$1.12<small>Bn</small> → $8<small>Bn</small></div><div className="ctx">By 2033 · CAGR ≈ 60%</div></div>
+              <div className="cell mstat"><div className="lbl">Shipbuilding — India</div><div className="val">$1.12<small>Bn</small> → $8<small>Bn</small></div><div className="ctx">By 2033 · CAGR ≈ 28%</div></div>
               <div className="cell mstat"><div className="lbl">Maritime Investment — India</div><div className="val">₹3–3.5<small>L Cr</small></div><div className="ctx">Planned govt. investment by 2030</div></div>
             </div>
 
@@ -283,70 +377,74 @@ export default function PitchPage() {
           <div className="hazard-rule" />
 
           {/* TRACTION */}
-          <section id="traction" className="alt">
-            <div className="eyebrow">04 — Traction &amp; Validation</div>
-            <h2 className="sec-title">From competition floor to field deployment.</h2>
+          <section id="traction">
+            <div className="eyebrow">05 — Traction &amp; Validation</div>
+            <h2 className="sec-title">From field trial to purchase order.</h2>
 
+            {/* Every figure here is itemised somewhere else in the deck —
+                the awards and media in section 07, the design registration in
+                the legal record. Nothing is counted twice. */}
             <div className="trac-nums">
-              <div className="tn"><div className="num">2</div><div className="lbl">Awards</div></div>
-              <div className="tn"><div className="num">2</div><div className="lbl">IP Filings</div></div>
-              <div className="tn"><div className="num">1</div><div className="lbl">Publications</div></div>
+              <div className="tn"><div className="num">5</div><div className="lbl">Awards &amp; recognitions</div></div>
+              <div className="tn"><div className="num">1</div><div className="lbl">Design registration — granted</div></div>
+              <div className="tn"><div className="num">1</div><div className="lbl">Provisional patent</div></div>
+              <div className="tn"><div className="num">3</div><div className="lbl">Media features</div></div>
               <div className="tn"><div className="num">18+</div><div className="lbl">Exhibitions</div></div>
-              <div className="tn"><div className="num">2+</div><div className="lbl">Lectures</div></div>
-              <div className="tn"><div className="num">2</div><div className="lbl">Recognitions</div></div>
-              <div className="tn"><div className="num">1</div><div className="lbl">Provisional Patents</div></div>
+              <div className="tn"><div className="num">2+</div><div className="lbl">Guest lectures</div></div>
             </div>
 
-            <div className="grid-2" style={{ marginTop: '24px' }}>
-              <div className="cell">
-                <h4>Active Relationships</h4>
-                <p>Active commercial relationships in private industry and Indian Army units, with a purchase order in line from an EPC / renewable-energy project. Field pilots completed with a ship-recycling yard, a power-generation company, multiple Army formations and an industrial surveillance project.</p>
-                <div className="pill-row" style={{ marginTop: '16px' }}>
-                  <span className="pill">Indian Army formations</span><span className="pill">Renewable / EPC</span><span className="pill">Ship recycling</span><span className="pill">Power generation</span><span className="pill">Industrial surveillance</span>
-                </div>
-              </div>
+            {/* The names, unsorted and unlabelled — who has put our machines on
+                their ground. How far each has gone is a conversation, not a
+                column heading. */}
+            <div style={{ marginTop: '32px' }}>
+              <div className="eyebrow" style={{ marginBottom: '18px' }}>Clients &amp; Validators</div>
+              <ul className="name-strip">
+                <li>Stable Dynamics</li>
+                <li>Indian Army — 21 Engr Regiment</li>
+                <li>SOLARISM Project — KP Group</li>
+                <li>Leela Group of Ship Recycling Yard</li>
+                <li>Atmos Power (Mazda Limited)</li>
+                <li>Indian Army — 86 Infantry</li>
+                <li>Barmer — desert terrain trial</li>
+              </ul>
+            </div>
+
+            <div className="grid-2" style={{ marginTop: '1px' }}>
               <div className="cell">
                 <h4>Revenue Streams</h4>
                 <div className="pill-row" style={{ marginTop: '4px' }}>
                   <span className="pill">Product Sales</span><span className="pill">Custom Development</span><span className="pill">Service Contracts</span><span className="pill">Government Projects</span><span className="pill">Robotics-as-a-Service</span>
                 </div>
-                <h4 style={{ marginTop: '26px' }}>Live Opportunities</h4>
+              </div>
+              <div className="cell">
+                <h4>Live Opportunities</h4>
                 <p>Solar-plant night surveillance (managed service and outright), sub-surface cable mapping at utility scale, defence electro-optic / weapon-station integration, and robotic HVAC duct cleaning.</p>
               </div>
             </div>
-          </section>
 
-          {/* FINANCIALS */}
-          <section id="financials">
-            <div className="eyebrow">05 — Financial Snapshot</div>
-            <h2 className="sec-title">Early-stage trajectory, FY24–FY26.</h2>
-            <p className="sec-lede">All figures in ₹ thousands, per the June 2026 snapshot. Revenue has compounded every year; FY26 earnings reflect a deliberate step-up in scale investment ahead of the current raise.</p>
-
-            <div className="fin-wrap">
-              <div className="chart-box">
-                <h4>Net Sales (₹ &apos;000)</h4>
-                <svg id="salesChart" viewBox="0 0 320 200" style={{ width: '100%', overflow: 'visible' }} />
-                <p className="chart-note">Up 6.5× across two years — a ≈156% compound annual growth rate.</p>
-              </div>
-              <div className="chart-box">
-                <h4>EBITDA (₹ &apos;000)</h4>
-                <svg id="ebitdaChart" viewBox="0 0 320 200" style={{ width: '100%', overflow: 'visible' }} />
-                <p className="chart-note">Profitable at small scale in FY24–25; FY26 is the planned investment year.</p>
+            {/* The pilots named above, photographed on the day. Each caption
+                says only what the frame shows. */}
+            <div style={{ marginTop: '56px' }}>
+              <div className="eyebrow" style={{ marginBottom: '20px' }}>On site</div>
+              <div className="grid-4">
+                <figure className="proof-figure">
+                  <img src={`${A}/proof-alang.jpg`} alt="Two ARNOBOT engineers in hard hats and hi-vis working the ground controls while the ALTIUS crawler holds the face of a ship hull above them" />
+                  <figcaption>ALTIUS on a hull face — ship-recycling yard, Alang</figcaption>
+                </figure>
+                <figure className="proof-figure">
+                  <img src={`${A}/proof-solar.jpg`} alt="A Saibya UGV on a paved service path beside a solar array, at the edge of the vegetation under the panel row" />
+                  <figcaption>SAIBYA on a solar plant service route</figcaption>
+                </figure>
+                <figure className="proof-figure">
+                  <img src={`${A}/proof-barmer.jpg`} alt="A Saibya UGV standing on open desert sand, its own tyre tracks behind it" />
+                  <figcaption>SAIBYA on open sand — desert terrain trial</figcaption>
+                </figure>
+                <figure className="proof-figure">
+                  <img src={`${A}/proof-nexus.jpg`} alt="The NEXUS robot driving inverted across leaf litter and roots, its lamps and camera facing forward from the underside" />
+                  <figcaption>NEXUS running inverted over broken ground</figcaption>
+                </figure>
               </div>
             </div>
-
-            <table className="fin-table">
-              <tbody>
-                <tr><th>Particulars</th><th>FY24</th><th>FY25</th><th>FY26</th></tr>
-                <tr><td>Net Sales</td><td>80.00</td><td>200.00</td><td>523.73</td></tr>
-                <tr><td>EBITDA</td><td>31.87</td><td>21.37</td><td className="neg">(1,024.50)</td></tr>
-                <tr><td>EBITDA %</td><td>39.8%</td><td>10.7%</td><td className="neg">-195.6%</td></tr>
-                <tr><td>PAT</td><td>31.87</td><td>21.37</td><td className="neg">(1,024.50)</td></tr>
-                <tr><td>Networth</td><td>131.87</td><td>153.25</td><td className="neg">(871.25)</td></tr>
-                <tr><td>Promoter&apos;s Debt</td><td>1.00</td><td>—</td><td>1,105.00</td></tr>
-              </tbody>
-            </table>
-            <p className="fin-note">Source: Project Sentinel financial snapshot, June 2026. Strictly private &amp; confidential.</p>
           </section>
 
           <div className="hazard-rule" />
@@ -355,7 +453,7 @@ export default function PitchPage() {
           <section id="ask" className="alt">
             <div className="eyebrow">06 — The Ask</div>
             <h2 className="sec-title">Raising ₹4 Cr to scale product, infrastructure and field validation.</h2>
-            <p className="sec-lede">Seeking strategic stakeholders who understand real-world operational needs in defence and high-risk industries. Hover a segment to see its allocation.</p>
+            <p className="sec-lede">Seeking strategic stakeholders who understand real-world operational needs in defence and high-risk industries. Hover a segment for its allocation.</p>
 
             <div className="ask-wrap">
               <div style={{ textAlign: 'center' }}>
@@ -365,6 +463,17 @@ export default function PitchPage() {
               </div>
               <ul className="donut-legend" id="donutLegend" />
             </div>
+
+            {/* The closing argument. Every line restates something already
+                evidenced earlier in the deck — no new claim is introduced here. */}
+            <div className="grid-4" style={{ marginTop: '56px' }}>
+              <div className="cell svc"><div className="n">01</div><div><h4>The machines exist</h4><p>Four platforms built and run on real sites — a ship hull at Alang, a solar plant, open desert, broken ground. This is a scale-up, not a first build.</p></div></div>
+              <div className="cell svc"><div className="n">02</div><div><h4>Demand is named, not modelled</h4><p>Two named clients — one of them an Indian Army engineer regiment — a purchase order in line on the SOLARISM project, and four completed field pilots.</p></div></div>
+              <div className="cell svc"><div className="n">03</div><div><h4>One core, many bodies</h4><p>The same four-layer autonomy stack runs on every vehicle, so each new mission is an integration measured in weeks rather than a fresh product programme.</p></div></div>
+              <div className="cell svc"><div className="n">04</div><div><h4>Built here, protected here</h4><p>Designed, fabricated and integrated in Ahmedabad, with a granted design registration on the tactical platform and a provisional patent filed.</p></div></div>
+            </div>
+
+            <p className="fin-note">Detailed financials, cap table and the full due-diligence pack are shared on request under NDA.</p>
           </section>
 
           {/* RECOGNITION */}
@@ -394,6 +503,16 @@ export default function PitchPage() {
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* The awards listed above, as received. Small deliberately — they
+                are corroboration for the list, not the argument itself. */}
+            <div className="trophy-strip">
+              <figure><img src={`${A}/trophy-wsro.jpg`} alt="WSRO Robotics Startup of the Year 2025 trophy engraved for Arnobot Private Limited" /><figcaption>WSRO 2025</figcaption></figure>
+              <figure><img src={`${A}/trophy-maharathi.jpg`} alt="Startup Maharathi award from Startup Mahakumbh 2025" /><figcaption>Startup Maharathi</figcaption></figure>
+              <figure><img src={`${A}/trophy-pride-gujarat.jpg`} alt="Pride of Gujarat award, Vibrant Gujarat 2026, defence category" /><figcaption>Pride of Gujarat</figcaption></figure>
+              <figure><img src={`${A}/trophy-kpgu.jpg`} alt="Startup Demo Day recognition from KPGU Vadodara 2025" /><figcaption>KPGU Demo Day</figcaption></figure>
+              <figure><img src={`${A}/trophy-karnavati.jpg`} alt="Distinguished lecture recognition from Karnavati University" /><figcaption>Karnavati University</figcaption></figure>
             </div>
           </section>
 

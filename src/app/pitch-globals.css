@@ -125,10 +125,14 @@ section.alt{background:var(--paper-2);}
   text-transform:uppercase; padding:7px 12px;
 }
 .hero-stats{display:grid; grid-template-columns:repeat(5,1fr); margin-top:44px; border-top:1px solid var(--line); width:100%;}
-.hero-stats .stat{padding:18px 22px 4px 0; border-right:1px solid var(--line);}
+/* Symmetric padding and centred content: the cells are divided by rules on both
+   sides, so content hugging the left rule (the old `padding-right` with no
+   `padding-left`) read as misaligned. Top-aligned, so all five numbers share a
+   baseline even where the label below wraps to two lines. */
+.hero-stats .stat{padding:20px 18px 22px; border-right:1px solid var(--line); text-align:center;}
 .hero-stats .stat:last-child{border-right:none;}
 .hero-stats .stat .num{font-family:var(--font-grotesk), sans-serif; font-size:clamp(20px,1.9vw,28px); color:var(--indigo); font-weight:600; white-space:nowrap;}
-.hero-stats .stat .lbl{font-family:var(--font-plex-mono), monospace; font-size:9.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; margin-top:5px; line-height:1.5;}
+.hero-stats .stat .lbl{font-family:var(--font-plex-mono), monospace; font-size:9.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; margin-top:7px; line-height:1.55; text-wrap:balance;}
 .scroll-cue{position:absolute; bottom:30px; left:64px; font-family:var(--font-plex-mono), monospace; font-size:10.5px; color:var(--text-3); display:flex; align-items:center; gap:8px; letter-spacing:.12em;}
 .scroll-cue .ln{width:1px; height:32px; background:linear-gradient(var(--steel), transparent); animation:pulse 1.8s infinite;}
 @keyframes pulse{0%,100%{opacity:.25} 50%{opacity:1}}
@@ -142,13 +146,6 @@ section.alt{background:var(--paper-2);}
 .cell{background:var(--paper); padding:26px;}
 .cell h4{margin-bottom:9px; font-size:15.5px;}
 .cell p{color:var(--text-2); font-size:14px;}
-
-/* company */
-.reg-strip{display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--line); margin-top:36px; background:var(--paper);}
-.reg-item{padding:14px 20px; border-right:1px solid var(--line); flex:1; min-width:160px;}
-.reg-item:last-child{border-right:none;}
-.reg-item .k{font-family:var(--font-plex-mono), monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:.08em;}
-.reg-item .v{font-family:var(--font-plex-mono), monospace; font-size:12.5px; color:var(--navy); margin-top:5px;}
 
 /* leadership */
 .founder{padding:28px; position:relative;}
@@ -207,19 +204,83 @@ section.alt{background:var(--paper-2);}
 .pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
 .pill{border:1px solid var(--line); background:var(--paper-2); padding:6px 12px; font-family:var(--font-plex-mono), monospace; font-size:11.5px; color:var(--navy);}
 
-/* financials */
-.fin-wrap{display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start;}
-.chart-box{border:1px solid var(--line); background:var(--paper); padding:24px; position:relative;}
-.chart-box h4{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-3); font-family:var(--font-plex-mono), monospace; margin-bottom:18px;}
-.chart-note{color:var(--text-2); font-size:12px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line-soft);}
-.bar-tip{position:absolute; background:var(--navy); color:#fff; border:1px solid var(--navy); padding:5px 9px; font-family:var(--font-plex-mono), monospace; font-size:11px; pointer-events:none; opacity:0; transition:opacity .12s; white-space:nowrap; z-index:5; transform:translate(-50%,-130%);}
-table.fin-table{width:100%; border-collapse:collapse; font-family:var(--font-plex-mono), monospace; font-size:12.5px; margin-top:32px; background:var(--paper);}
-table.fin-table th,table.fin-table td{border:1px solid var(--line); padding:10px 14px; text-align:right;}
-table.fin-table th:first-child,table.fin-table td:first-child{text-align:left; color:var(--text-2);}
-table.fin-table th{color:var(--text-3); font-weight:500; text-transform:uppercase; font-size:10.5px; letter-spacing:.06em; background:var(--paper-2);}
-table.fin-table td{color:var(--navy);}
-td.neg{color:var(--neg);}
 .fin-note{color:var(--text-3); font-size:11.5px; margin-top:10px;}
+
+/* vehicle use-case matrix — platform, job, ground, sector */
+table.uc-table{width:100%; border-collapse:collapse; font-size:13px; background:var(--paper);}
+table.uc-table th,table.uc-table td{border:1px solid var(--line); padding:11px 14px; text-align:left; vertical-align:top;}
+table.uc-table th{
+  color:var(--text-3); font-weight:500; text-transform:uppercase; font-size:10.5px;
+  letter-spacing:.06em; background:var(--paper-2); font-family:var(--font-plex-mono), monospace;
+}
+table.uc-table td{color:var(--text-2);}
+table.uc-table td.uc-veh{
+  font-family:var(--font-plex-mono), monospace; font-size:12px; color:var(--indigo);
+  letter-spacing:.04em; white-space:nowrap; width:1%;
+}
+table.uc-table tbody tr:hover td{background:var(--paper-2);}
+
+/* technology — a card that opens on the hardware it describes */
+.tcard{padding:0; display:flex; flex-direction:column;}
+.tcard img{width:100%; aspect-ratio:16/9; object-fit:cover; border-bottom:1px solid var(--line-soft);}
+.tcard .n{
+  font-family:var(--font-plex-mono), monospace; font-size:10.5px; color:var(--steel);
+  text-transform:uppercase; letter-spacing:.1em; padding:20px 24px 0;
+}
+.tcard h4{padding:8px 24px 0; font-size:15.5px;}
+.tcard p{padding:8px 24px 24px; color:var(--text-2); font-size:13.5px;}
+.tcard .img-ph{aspect-ratio:16/9;}
+
+/* the wide variant — capture beside the copy rather than above it */
+.tcard-wide{flex-direction:row; align-items:stretch; border:1px solid var(--line);}
+.tcard-wide img{width:46%; flex-shrink:0; aspect-ratio:auto; object-fit:cover; border-bottom:none; border-right:1px solid var(--line-soft);}
+.tcard-wide .tcard-body{display:flex; flex-direction:column; justify-content:center; padding:8px 0;}
+.tcard-wide p{padding-bottom:8px;}
+
+/* evidence photograph — a framed still with a caption that says only what the
+   frame shows. Used for the facility strip and the on-site pilot strip. */
+.proof-figure{border:1px solid var(--line); background:var(--paper);}
+.proof-figure img{width:100%; aspect-ratio:3/2; object-fit:cover; display:block;}
+.proof-figure figcaption{
+  padding:11px 14px; border-top:1px solid var(--line-soft);
+  font-family:var(--font-plex-mono), monospace; font-size:10.5px; line-height:1.6;
+  color:var(--text-2); text-transform:uppercase; letter-spacing:.05em;
+}
+.proof-figure .img-ph{aspect-ratio:3/2;}
+.grid-3 .proof-figure,.grid-4 .proof-figure{border:none;}
+
+/* the team cut-out sits on the deck's own paper — no frame, no crop */
+.team-band{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:36px; align-items:center; margin-top:28px; padding-top:28px; border-top:1px solid var(--line);}
+.team-band img{width:100%; max-width:520px;}
+.team-band p{color:var(--text-2); font-size:14px;}
+.team-band strong{color:var(--navy); font-weight:600;}
+
+/* awards, as received — corroboration, so deliberately small */
+.trophy-strip{display:flex; flex-wrap:wrap; gap:22px; margin-top:36px; padding-top:28px; border-top:1px solid var(--line);}
+.trophy-strip figure{width:112px;}
+.trophy-strip img{width:100%; height:118px; object-fit:contain; object-position:bottom;}
+.trophy-strip figcaption{
+  margin-top:9px; font-family:var(--font-plex-mono), monospace; font-size:9.5px;
+  color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; line-height:1.5;
+}
+
+/* traction — the names, one flat strip. Same bordered-cell rhythm as
+   .trac-nums above it, so the two read as one block. */
+.name-strip{
+  list-style:none; display:flex; flex-wrap:wrap;
+  border:1px solid var(--line); border-bottom:none; background:var(--paper);
+}
+/* every row stretches to full width (flex:1), so the last row's own bottom
+   borders close the box — the container's would only double the rule */
+.name-strip li{
+  flex:1 1 240px; min-width:200px; padding:18px 20px;
+  border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+  color:var(--navy); font-size:14px; position:relative; padding-left:36px;
+}
+.name-strip li::before{
+  content:""; position:absolute; left:20px; top:25px; width:6px; height:6px; background:var(--steel);
+}
+.name-strip li:last-child{border-right:none;}
 
 /* the ask */
 .ask-wrap{display:grid; grid-template-columns:320px 1fr; gap:56px; align-items:center;}
@@ -306,11 +367,20 @@ td.neg{color:var(--neg);}
   section{padding:56px 22px;}
   .hero{padding:76px 22px 56px; min-height:auto;}
   .hero-stats{grid-template-columns:repeat(2,1fr);}
-  .hero-stats .stat{padding:16px 14px 12px 0; border-bottom:1px solid var(--line);}
+  .hero-stats .stat{padding:16px 12px 18px; border-bottom:1px solid var(--line);}
   .hero-stats .stat:nth-child(2n){border-right:none;}
   .grid-2,.grid-3,.grid-4,.grid-5,.grid-6{grid-template-columns:1fr;}
-  .fin-wrap,.ask-wrap,.contact-wrap,.video-grid{grid-template-columns:1fr;}
+  .ask-wrap,.contact-wrap,.video-grid,.team-band{grid-template-columns:1fr;}
+  .team-band img{max-width:none;}
+  .tcard-wide{flex-direction:column;}
+  .tcard-wide img{width:100%; aspect-ratio:16/9; border-right:none; border-bottom:1px solid var(--line-soft);}
+  .name-strip li{flex:1 1 100%; border-right:none;}
   .scroll-cue{display:none;}
+  /* the use-case matrix has four columns of prose and cannot reflow; it scrolls
+     inside its own box rather than pushing the page sideways */
+  table.uc-table{display:block; overflow-x:auto; white-space:normal; min-width:0;}
+  table.uc-table thead,table.uc-table tbody{display:table; width:100%; min-width:620px;}
+  table.uc-table thead{border-collapse:collapse;}
 }
 
 /* print */

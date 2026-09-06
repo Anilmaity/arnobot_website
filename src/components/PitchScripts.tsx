@@ -5,23 +5,13 @@ import { useEffect } from 'react';
 /**
  * Behaviour for the /pitch deck — a direct port of the scripts in
  * presentation.src.html: scroll spy, fade-up reveal, product accordion,
- * click-to-play video facades, the two bar charts and the allocation donut.
+ * click-to-play video facades and the allocation donut.
+ *
+ * The two financial bar charts this file also used to draw went out with the
+ * financial-snapshot section; the deck no longer publishes those figures.
  */
 
-const BRAND = {
-  steel: '#375E9D',
-  indigo: '#230C75',
-  navy: '#1F3864',
-  neg: '#B32B22',
-  line: '#D6DFEA',
-  mute: '#7C8A9C',
-};
 const NS = 'http://www.w3.org/2000/svg';
-const MONO = 'var(--font-plex-mono), monospace';
-
-const fmt = (n: number) =>
-  Math.abs(n).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const money = (n: number) => (n < 0 ? `(${fmt(n)})` : fmt(n));
 
 const TOTAL_CR = 4;
 const allocation = [
@@ -33,153 +23,6 @@ const allocation = [
   { label: 'Testing & Field Trials', pct: 10, color: '#E39412' },
   { label: 'Working Capital', pct: 10, color: '#B7C6DA' },
 ];
-
-function txt(
-  parent: SVGElement,
-  x: number,
-  y: number,
-  s: string,
-  {
-    size = 9.5,
-    fill = BRAND.mute,
-    anchor = 'middle',
-    weight = 400,
-  }: { size?: number; fill?: string; anchor?: string; weight?: number } = {},
-) {
-  const t = document.createElementNS(NS, 'text');
-  t.setAttribute('x', String(x));
-  t.setAttribute('y', String(y));
-  t.setAttribute('text-anchor', anchor);
-  t.setAttribute('font-size', String(size));
-  t.setAttribute('fill', fill);
-  t.setAttribute('font-weight', String(weight));
-  t.style.fontFamily = MONO;
-  t.textContent = s;
-  parent.appendChild(t);
-  return t;
-}
-
-function tipFor(svgId: string) {
-  const box = document.getElementById(svgId)!.parentElement!;
-  let tip = box.querySelector<HTMLDivElement>('.bar-tip');
-  if (!tip) {
-    tip = document.createElement('div');
-    tip.className = 'bar-tip';
-    box.appendChild(tip);
-  }
-  return { box, tip };
-}
-function showTip(svgId: string, x: number, y: number, text: string) {
-  const svg = document.getElementById(svgId)!;
-  const { box, tip } = tipFor(svgId);
-  const sr = svg.getBoundingClientRect();
-  const br = box.getBoundingClientRect();
-  tip.textContent = text;
-  tip.style.left = sr.left - br.left + (x / 320) * sr.width + 'px';
-  tip.style.top = sr.top - br.top + (y / 200) * sr.height + 'px';
-  tip.style.opacity = '1';
-}
-function hideTip(svgId: string) {
-  const tip = document.getElementById(svgId)?.parentElement?.querySelector<HTMLDivElement>('.bar-tip');
-  if (tip) tip.style.opacity = '0';
-}
-
-function drawBarChart(
-  svgId: string,
-  labels: string[],
-  values: number[],
-  opts: { color?: string; showDelta?: boolean } = {},
-) {
-  const svg = document.getElementById(svgId) as SVGSVGElement | null;
-  if (!svg) return;
-  svg.innerHTML = '';
-  const w = 320,
-    padL = 8,
-    padR = 8;
-  const plotTop = opts.showDelta ? 40 : 34,
-    plotBottom = 152;
-  const yearY = 180;
-  const span = plotBottom - plotTop;
-
-  const maxPos = Math.max(0, ...values);
-  const maxNeg = Math.max(0, ...values.map((v) => -v));
-  let zeroY: number, scale: number;
-  if (maxNeg === 0) {
-    zeroY = plotBottom;
-    scale = span / maxPos;
-  } else if (maxPos === 0) {
-    zeroY = plotTop;
-    scale = span / maxNeg;
-  } else {
-    const total = maxPos + maxNeg;
-    zeroY = plotTop + span * (maxPos / total);
-    scale = span / total;
-  }
-
-  const slot = (w - padL - padR) / values.length;
-  const barW = Math.min(slot - 30, 58);
-
-  // zero / baseline reference
-  const axis = document.createElementNS(NS, 'line');
-  axis.setAttribute('x1', String(padL));
-  axis.setAttribute('x2', String(w - padR));
-  axis.setAttribute('y1', String(zeroY));
-  axis.setAttribute('y2', String(zeroY));
-  axis.setAttribute('stroke', maxNeg ? BRAND.mute : BRAND.line);
-  axis.setAttribute('stroke-width', '1');
-  svg.appendChild(axis);
-  if (maxNeg) txt(svg, w - padR, zeroY - 4, '0', { size: 8, anchor: 'end', fill: BRAND.mute });
-
-  values.forEach((v, i) => {
-    // `noUncheckedIndexedAccess` types this as possibly-undefined; falling back
-    // to '' also keeps a short `labels` from printing "undefined" in the tooltip.
-    const label = labels[i] ?? '';
-    const x = padL + i * slot + (slot - barW) / 2;
-    const barH = Math.max(Math.abs(v) * scale, 2.5);
-    const y = v >= 0 ? zeroY - barH : zeroY;
-    const base = opts.color || BRAND.steel;
-
-    const rect = document.createElementNS(NS, 'rect');
-    rect.setAttribute('x', String(x));
-    rect.setAttribute('y', String(y));
-    rect.setAttribute('width', String(barW));
-    rect.setAttribute('height', String(barH));
-    rect.setAttribute('fill', v >= 0 ? base : BRAND.neg);
-    rect.style.cursor = 'pointer';
-    rect.style.transition = 'fill .12s';
-    rect.addEventListener('mouseenter', () => {
-      rect.setAttribute('fill', v >= 0 ? BRAND.indigo : '#8E1F18');
-      showTip(svgId, x + barW / 2, y, `${label}  ₹${money(v)}k`);
-    });
-    rect.addEventListener('mouseleave', () => {
-      rect.setAttribute('fill', v >= 0 ? base : BRAND.neg);
-      hideTip(svgId);
-    });
-    svg.appendChild(rect);
-
-    // value printed on the bar's free end — readable without hovering
-    txt(svg, x + barW / 2, v >= 0 ? y - 7 : y + barH + 12, money(v), {
-      size: 10,
-      fill: v >= 0 ? BRAND.navy : BRAND.neg,
-      weight: 600,
-    });
-
-    txt(svg, x + barW / 2, yearY, label, { size: 11 });
-  });
-
-  // year-on-year change between consecutive bars
-  if (opts.showDelta) {
-    for (let i = 1; i < values.length; i++) {
-      const prev = values[i - 1],
-        cur = values[i];
-      // `!prev` also skips a zero baseline, where the percentage would divide by 0.
-      if (!prev || cur === undefined) continue;
-      const pct = Math.round(((cur - prev) / Math.abs(prev)) * 100);
-      const x = padL + (i - 0.5) * slot + slot / 2;
-      txt(svg, x, 16, `${pct >= 0 ? '+' : ''}${pct}%`, { size: 9.5, fill: BRAND.steel, weight: 600 });
-    }
-  }
-}
 
 function drawDonut() {
   const svg = document.getElementById('donutChart') as SVGSVGElement | null;
@@ -288,7 +131,7 @@ export default function PitchScripts() {
       { threshold: 0.12 },
     );
     document
-      .querySelectorAll('.cell, .product, .mstat, .trac-nums, .reg-strip, .hero-photo')
+      .querySelectorAll('.cell, .product, .mstat, .trac-nums, .hero-photo, .uc-table, .proof-figure')
       .forEach((el) => {
         el.classList.add('fade-up');
         fio.observe(el);
@@ -357,9 +200,7 @@ export default function PitchScripts() {
       cleanups.push(() => img.removeEventListener('error', onError));
     });
 
-    // ---- charts ----
-    drawBarChart('salesChart', ['FY24', 'FY25', 'FY26'], [80.0, 200.0, 523.73], { showDelta: true });
-    drawBarChart('ebitdaChart', ['FY24', 'FY25', 'FY26'], [31.87, 21.37, -1024.5]);
+    // ---- allocation donut ----
     drawDonut();
 
     return () => cleanups.forEach((fn) => fn());
