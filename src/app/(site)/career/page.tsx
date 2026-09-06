@@ -166,8 +166,8 @@ export default function CareerPage() {
               <Link href="/career/open-positions" className="btn btn-light">
                 See open roles
               </Link>
-              <Link href="/career/open-positions#apply" className="btn btn-outline">
-                Send an open application
+              <Link href="/apply" className="btn btn-outline">
+                Start your application
               </Link>
             </div>
           </div>
@@ -292,7 +292,7 @@ export default function CareerPage() {
                 </p>
                 <p className={styles.processDetail}>{step.detail}</p>
                 {index === 0 ? (
-                  <Link href="/career/open-positions#apply" className={cn('btn btn-light', styles.processCta)}>
+                  <Link href="/apply" className={cn('btn btn-light', styles.processCta)}>
                     Apply now{' '}
                     <span className="btn-arrow" aria-hidden="true">
                       &rarr;
