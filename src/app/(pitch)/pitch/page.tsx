@@ -505,14 +505,19 @@ export default function PitchPage() {
               </div>
             </div>
 
-            {/* The awards listed above, as received. Small deliberately — they
-                are corroboration for the list, not the argument itself. */}
-            <div className="trophy-strip">
-              <figure><img src={`${A}/trophy-wsro.jpg`} alt="WSRO Robotics Startup of the Year 2025 trophy engraved for Arnobot Private Limited" /><figcaption>WSRO 2025</figcaption></figure>
-              <figure><img src={`${A}/trophy-maharathi.jpg`} alt="Startup Maharathi award from Startup Mahakumbh 2025" /><figcaption>Startup Maharathi</figcaption></figure>
-              <figure><img src={`${A}/trophy-pride-gujarat.jpg`} alt="Pride of Gujarat award, Vibrant Gujarat 2026, defence category" /><figcaption>Pride of Gujarat</figcaption></figure>
-              <figure><img src={`${A}/trophy-kpgu.jpg`} alt="Startup Demo Day recognition from KPGU Vadodara 2025" /><figcaption>KPGU Demo Day</figcaption></figure>
-              <figure><img src={`${A}/trophy-karnavati.jpg`} alt="Distinguished lecture recognition from Karnavati University" /><figcaption>Karnavati University</figcaption></figure>
+            {/* The bodies that gave the awards and the outlets that ran the
+                coverage, as marks. The trophy photographs from the same award
+                register are ~200px straight out of a PDF — unreadable at any
+                size and five different aspect ratios, so the strip shows who
+                recognised us rather than the object they handed over. */}
+            <div className="logo-strip">
+              <img src={`${A}/logo-mahakumbh.webp`} alt="Startup Mahakumbh" />
+              <img src={`${A}/logo-wsro.webp`} alt="World STEM &amp; Robotics Olympiad" />
+              <img src={`${A}/logo-vibrant-gujarat.png`} alt="Vibrant Gujarat" />
+              <img src={`${A}/logo-kpgu.png`} alt="KPGU Vadodara" />
+              <img src={`${A}/logo-karnavati.png`} alt="Karnavati University" />
+              <img src={`${A}/logo-gujarat-first.png`} alt="Gujarat First" />
+              <img src={`${A}/logo-divya-bhaskar.png`} alt="Divya Bhaskar" />
             </div>
           </section>
 

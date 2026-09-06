@@ -255,14 +255,22 @@ table.uc-table tbody tr:hover td{background:var(--paper-2);}
 .team-band p{color:var(--text-2); font-size:14px;}
 .team-band strong{color:var(--navy); font-weight:600;}
 
-/* awards, as received — corroboration, so deliberately small */
-.trophy-strip{display:flex; flex-wrap:wrap; gap:22px; margin-top:36px; padding-top:28px; border-top:1px solid var(--line);}
-.trophy-strip figure{width:112px;}
-.trophy-strip img{width:100%; height:118px; object-fit:contain; object-position:bottom;}
-.trophy-strip figcaption{
-  margin-top:9px; font-family:var(--font-plex-mono), monospace; font-size:9.5px;
-  color:var(--text-3); text-transform:uppercase; letter-spacing:.06em; line-height:1.5;
+/* who recognised us — the awarding bodies and the outlets, as marks.
+   Uniform tiles with `contain`, so seven different aspect ratios sit on one
+   optical line instead of reading as a ragged row. */
+.logo-strip{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+  gap:1px; background:var(--line);
+  margin-top:36px; border:1px solid var(--line);
 }
+.logo-strip img{
+  width:100%; height:84px; object-fit:contain; padding:16px 22px;
+  background:var(--paper);
+  /* grayscale keeps seven clashing brand palettes from fighting the deck's
+     navy; .8 rather than lower so they still read when projected */
+  filter:grayscale(1); opacity:.8; transition:filter .2s, opacity .2s;
+}
+.logo-strip img:hover{filter:none; opacity:1;}
 
 /* traction — the names, one flat strip. Same bordered-cell rhythm as
    .trac-nums above it, so the two read as one block. */
